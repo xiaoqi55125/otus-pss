@@ -1,5 +1,5 @@
 /*
-  #!/usr/local/bin/node
+  #!/usr/bin/env node
   -*- coding:utf-8 -*-
  
   Copyright 2013 freedom Inc. All Rights Reserved.
@@ -17,14 +17,72 @@
   limitations under the License.
   ---
   Created with Sublime Text 2.
-  Date: Dec 10, 2013
-  Time: 9:45 AM
+  Date: Mar 13, 2014
+  Time: 12:00 AM
   Desc: the url router's definition
  */
 
+var journalCtrller         = require("./controller/journal");
+var journalTypeCtrller     = require("./controller/journalType");
+var productCtrller         = require("./controller/product");
+var productCategoryCtrller = require("./controller/productCategory");
+var stockInCtrller         = require("./controller/stockIn");
+var stockOutCtrller        = require("./controller/stockOut");
+var userCtrller            = require("./controller/user");
+var inventoryCtrller       = require("./controller/inventory");
 
 module.exports = function (app) {
 
-    
+    /************************************************************************/
+    /*                Resful: URI Represent a Resource!!!                   */
+    /************************************************************************/
 
-};
+    /**
+     * ----------------------------------- page ----------------------------- *
+     */
+    
+    
+    /**
+     * ----------------------------------- api ----------------------------- *
+     */
+    
+    //user
+    // app.get("/users", userCtrller.findAll);
+    // app.get("/users/:userId", userCtrller.findOne);
+    // app.post("/users", userCtrller.add);
+    // app.put("/users/:userId", userCtrller.modify);
+    // app.delete("/user/:userId", userCtrller.delete);
+
+    // //product
+    // app.get("/products", productCtrller.findAll);
+    // app.get("/products/:productId", productCtrller.findOne);
+    // app.get("/products/:productId/inventory", productCtrller.findInventory);
+    // app.post("/products", productCtrller.add);
+    // app.put("/products/:userId", productCtrller.modify);
+    // app.delete("/products/:userId", productCtrller.delete);
+
+    // //product category
+    // app.get("/productcategories", productCategoryCtrller.findAll);
+    // app.get("/productcategories/:pcId/products", productcategories.findProducts);
+    // app.get("/productcategories/:pcId", productCategoryCtrller.findOne);
+    // app.post("/productcategories", productCategoryCtrller.add);
+    // app.put("/productcategories/:pcId", productcategories.modify);
+    // app.delete("/productcategories/:pcId", productcategories.delete);
+
+    // //stock in
+    // app.get("/stockins", stockInCtrller.findAll);         //distinct serial number
+    // app.get("/stockins/:sn", stockInCtrller.findOne);     //find by serial number
+    // app.post("/stockins", stockInCtrller.stockIn);
+    // app.delete("/stockins/:sn", stockInCtrller.delete);
+
+    // //stock out
+    // app.get("/stockouts", stockOutCtrller.findAll);
+    // app.get("/stockouts/:sn", stockOutCtrller.findOne);
+    // app.post("/stockouts", stockOutCtrller.stockOut);
+    // app.delete("/stockouts", stockOutCtrller.delete);
+
+    // //inventory
+    // app.get("/inventories", inventoryCtrller.findAll);
+
+}
+

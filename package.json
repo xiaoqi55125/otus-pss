@@ -1,5 +1,5 @@
 {
-  "name": "GiftManager",
+  "name": "otus-pss",
   "description": "It's a pss system that built with node.js.",
   "version": "0.0.1",
   "main": "app.js",

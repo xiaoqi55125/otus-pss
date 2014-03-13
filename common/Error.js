@@ -26,7 +26,7 @@
 //mode
 'use strict';
 
-var config = require("../config")();
+var config = require("../appConfig").config;
 
 function BaseError(message) {
     this.name       = "BaseError";

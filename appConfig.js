@@ -40,7 +40,7 @@ exports.config = {
     site_static_host    : "",
     mini_assets         : false,
 
-    session_secret      : "Gift_asdfhjkafwienfkjasdfklasdf0987654321",
+    session_secret      : "otus-pss_asdfhjkafwienfkjasdfklasdf0987654321",
 
     mail_opts           : {
         host  : "smtp.163.com",
@@ -52,10 +52,30 @@ exports.config = {
     },
 
     mailDefault_TO      : [
-        "huayang@wisedu.com",
-        "zcliu@wisedu.com"
+        "XXX@wisedu.com",
+        "XXX@wisedu.com"
     ],
 
-    networkIsOk         : 1
+    /******************************system config **************************/
+    default_page_size : 50,
+
+    //mysql max connections
+    default_max_conns : 50,
+
+    statusCode        : {
+        SATUS_OK                  : 0,
+        STATUS_NOTFOUND           : 1,        //means data not found not url request
+        STATUS_SERVER_ERROR       : 2,
+        STATUS_INVAILD_PARAMS     : 3,
+        STATUS_DBERROR            : 4
+        //....
+    },
+
+    mysqlConfig       : {
+        "host"      : "127.0.0.1",
+        "user"      : "root",
+        "password"  : "123456",
+        "database"  : "fixedAsset"
+    },
 
 };
