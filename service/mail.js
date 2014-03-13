@@ -17,14 +17,10 @@
   limitations under the License.
   ---
   Created with Sublime Text 2.
-  Date: Dec 10, 2013
-  Time: 10:13 AM
-  Desc: the service of mail
+  Date: Jan 10, 2014
+  Time: 4:22 PM
+  Desc: the mail service
  */
-
-
-//mode
-'use strict';
 
 var mailer    = require("nodemailer");
 var appConfig = require("../appConfig").config;
@@ -44,22 +40,22 @@ var transport = mailer.createTransport("SMTP", appConfig.mail_opts);
  * @return {null}         
  */
 exports.sendMail = function (mailObj) {
-
+    debugService("/services/mail/sendMail");
     if (!mailObj.hasOwnProperty("from")) {
-        mailObj["from"] = appConfig.mail_opts.auth.user;
-    };
+        mailObj.from = appConfig.mail_opts.auth.user;
+    }
 
     //if there is no property then use default
     if (!mailObj.hasOwnProperty("to")) {
-        mailObj["to"] = appConfig.mailDefault_TO.join(",");
+        mailObj.to = appConfig.mailDefault_TO.join(",");
     }
 
-    console.log("sending mail .....");
+    debugService("sending mail .....");
 
     transport.sendMail(mailObj, function (err) {
         if (err) {
             console.log("mail error:");
             console.log(err);
-        };
+        }
     });
 };
