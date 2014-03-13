@@ -27,8 +27,8 @@ var path = require("path");
 
 exports.config = {
     debug               : true,
-    name                : "礼品管理系统",
-    description         : "Gift Manager",
+    name                : "进销存管理系统",
+    description         : "pss Manager",
     version             : "0.0.1",
 
     port                : 8087,
