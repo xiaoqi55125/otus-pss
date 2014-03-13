@@ -26,7 +26,7 @@
 //mode
 'use strict';
 
-var mailServie = require("../services/mail");
+var mailServie = require("../service/mail");
 
 /**
  * process app errors
