@@ -21,3 +21,122 @@
   Time: 11:48 AM
   Desc: the proxy of user
  */
+
+var mysqlClient = require("../lib/mysqlUtil");
+
+/**
+ * get user info by user id
+ * @param  {string}   userId   user id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getUserById = function (userId, callback) {
+    debugProxy("proxy/user/getUserInfoById");
+
+    userId = userId || "";
+
+    if (userId.length === 0) {
+        return callback(new InvalidParamError(), null);
+    }
+
+    mysqlClient.query({
+        sql : "SELECT * FROM USER WHERE USER_ID = :USER_ID",
+        params : {
+            "USER_ID"  : userId
+        }
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getAllUsers error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        if (rows && rows.length > 0) {
+            return callback(null, rows[0]);
+        } else {
+            return callback(new DataNotFoundError(), null);
+        }
+    });
+};
+
+/**
+ * get all users
+ * @param  {Function} callback   the callback func
+ * @param  {Object}   pagingInfo page info
+ * @return {null}              
+ */
+exports.getAllUsers = function (callback, pagingInfo) {
+    debugProxy("proxy/user/getAllUsers");
+
+    var sql = "";
+    var params = {};
+
+    if (pagingInfo) {
+        sql                  = "SELECT * FROM USER LIMIT :start, :end ";
+        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
+        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
+        params.end           = config.default_page_size;
+    } else {
+        sql = "SELECT * FROM USER ";
+    }
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : params
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getAllUsers error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};
+
+/**
+ * create a new user
+ * @param  {Object}   userInfo the creating user info
+ * @param  {Function} callback the call back func
+ * @return {null}            
+ */
+exports.createUser = function (userInfo, callback) {
+    debugProxy("proxy/user/createUser");
+
+    var sql = "INSERT INTO USER VALUES(:USER_ID, :USER_NAME, :SEX, :REMARK)";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : userInfo
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[createUser error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
+
+/**
+ * modify a user by userId
+ * @param  {String}   userId   the user id
+ * @param  {Function} callback the callback func
+ * @return {null}            
+ */
+exports.modifyUser = function (userInfo, callback) {
+    debugProxy("proxy/user/modifyUserById");
+
+    var sql = "UPDATE USER SET USER_NAME = :USER_NAME, SEX = :SEX, REMARK = :REMARK " +
+              " WHERE USER_ID = :USER_ID";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : userInfo
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[modifyUser error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
