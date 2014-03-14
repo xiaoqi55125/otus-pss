@@ -28,7 +28,7 @@ var path = require("path");
 exports.config = {
     debug               : true,
     name                : "进销存管理系统",
-    description         : "otus-pss",
+    description         : "pss Manager",
     version             : "0.0.1",
 
     port                : 8087,
