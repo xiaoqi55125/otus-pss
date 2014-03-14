@@ -37,7 +37,6 @@ var sanitize = require("validator").sanitize;
  */
 exports.findAll = function (req, res, next) {
     debugCtrller("controller/user/findAll");
-    console.log(config.statusCode.STATUS_OK);
 
     User.getAllUsers(function (err, data) {
         if (err) {
