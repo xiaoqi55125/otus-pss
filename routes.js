@@ -62,12 +62,12 @@ module.exports = function (app) {
     // app.delete("/products/:userId", productCtrller.delete);
 
     // //product category
-    // app.get("/productcategories", productCategoryCtrller.findAll);
-    // app.get("/productcategories/:pcId/products", productcategories.findProducts);
-    // app.get("/productcategories/:pcId", productCategoryCtrller.findOne);
-    // app.post("/productcategories", productCategoryCtrller.add);
-    // app.put("/productcategories/:pcId", productcategories.modify);
-    // app.delete("/productcategories/:pcId", productcategories.delete);
+    app.get("/productcategories", productCategoryCtrller.findAll);
+    app.get("/productcategories/:pcId/products", productCategoryCtrller.findProducts);
+    app.get("/productcategories/:pcId", productCategoryCtrller.findOne);
+    app.post("/productcategories", productCategoryCtrller.add);
+    app.put("/productcategories/:pcId", productCategoryCtrller.modify);
+    // app.delete("/productcategories/:pcId", productCategoryCtrller.delete);
 
     // //stock in
     // app.get("/stockins", stockInCtrller.findAll);         //distinct serial number
