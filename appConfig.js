@@ -27,7 +27,7 @@ var path = require("path");
 
 exports.config = {
     debug               : true,
-    name                : "礼品管理系统",
+    name                : "进销存管理系统",
     description         : "otus-pss",
     version             : "0.0.1",
 
@@ -63,7 +63,7 @@ exports.config = {
     default_max_conns : 50,
 
     statusCode        : {
-        SATUS_OK                  : 0,
+        STATUS_OK                 : 0,
         STATUS_NOTFOUND           : 1,        //means data not found not url request
         STATUS_SERVER_ERROR       : 2,
         STATUS_INVAILD_PARAMS     : 3,
@@ -75,7 +75,7 @@ exports.config = {
         "host"      : "127.0.0.1",
         "user"      : "root",
         "password"  : "123456",
-        "database"  : "fixedAsset"
+        "database"  : "otusDB"
     },
 
 };
