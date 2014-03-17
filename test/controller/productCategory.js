@@ -19,7 +19,7 @@
   Created with Sublime Text 2.
   Date: Mar 14, 2014
   Time: 14:03 PM
-  Desc: the test of inventory
+  Desc: the test of product category
  */
 
 var request = require("supertest");
