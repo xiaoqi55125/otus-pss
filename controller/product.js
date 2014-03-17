@@ -21,3 +21,126 @@
   Time: 11:48 AM
   Desc: the controller of product
  */
+
+var Product  = require("../proxy").Product;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+
+/**
+ * find all products
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findAll = function (req, res, next) {
+    debugCtrller("controller/product/findAll");
+
+    Product.getAllProducts(function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null. err.statusCode));
+        }
+         
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
+
+/**
+ * find a product by id
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findOne = function (req, res, next) {
+    debugCtrller("controller/product/findOne");
+
+    var productId = req.params.productId || "";
+
+    try {
+        check(productId).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Product.getProductById(productId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
+
+/**
+ * add a new product
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.add = function (req, res, next) {
+    debugCtrller("controller/product/add");
+
+    var productObj              = {};
+    productObj.PRODUCT_ID       = util.GUID();
+    productObj.PRODUCT_NAME     = req.body.PRODUCT_NAME || "";
+    productObj.PRICE            = req.body.PRICE || "";
+    productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";
+    productObj.MANUFACTURE_DATE = req.body.MANUFACTURE_DATE || "";
+    productObj.PC_ID            = req.body.PC_ID || "";
+
+    try {
+        check(productObj.PRODUCT_NAME).notEmpty();
+        check(productObj.PRICE).notEmpty();
+        check(productObj.PC_ID).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Product.createProduct(productObj, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+};
+
+/**
+ * modify a product
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.modify = function (req, res, next) {
+    debugCtrller("controller/product/modify");
+
+    var productObj              = {};
+    productObj.PRODUCT_ID       = req.params.productId;
+    productObj.PRODUCT_NAME     = req.body.PRODUCT_NAME || "";
+    productObj.PRICE            = req.body.PRICE || "";
+    productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";
+    productObj.MANUFACTURE_DATE = req.body.MANUFACTURE_DATE || "";
+    productObj.PC_ID            = req.body.PC_ID || "";
+
+    try {
+        check(productObj.PRODUCT_ID).notEmpty();
+        check(productObj.PRODUCT_NAME).notEmpty();
+        check(productObj.PRICE).notEmpty();
+        check(productObj.PC_ID).notEmpty();
+    } catch(e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Product.modifyProduct(productObj, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+};
+

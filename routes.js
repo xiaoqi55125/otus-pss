@@ -54,11 +54,11 @@ module.exports = function (app) {
     // app.delete("/user/:userId", userCtrller.delete);
 
     // //product
-    // app.get("/products", productCtrller.findAll);
-    // app.get("/products/:productId", productCtrller.findOne);
+    app.get("/products", productCtrller.findAll);
+    app.get("/products/:productId", productCtrller.findOne);
     // app.get("/products/:productId/inventory", productCtrller.findInventory);
-    // app.post("/products", productCtrller.add);
-    // app.put("/products/:userId", productCtrller.modify);
+    app.post("/products", productCtrller.add);
+    app.put("/products/:productId", productCtrller.modify);
     // app.delete("/products/:userId", productCtrller.delete);
 
     // //product category
