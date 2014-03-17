@@ -23,10 +23,10 @@
  */
 
 var ProductCategory = require("../proxy").ProductCategory;
-var util          = require("../lib/util");
-var config        = require("../appConfig").config;
-var check         = require("validator").check;
-var sanitize      = require("validator").sanitize;
+var util            = require("../lib/util");
+var config          = require("../appConfig").config;
+var check           = require("validator").check;
+var sanitize        = require("validator").sanitize;
 
 /**
  * find all product category
@@ -55,7 +55,7 @@ exports.findAll = function (req, res, next) {
  * @return {null}        
  */
 exports.findOne = function (req, res, next) {
-    debugCtrller("controller/productCategory/findAll");
+    debugCtrller("controller/productCategory/findOne");
 
     var pcId = req.params.pcId || "";
 
