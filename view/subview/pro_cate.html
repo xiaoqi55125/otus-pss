@@ -1,0 +1,61 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/pro_cate.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/pro_cate.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/pro_cate.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		getProductCatetory();
+	});
+</script>
+<div class="main_div">
+	<h3>商品类型管理</h3>
+	<hr>
+	<form class="resumeSearchForm">
+		<div class="row">
+			<div class="col-md-2">
+				商品类型:
+				<input class="form-control" name="pc_name" id="pc_name"></div>
+			<div class="col-md-2">
+				备注:
+				<input class="form-control" id="pc_remark"></div>
+			<div class="col-md-2">
+				<button type="button" id="addandEditBtn" class="btn btn-primary" style="margin-top:18px" onclick="addandEditPcType(1)">
+					添加商品类别
+				</button>
+			</div>
+		</div>
+
+		<hr>
+		<div class="row" >
+			<div class="panel-heading" id = "viewTitle">现有礼品类别</div>
+	        <table class="table table-striped">
+	            <thead>
+	                <tr>
+	                    <th>类别名</th>
+	                    <th>备注</th>
+	                    <th>修改</th>
+	                </tr>
+	            </thead>
+	            <tbody id='pc_listView'>
+
+	            </tbody>
+	        </table>
+			<div id='paginator_div' style="float:left;padding-top:10px" ></div>
+						
+		</div>
+	</form>
+</div>
