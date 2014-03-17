@@ -53,7 +53,7 @@ module.exports = function (app) {
     app.put("/users/:userId", userCtrller.modify);
     // app.delete("/user/:userId", userCtrller.delete);
 
-    // //product
+    //product
     app.get("/products", productCtrller.findAll);
     app.get("/products/:productId", productCtrller.findOne);
     // app.get("/products/:productId/inventory", productCtrller.findInventory);
@@ -61,7 +61,7 @@ module.exports = function (app) {
     app.put("/products/:productId", productCtrller.modify);
     // app.delete("/products/:userId", productCtrller.delete);
 
-    // //product category
+    //product category
     app.get("/productcategories", productCategoryCtrller.findAll);
     app.get("/productcategories/:pcId/products", productCategoryCtrller.findProducts);
     app.get("/productcategories/:pcId", productCategoryCtrller.findOne);
@@ -81,8 +81,17 @@ module.exports = function (app) {
     // app.post("/stockouts", stockOutCtrller.stockOut);
     // app.delete("/stockouts", stockOutCtrller.delete);
 
-    // //inventory
+    //inventory
     // app.get("/inventories", inventoryCtrller.findAll);
+
+    //journal type
+    app.get("/journaltypes", journalTypeCtrller.findAll);
+    // app.get("/journaltypes/:jtId/journals", journalTypeCtrller.findJournal);
+    app.post("/journaltypes", journalTypeCtrller.add);
+    app.put("/journaltypes/:jtId", journalTypeCtrller.modify);
+
+    //journal
+    // app.get("/journals", journalCtrller.findAll);
 
 }
 
