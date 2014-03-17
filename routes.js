@@ -30,6 +30,7 @@ var stockInCtrller         = require("./controller/stockIn");
 var stockOutCtrller        = require("./controller/stockOut");
 var userCtrller            = require("./controller/user");
 var inventoryCtrller       = require("./controller/inventory");
+var pssRender              = require('./controller/render');
 
 module.exports = function (app) {
 
@@ -40,6 +41,8 @@ module.exports = function (app) {
     /**
      * ----------------------------------- page ----------------------------- *
      */
+    app.get("/",pssRender.index);
+    app.get("/pro_cate",pssRender.pro_cate);
     
     
     /**

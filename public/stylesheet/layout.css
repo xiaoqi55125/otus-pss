@@ -87,6 +87,10 @@ p { margin-bottom: 1em; }
   float: left;
   margin: 0;
 }
+#nav_title{
+  line-height: 60px;
+  font-size: 20px;
+}
 .navbar-nav > li {
   float: left;
 }
@@ -138,4 +142,8 @@ p { margin-bottom: 1em; }
 }
 .lableText{
 	line-height: 30px;
+}
+.row {
+margin-right: 0px; 
+margin-left: 0px; 
 }
