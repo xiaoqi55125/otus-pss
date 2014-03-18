@@ -1,0 +1,70 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/stockOut.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/stockOut.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+    .js("/public/javascript/locales/bootstrap-datepicker.zh-CN.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/stockOut.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker3.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#proCateType').selectpicker();
+        $('#productID').focus();
+        $('#maDate').datepicker({
+            language: "zh-CN",
+            autoclose: true,
+            todayHighlight: true
+        });
+	});
+</script>
+<div class="main_div">
+	<h3>商品管理</h3>
+	<hr>
+	<form class="stockOut">
+        <div class="row">
+            <div class="col-md-3">
+                商品编号:
+                <input class="form-control" id="productID" name="PRODUCT_ID" />
+            </div>
+            <div class="col-md-3">
+                商品类型:
+                <select  id="proCateType" name="PC_ID"  class="selectpicker show-tick">
+                    <option value="0">-- 请选择商品类型 --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                商品名称:
+                <input class="form-control"  name="PRODUCT_NAME" />
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                商品价格:
+                <div class="input-group">
+                  <input type="text" class="form-control" name="PRICE">
+                  <span class="input-group-addon">.00</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                生产厂家:
+                <input class="form-control" id="productID" name="MANUFACTURE_NAME" />
+            </div>
+            <div class="col-md-3">
+                生产日期:
+                 <input id="maDate" class="form-control" size="16" type="text">
+            </div>
+        </div>
+    </form>
+</div>

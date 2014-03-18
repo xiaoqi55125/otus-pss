@@ -58,6 +58,42 @@ exports.pro_cate = function (req, res, next) {
   res.render('subview/pro_cate');
 }
 
+/**
+ * stockOut page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.stockOut = function (req, res, next) {
+  debugCtrller("/controller/render/stockOut");
+  res.render('subview/stockOut');
+}
+
+/**
+ * stockIn page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.stockIn = function (req, res, next) {
+  debugCtrller("/controller/render/stockIn");
+  res.render('subview/stockIn');
+}
+
+/**
+ * products page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.products = function (req, res, next) {
+  debugCtrller("/controller/render/products");
+  res.render('subview/products');
+}
+
 
 
 
