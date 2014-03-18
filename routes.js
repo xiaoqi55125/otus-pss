@@ -42,7 +42,11 @@ module.exports = function (app) {
      * ----------------------------------- page ----------------------------- *
      */
     app.get("/",pssRender.index);
+    app.get("/stockOut",pssRender.stockOut);
+    app.get("/stockIn",pssRender.stockIn);
     app.get("/pro_cate",pssRender.pro_cate);
+    app.get("/products",pssRender.products);
+
     
     
     /**
