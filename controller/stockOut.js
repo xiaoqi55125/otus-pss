@@ -21,3 +21,61 @@
   Time: 11:48 AM
   Desc: the controller of stock out
  */
+
+var StockOut = require("../proxy").StockOut;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+var async    = require("async");
+
+/**
+ * add a new stock out
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.stockOut = function (req, res, next) {
+    debugCtrller("controller/stockOut/stockOut");
+
+    var stockOutInfo    = {};
+    var productsJSonStr = req.body.jsonStr || "";
+
+    try {
+        check(productsJSonStr).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    var productsJsonObj = JSON.parse(productsJSonStr);
+    var serial_num      = util.GUID();
+
+    var warppedObjArr = productsJsonObj.data.map(function (item) {
+        item.SERIAL_NUM = serial_num;
+        item.SO_ID      = util.GUID();
+        return item;
+    });
+
+    stockOutInfo.productList = warppedObjArr;
+
+    async.series([
+        //step 1:
+        function (callback) {
+            StockOut.doStockOut(stockOutInfo, function (err, data) {
+                callback(err, null);
+            });
+        },
+        //step 2:
+        function (callback) {
+            StockOut.writeStockOutJournal(productsJSonStr, function (err, data) {
+                callback(err, null);
+            });
+        }
+    ],  function (err, values) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+};

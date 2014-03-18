@@ -85,7 +85,7 @@ module.exports = function (app) {
     // //stock out
     // app.get("/stockouts", stockOutCtrller.findAll);
     // app.get("/stockouts/:sn", stockOutCtrller.findOne);
-    // app.post("/stockouts", stockOutCtrller.stockOut);
+    app.post("/stockouts", stockOutCtrller.stockOut);
     // app.delete("/stockouts", stockOutCtrller.delete);
 
     //inventory
