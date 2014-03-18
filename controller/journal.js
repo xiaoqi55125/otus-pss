@@ -21,3 +21,46 @@
   Time: 11:48 AM
   Desc: the controller of journal
  */
+
+var Journal  = require("../proxy").Journal;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+
+/**
+ * find journal - multi query
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findJournal = function (req, res, next) {
+    debugCtrller("controller/journal/findJournal");
+
+    var queryConditions       = {};
+    queryConditions.jtId      = req.query.jtId || "";
+    queryConditions.productId = req.query.productId || "";
+    queryConditions.from_dt   = req.query.from_dt || "";
+    queryConditions.to_dt     = req.query.to_dt || "";
+
+    console.dir(queryConditions);
+
+    try {
+        sanitize(sanitize(queryConditions.jtId).trim()).xss();
+        sanitize(sanitize(queryConditions.productId).trim()).xss();
+        sanitize(sanitize(queryConditions.from_dt).trim()).xss();
+        sanitize(sanitize(queryConditions.to_dt).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Journal.getJournalWithQueryConditions(queryConditions, function (err, data) {
+         if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+
+};

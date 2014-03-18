@@ -21,3 +21,48 @@
   Time: 11:48 AM
   Desc: the proxy of journal
  */
+
+var mysqlClient = require("../lib/mysqlUtil");
+
+/**
+ * multi query for journal
+ * @param  {Object}   queryConditions   the query conditions
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getJournalWithQueryConditions = function (queryConditions, callback) {
+    debugProxy("proxy/journal/createJournal");
+
+    var sql = 'SELECT * FROM JOURNAL WHERE 1 = 1 ';
+
+    if (queryConditions) {
+        if (queryConditions.jtId) {
+            sql += (' AND JT_ID = "' + queryConditions.jtId + '" ');
+        }
+
+        if (queryConditions.productId) {
+            sql += (' AND JOURNAL_CONTENT LIKE "%' + queryConditions.productId + '%"')
+        }
+
+        if (queryConditions.from_dt && queryConditions.to_dt) {
+            sql += (' AND DATETIME BETWEEN "' + queryConditions.from_dt + '" AND "' + queryConditions.to_dt + '"');
+        } else if (queryConditions.from_dt) {
+            SQL += (' AND DATETIME >= "' + queryConditions.from_dt + '"');
+        } else if (queryConditions.to_dt) {
+            SQL += (' AND DATETIME <= "' + queryConditions.to_dt + '"');
+        }
+    }
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : queryConditions
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[createJournal error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
+

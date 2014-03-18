@@ -97,8 +97,9 @@ module.exports = function (app) {
     app.post("/journaltypes", journalTypeCtrller.add);
     app.put("/journaltypes/:jtId", journalTypeCtrller.modify);
 
-    //journal
-    // app.get("/journals", journalCtrller.findAll);
+    //journal  
+    //params : jtId=:jtId&productId=:productId&from_dt=:from_dt&to_dt=:to_dt
+    app.get("/journals", journalCtrller.findJournal);
 
 }
 
