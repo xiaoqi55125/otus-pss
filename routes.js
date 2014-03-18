@@ -89,7 +89,7 @@ module.exports = function (app) {
     // app.delete("/stockouts", stockOutCtrller.delete);
 
     //inventory
-    // app.get("/inventories", inventoryCtrller.findAll);
+    app.get("/inventories", inventoryCtrller.findAll);
 
     //journal type
     app.get("/journaltypes", journalTypeCtrller.findAll);
