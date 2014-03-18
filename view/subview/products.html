@@ -1,16 +1,16 @@
 <head>
 <!-- script -->
-<%- Loader("/public/javascript/stockOut.min.js")
+<%- Loader("/public/javascript/product.min.js")
 	.js("/public/javascript/bootstrap-select.js")
 	.js("/public/javascript/bootstrap-datepicker.js")
 	.js("/public/javascript/bootbox.min.js")
-	.js("/public/javascript/stockOut.js")
+	.js("/public/javascript/product.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
     .js("/public/javascript/locales/bootstrap-datepicker.zh-CN.js")
 	.done(assets)
 	%>
 <!-- style -->
-<%- Loader("/public/stylesheet/stockOut.min.css")
+<%- Loader("/public/stylesheet/product.min.css")
 	.css("/public/stylesheet/bootstrap-select.css")
 	.css("/public/stylesheet/datepicker3.css")
 	.css("/public/stylesheet/simplePagination.css")
@@ -19,10 +19,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#proCateType').selectpicker();
+		//$('#proCateType').selectpicker();
+        getProductCates();
+        getProducts();
         $('#productID').focus();
         $('#maDate').datepicker({
-            language: "zh-CN",
             autoclose: true,
             todayHighlight: true
         });
@@ -31,7 +32,7 @@
 <div class="main_div">
 	<h3>商品管理</h3>
 	<hr>
-	<form class="stockOut">
+	<form class="productAdd">
         <div class="row">
             <div class="col-md-3">
                 商品编号:
@@ -53,18 +54,43 @@
             <div class="col-md-3">
                 商品价格:
                 <div class="input-group">
-                  <input type="text" class="form-control" name="PRICE">
+                  <input type="text" class="form-control" id="proPrice" name="PRICE">
                   <span class="input-group-addon">.00</span>
                 </div>
             </div>
             <div class="col-md-3">
                 生产厂家:
-                <input class="form-control" id="productID" name="MANUFACTURE_NAME" />
+                <input class="form-control"  name="MANUFACTURE_NAME" />
             </div>
             <div class="col-md-3">
                 生产日期:
                  <input id="maDate" class="form-control" size="16" type="text">
             </div>
         </div>
+        <div class="row">
+             <div class="col-md-3">
+                <button type="button" class="btn btn-primary" style="margin-top:10px" onclick="addProduct()">确定录入商品</button>
+            </div>
+        </div>
     </form>
+    <div>
+        <h3>现有商品</h3>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>价格</th>
+                    <th>生产商</th>
+                    <th>生产批号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id='pd_listView'>
+
+            </tbody>
+        </table>
+        <div id='paginator_div' style="float:left;padding-top:10px" ></div>
+    </div>
+    
 </div>
