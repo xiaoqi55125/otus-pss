@@ -85,11 +85,11 @@ module.exports = function (app) {
     // //stock out
     // app.get("/stockouts", stockOutCtrller.findAll);
     // app.get("/stockouts/:sn", stockOutCtrller.findOne);
-    // app.post("/stockouts", stockOutCtrller.stockOut);
+    app.post("/stockouts", stockOutCtrller.stockOut);
     // app.delete("/stockouts", stockOutCtrller.delete);
 
     //inventory
-    // app.get("/inventories", inventoryCtrller.findAll);
+    app.get("/inventories", inventoryCtrller.findAll);
 
     //journal type
     app.get("/journaltypes", journalTypeCtrller.findAll);
@@ -97,8 +97,9 @@ module.exports = function (app) {
     app.post("/journaltypes", journalTypeCtrller.add);
     app.put("/journaltypes/:jtId", journalTypeCtrller.modify);
 
-    //journal
-    // app.get("/journals", journalCtrller.findAll);
+    //journal  
+    //params : jtId=:jtId&productId=:productId&from_dt=:from_dt&to_dt=:to_dt
+    app.get("/journals", journalCtrller.findJournal);
 
 }
 

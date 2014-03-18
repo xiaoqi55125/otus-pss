@@ -22,3 +22,40 @@
   Desc: the proxy of inventory
  */
 
+var mysqlClient = require("../lib/mysqlUtil");
+
+/**
+ * get all inventory
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getAllInventories = function (callback, pagingInfo) {
+    debugProxy("proxy/inventory/getAllInventories");
+
+    var sql = "";
+    var params = {};
+
+    if (pagingInfo) {
+        sql                  = "SELECT * FROM INVENTORY I " +
+                               "  LEFT JOIN PRODUCT P ON I.PRODUCT_ID = P.PRODUCT_ID " +
+                               " LIMIT :start, :end ";
+        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
+        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
+        params.end           = config.default_page_size;
+    } else {
+        sql = "SELECT * FROM INVENTORY I " +
+              "  LEFT JOIN PRODUCT P ON I.PRODUCT_ID = P.PRODUCT_ID ";
+    }
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : params
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getAllInventories error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};

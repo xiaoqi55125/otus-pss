@@ -21,3 +21,28 @@
   Time: 15:15 PM
   Desc: the controller of inventory
  */
+
+var Inventory = require("../proxy").Inventory;
+var util      = require("../lib/util");
+var config    = require("../appConfig").config;
+var check     = require("validator").check;
+var sanitize  = require("validator").sanitize;
+
+/**
+ * find all inventory list
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findAll = function (req, res, next) {
+    debugCtrller("controller/inventory/findAll");
+
+    Inventory.getAllInventories(function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null. err.statusCode));
+        }
+         
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
