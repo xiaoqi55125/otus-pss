@@ -75,7 +75,7 @@ module.exports = function (app) {
     // //stock in
     // app.get("/stockins", stockInCtrller.findAll);         //distinct serial number
     // app.get("/stockins/:sn", stockInCtrller.findOne);     //find by serial number
-    // app.post("/stockins", stockInCtrller.stockIn);
+    app.post("/stockins", stockInCtrller.stockIn);
     // app.delete("/stockins/:sn", stockInCtrller.delete);
 
     // //stock out

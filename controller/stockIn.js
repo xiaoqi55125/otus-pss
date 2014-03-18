@@ -21,3 +21,73 @@
   Time: 11:48 AM
   Desc: the controller of stock in
  */
+
+var StockIn  = require("../proxy").StockIn;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+var async    = require("async");
+
+/**
+ * add a new stockIn
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.stockIn = function (req, res, next) {
+    debugCtrller("controller/stockIn/stockIn");
+
+    var stockInInfo     = {};
+    var productsJSonStr = req.body.jsonStr || "";
+
+    try {
+        check(productsJSonStr).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    var productsJsonObj = JSON.parse(productsJSonStr);
+    var serial_num      = util.GUID();
+    
+    var warppedObjArr = productsJsonObj.data.map(function (item) {
+        item.SERIAL_NUM = serial_num;
+        item.SI_ID      = util.GUID();
+        return item;
+    });
+
+    stockInInfo.productList = warppedObjArr;
+
+    async.series([
+        //step 1:
+        function (callback) {
+            StockIn.doStockIn(stockInInfo, function (err, data) {
+                callback(err, null);
+            });
+        },
+        function (callback) {
+            StockIn.writeStockInJournal(productsJSonStr, function (err, data) {
+                callback(err, null);
+            });
+        }
+    ],  function (err, values) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+
+};
+
+/**
+ * modify a stockIn
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.modify = function (req, res, next) {
+    debugCtrller("controller/stockIn/modify");
+
+};

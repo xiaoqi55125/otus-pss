@@ -7,7 +7,7 @@
   "dependencies": {
     "express": "*",
     "express-partials": "*",
-    "mysql": "2.0.0-alpha9",
+    "mysql": "2.0.0-rc2",
     "async": "*",
     "validator": "1.5.1",
     "ejs": "0.8.4",
