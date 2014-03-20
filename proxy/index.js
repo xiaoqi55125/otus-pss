@@ -31,3 +31,4 @@ exports.ProductCategory = require("./productCategory");
 exports.StockIn         = require("./stockIn");
 exports.StockOut        = require("./stockOut");
 exports.User            = require("./user");
+exports.Order           = require("./order");

@@ -30,6 +30,7 @@ var stockInCtrller         = require("./controller/stockIn");
 var stockOutCtrller        = require("./controller/stockOut");
 var userCtrller            = require("./controller/user");
 var inventoryCtrller       = require("./controller/inventory");
+var orderCtrller           = require("./controller/order");
 var pssRender              = require('./controller/render');
 
 module.exports = function (app) {
@@ -91,6 +92,10 @@ module.exports = function (app) {
     //inventory
     app.get("/inventories", inventoryCtrller.findAll);
     app.get("/inventories/:productId/num", inventoryCtrller.findNum);
+
+    //order
+    app.get("/orders", orderCtrller.findAll);
+    app.post("/orders", orderCtrller.add);
 
     //journal type
     app.get("/journaltypes", journalTypeCtrller.findAll);
