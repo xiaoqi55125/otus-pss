@@ -1,0 +1,77 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/StockOut.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/StockOut.js")
+    .js("/public/javascript/moment.min.js")
+	.js("/public/javascript/jquery.fs.stepper.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/StockOut.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.css("/public/stylesheet/jquery.fs.stepper.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		getALLOrders (); 
+	});
+</script>
+<div class="main_div">
+	<h3>当前未发货订单</h3>
+	<hr>
+	<table id="bookListStockOut" class="table table-striped">
+        <thead>
+            <tr>
+                <th>客户名称</th>
+                <th>订单生成时间</th>
+                <th>备注</th>
+                <th>发货出库</th>
+            </tr>
+        </thead>
+        <tbody id='add_listView'>
+
+        </tbody>
+    </table>
+
+    <h3>已发货订单</h3>
+    <hr>
+    <table id="bookListStockOutAlready" class="table table-striped">
+        <thead>
+            <tr>
+                <th>客户名称</th>
+                <th>订单生成时间</th>
+                <th>备注</th>
+                <th>查看详情</th>
+            </tr>
+        </thead>
+        <tbody id='add_listView_already'>
+            
+        </tbody>
+    </table>
+
+
+
+    <div class="modal fade" id="checkBookList" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">订单确认</h4>
+                </div>
+                <div class="modal-body" id="bookListInfo">
+                    
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>

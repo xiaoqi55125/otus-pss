@@ -63,7 +63,7 @@ describe('test for /controller/order.js', function () {
         
         var params = {
             jsonStr         : jsonStr,
-            CUSTOMER_NAME   : "志程必败有限公司",
+            CUSTOMER_NAME   : "杨华hot tokyo株式会社",
             REMARK          : ""
         };
 

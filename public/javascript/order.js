@@ -35,7 +35,6 @@ function addProductToList() {
 	if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
 	{   
 		$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
-		
 	}else{
 		row.append(cellName);
 		row.append(cellPRICE);
@@ -49,7 +48,7 @@ function addProductToList() {
 	
 }
 
-function submitStockOut () {
+function submitOrder () {
 	//without check 
 	//alert($("#add_listView").children());
 	//$ttd[i].eq(0).find('input').val()
@@ -69,13 +68,13 @@ function submitStockOut () {
 	obj["data"] = datas; 
 	var jsonString = JSON.stringify(obj); 
 	$.ajax({
-		url:'/stockouts',
+		url:'/orders',
 		type:'POST',
 		data:{"jsonStr":jsonString},
 		dataType: 'json',
 		success: function (data) {
 			if (data.statusCode === 0) {
-				bootbox.alert("出库成功", function() {
+				bootbox.alert("添加订单成功", function() {
 				  $("#add_listView").html("");
 				});
 			};
