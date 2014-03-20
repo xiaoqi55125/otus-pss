@@ -85,9 +85,9 @@ exports.getProductCategoryById = function (pcId, callback) {
 
         if (rows && rows.length > 0) {
             return callback(null, rows[0]);
-        } else {
-            return callback(new DataNotFoundError(), null);
         }
+
+        return callback(new DataNotFoundError(), null);
     });
 };
 
