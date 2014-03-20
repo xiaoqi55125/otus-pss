@@ -32,7 +32,7 @@ describe('test for /controller/stockIn.js', function () {
 
     it('is testing func: /stockins', function (done) {
         var jsonStr = '{ "data" : [' +
-        '{"PRODUCT_ID":"12345678", "NUM":3, "AMOUNT":2000, "SUPPLIER":"MICROSOFT", "SI_DATE":"2014-03-17 01:01:01", "REMARK":""},' +
+        '{"PRODUCT_ID":"12345678", "NUM":3, "AMOUNT":2000, "SUPPLIER":"MICROSOFT", "REMARK":""},' +
         '{"PRODUCT_ID":"43890f6c-eb7f-d253-14c4-36d44ffeb265", "NUM":10, "AMOUNT":5000, "SUPPLIER":"APPLE", "SI_DATE":"2014-03-18 01:01:01", "REMARK":""}' +
         ']}';
         var param = {

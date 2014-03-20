@@ -28,6 +28,7 @@ var config   = require("../appConfig").config;
 var check    = require("validator").check;
 var sanitize = require("validator").sanitize;
 var async    = require("async");
+require("../lib/DateUtil");
 
 /**
  * add a new stock out
@@ -53,6 +54,7 @@ exports.stockOut = function (req, res, next) {
     var warppedObjArr = productsJsonObj.data.map(function (item) {
         item.SERIAL_NUM = serial_num;
         item.SO_ID      = util.GUID();
+        item.SO_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
         return item;
     });
 
