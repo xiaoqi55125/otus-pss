@@ -84,7 +84,7 @@ exports.add = function (req, res, next) {
     debugCtrller("controller/product/add");
 
     var productObj              = {};
-    productObj.PRODUCT_ID       = util.GUID();
+    productObj.PRODUCT_ID       = req.body.PRODUCT_ID || "";
     productObj.PRODUCT_NAME     = req.body.PRODUCT_NAME || "";
     productObj.PRICE            = req.body.PRICE || "";
     productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";

@@ -15,15 +15,12 @@ var tdCont = {
 
 function addandEditPcType (add,pcId) {
 	//without check 
-	var urlData , url ,type ,successStr;
-
+	var url ,type ,successStr;
 	if (add == 1) {
-		urlData = {'PC_NAME':$("#pc_name").val(),'REMARK':$("#pc_remark").val()};
 		url = "/productcategories";
 		type = "POST";
 		successStr = "添加商品类别成功!";
 	}else{
-		urlData = {'PC_NAME':$("#pc_name").val(),'REMARK':$("#pc_remark").val()};
 		url = "/productcategories/"+pcId;
 		type = "PUT";
 		successStr = "修改商品类别成功!";
@@ -31,7 +28,7 @@ function addandEditPcType (add,pcId) {
 	$.ajax({
 		url:url,
 		type:type,
-		data:urlData,
+		data:{'PC_NAME':$("#pc_name").val(),'REMARK':$("#pc_remark").val()},
 		success:function (data) {
 			if (data.statusCode === 0) {
 				bootbox.alert(successStr, function() {
