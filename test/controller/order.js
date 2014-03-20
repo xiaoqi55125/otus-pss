@@ -65,5 +65,28 @@ describe('test for /controller/order.js', function () {
         });
     });
 
+    it('is testing func: /orders', function(done) {
+        var jsonStr = '{ "data" : [' +
+        '{"PRODUCT_ID":"43890f6c-eb7f-d253-14c4-36d44ffeb265", "NUM":10, "AMOUNT":5000, "OPERATOR":"12345678", "SO_DATE":"2014-03-18 01:01:01", "REMARK":""}' +
+        ']}';
+        
+        var params = {
+            jsonStr         : jsonStr,
+            CUSTOMER_NAME   : "志程必败有限公司!",
+            REMARK          : "test",
+            ORDER_ID        : "12345678"
+        };
+
+        request(app).put("/orders").send(params).expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+    });
+
 });
 

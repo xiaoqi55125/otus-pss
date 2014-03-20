@@ -59,8 +59,8 @@ exports.getAllOrders = function (callback, pagingInfo) {
 };
 
 /**
- * get all product list
- * @param {Object}    orderInfo the creating order info
+ * create a new order
+ * @param  {Object}    orderInfo the creating order info
  * @param  {Function} callback callback func
  * @return {null}            
  */
@@ -82,5 +82,30 @@ exports.createOrder = function (orderInfo, callback) {
     });
 };
 
+/**
+ * modify a order
+ * @param  {Object}    orderInfo the creating order info
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.modifyOrder = function (orderInfo, callback) {
+    debugProxy("proxy/order/modifyOrder");
 
+    var sql = "UPDATE ORDERS SET ORDER_CONTENT = :ORDER_CONTENT, " + 
+              "              CUSTOMER_NAME = :CUSTOMER_NAME, " + 
+              "              DATETIME = :DATETIME, " + 
+              "              REMARK = :REMARK WHERE ORDER_ID = :ORDER_ID";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : orderInfo
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[createOrder error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
 

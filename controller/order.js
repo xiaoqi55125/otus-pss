@@ -72,7 +72,7 @@ exports.add = function (req, res, next) {
 
     orderInfo.ORDER_ID      = util.GUID();
     orderInfo.DATETIME      = new Date().Format("yyyy-MM-dd hh:mm:ss");
-    orderInfo.ORDER_CONTENT = productsJSonStr
+    orderInfo.ORDER_CONTENT = productsJSonStr;
 
     Order.createOrder(orderInfo, function (err, data) {
         if (err) {
@@ -83,4 +83,38 @@ exports.add = function (req, res, next) {
     });
 };
 
+/**
+ * modify a order
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.modify = function (req, res, next) {
+    debugCtrller("controller/order/add");
 
+    var orderInfo           = {};
+    orderInfo.ORDER_ID      = req.body.ORDER_ID || "";
+    var productsJSonStr     = req.body.jsonStr || "";
+    orderInfo.CUSTOMER_NAME = req.body.CUSTOMER_NAME || "";
+    orderInfo.REMARK        = req.body.REMARK || "";
+
+    try {
+        check(orderInfo.ORDER_ID).notEmpty();
+        check(productsJSonStr).notEmpty();
+        //check json structure
+        JSON.parse(productsJSonStr);
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    orderInfo.DATETIME      = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    orderInfo.ORDER_CONTENT = productsJSonStr;
+
+    Order.modifyOrder(orderInfo, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
+    });
+};
