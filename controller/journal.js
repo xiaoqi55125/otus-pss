@@ -44,8 +44,6 @@ exports.findJournal = function (req, res, next) {
     queryConditions.from_dt   = req.query.from_dt || "";
     queryConditions.to_dt     = req.query.to_dt || "";
 
-    console.dir(queryConditions);
-
     try {
         sanitize(sanitize(queryConditions.jtId).trim()).xss();
         sanitize(sanitize(queryConditions.productId).trim()).xss();
