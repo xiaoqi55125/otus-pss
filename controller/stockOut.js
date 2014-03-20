@@ -23,6 +23,7 @@
  */
 
 var StockOut = require("../proxy").StockOut;
+var Order    = require("../proxy").Order;
 var util     = require("../lib/util");
 var config   = require("../appConfig").config;
 var check    = require("validator").check;
@@ -39,37 +40,53 @@ require("../lib/DateUtil");
 exports.stockOut = function (req, res, next) {
     debugCtrller("controller/stockOut/stockOut");
 
-    var stockOutInfo    = {};
-    var productsJSonStr = req.body.jsonStr || "";
+    var orderId = req.body.orderId || "";
 
     try {
-        check(productsJSonStr).notEmpty();
+        check(orderId).notEmpty();
+        sanitize(sanitize(orderId).trim()).xss();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var productsJsonObj = JSON.parse(productsJSonStr);
-    var serial_num      = util.GUID();
-
-    var warppedObjArr = productsJsonObj.data.map(function (item) {
-        item.SERIAL_NUM = serial_num;
-        item.SO_ID      = util.GUID();
-        item.SO_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
-        return item;
-    });
-
-    stockOutInfo.productList = warppedObjArr;
-
-    async.series([
+    async.waterfall([
         //step 1:
         function (callback) {
-            StockOut.doStockOut(stockOutInfo, function (err, data) {
-                callback(err, null);
+            //get order by id
+            Order.getOrderById(orderId, function (err, data) {
+                if (err || !data) {
+                    return callback(err, null);
+                } else {
+                    var productsJsonObj = JSON.parse(data["ORDER_CONTENT"]);
+
+                    var warppedObjArr = productsJsonObj.data.map(function (item) {
+                        item.ORDER_ID   = orderId;
+                        item.SO_ID      = util.GUID();
+                        item.SO_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
+                        return item;
+                    });
+
+                    var stockOutInfo = {};
+                    stockOutInfo.productList = warppedObjArr;
+                    return callback(err, stockOutInfo);
+                }
             });
         },
         //step 2:
+        function (stockOutInfo, callback) {
+            StockOut.doStockOut(stockOutInfo, function (err, data) {
+                callback(err);
+            });
+        },
+        //step 3:     //change order status
         function (callback) {
-            StockOut.writeStockOutJournal(productsJSonStr, function (err, data) {
+            Order.changeOrderStatus(orderId, 1, function (err, data) {
+                callback(err);
+            });
+        },
+        //step 4:
+        function (callback) {
+            StockOut.writeStockOutJournal(orderId, function (err, data) {
                 callback(err, null);
             });
         }
