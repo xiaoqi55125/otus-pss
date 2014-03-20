@@ -49,6 +49,33 @@ exports.findAll = function (req, res, next) {
 };
 
 /**
+ * find order by orderId
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.findOne = function (req, res, next) {
+    debugCtrller("controller/order/findOne");
+
+    var orderId = req.params.orderId || "";
+
+    try {
+        check(orderId).notEmpty();
+        sanitize(sanitize(orderId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Order.getOrderById(orderId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
+
+/**
  * add a new order
  * @param {Object}   req  the instance of request
  * @param {Object}   res  the instance of response
@@ -90,7 +117,7 @@ exports.add = function (req, res, next) {
  * @param {Function} next the next handler
  */
 exports.modify = function (req, res, next) {
-    debugCtrller("controller/order/add");
+    debugCtrller("controller/order/modify");
 
     var orderInfo           = {};
     orderInfo.ORDER_ID      = req.body.ORDER_ID || "";

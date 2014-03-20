@@ -96,6 +96,7 @@ module.exports = function (app) {
 
     //order
     app.get("/orders", orderCtrller.findAll);
+    app.get("/orders/:orderId", orderCtrller.findOne);
     app.post("/orders", orderCtrller.add);
     app.put("/orders", orderCtrller.modify);
 

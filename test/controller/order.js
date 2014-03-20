@@ -42,6 +42,19 @@ describe('test for /controller/order.js', function () {
         });
     });
 
+    it('is testing func: /orders/:orderId', function (done) {
+        request(app).get("/orders/12345678").expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+            should(res.body.data).have.property("ORDER_ID","12345678");
+
+            done();
+        });
+    });
+
     it('is testing func: /orders', function(done) {
         var jsonStr = '{ "data" : [' +
         '{"PRODUCT_ID":"12345678", "NUM":3, "AMOUNT":2000, "OPERATOR":"12345678", "REMARK":""},' +

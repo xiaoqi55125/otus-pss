@@ -59,6 +59,41 @@ exports.getAllOrders = function (callback, pagingInfo) {
 };
 
 /**
+ * get order by id
+ * @param  {string}   orderId   the order id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getOrderById = function (orderId, callback) {
+    debugProxy("proxy/order/getOrderById");
+
+    orderId = orderId || "";
+
+    if (orderId.length === 0) {
+        return callback(new InvalidParamError(), null);
+    }
+
+    mysqlClient.query({
+        sql : "SELECT * FROM ORDERS " +
+              " WHERE ORDER_ID = :ORDER_ID",
+        params : {
+            "ORDER_ID"  : orderId
+        }
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getOrderById error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        if (rows && rows.length > 0) {
+            return callback(null, rows[0]);
+        } 
+
+        return callback(null, rows);
+    });
+};
+
+/**
  * create a new order
  * @param  {Object}    orderInfo the creating order info
  * @param  {Function} callback callback func
