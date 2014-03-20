@@ -59,3 +59,25 @@ exports.getAllInventories = function (callback, pagingInfo) {
         return callback(null, rows);
     });
 };
+
+/**
+ * get a product num with product id
+ * @param {String} productId the product id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getProductNumWithId = function (productId, callback) {
+    debugProxy("proxy/inventory/getProductNumWithId");
+
+    mysqlClient.query({
+        sql   : "SELECT NUM FROM INVENTORY WHERE PRODUCT_ID = '" + productId + "'",
+        params: null
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[getProductNumWithId error]: %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows[0]['NUM']);
+    });
+};

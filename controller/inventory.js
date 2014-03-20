@@ -46,3 +46,31 @@ exports.findAll = function (req, res, next) {
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * find a product's num with product id
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findNum = function (req, res, next) {
+    debugCtrller("controller/inventory/findNum");
+
+    var productId = req.params.productId;
+
+    try {
+        check(productId).notEmpty();
+        sanitize(sanitize(productId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Inventory.getProductNumWithId(productId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(err, data));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
