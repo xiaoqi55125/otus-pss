@@ -100,14 +100,27 @@ exports.add = function (req, res, next) {
     orderInfo.ORDER_ID      = util.GUID();
     orderInfo.DATETIME      = new Date().Format("yyyy-MM-dd hh:mm:ss");
     orderInfo.ORDER_CONTENT = productsJSonStr;
+    orderInfo.IS_STOCKOUT   = 0;                //has not stock out
 
-    Order.createOrder(orderInfo, function (err, data) {
+    async.series([
+        function (callback) {
+            Order.createOrder(orderInfo, function (err, data) {
+                callback(err, data);
+            });
+        },
+        function (callback) {
+            Order.writeOrderJournal(JSON.stringify(orderInfo), "C", function (err, data) {
+                callback(err, data);
+            });
+        }
+    ],  function (err, results) {
         if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }
 
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
     });
+    
 };
 
 /**
@@ -124,6 +137,7 @@ exports.modify = function (req, res, next) {
     var productsJSonStr     = req.body.jsonStr || "";
     orderInfo.CUSTOMER_NAME = req.body.CUSTOMER_NAME || "";
     orderInfo.REMARK        = req.body.REMARK || "";
+    orderInfo.IS_STOCKOUT   = req.body.IS_STOCKOUT || 0;
 
     try {
         check(orderInfo.ORDER_ID).notEmpty();
@@ -137,7 +151,18 @@ exports.modify = function (req, res, next) {
     orderInfo.DATETIME      = new Date().Format("yyyy-MM-dd hh:mm:ss");
     orderInfo.ORDER_CONTENT = productsJSonStr;
 
-    Order.modifyOrder(orderInfo, function (err, data) {
+    async.series([
+        function (callback) {
+            Order.modifyOrder(orderInfo, function (err, data) {
+                callback(err, data);
+            });
+        },
+        function (callback) {
+            Order.writeOrderJournal(JSON.stringify(orderInfo), "U", function (err, data) {
+                callback(err, data);
+            });
+        }
+    ],  function (err, results) {
         if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }

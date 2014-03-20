@@ -23,6 +23,8 @@
  */
 
 var mysqlClient = require("../lib/mysqlUtil");
+var async       = require("async");
+var util        = require("../lib/util");
 
 /**
  * get all product list
@@ -102,7 +104,7 @@ exports.getOrderById = function (orderId, callback) {
 exports.createOrder = function (orderInfo, callback) {
     debugProxy("proxy/order/createOrder");
 
-    var sql = "INSERT INTO ORDERS VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :REMARK);"
+    var sql = "INSERT INTO ORDERS VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :IS_STOCKOUT, :REMARK);"
 
     mysqlClient.query({
         sql     : sql,
@@ -129,6 +131,7 @@ exports.modifyOrder = function (orderInfo, callback) {
     var sql = "UPDATE ORDERS SET ORDER_CONTENT = :ORDER_CONTENT, " + 
               "              CUSTOMER_NAME = :CUSTOMER_NAME, " + 
               "              DATETIME = :DATETIME, " + 
+              "              IS_STOCKOUT = :IS_STOCKOUT, " + 
               "              REMARK = :REMARK WHERE ORDER_ID = :ORDER_ID";
 
     mysqlClient.query({
@@ -142,5 +145,78 @@ exports.modifyOrder = function (orderInfo, callback) {
 
         return callback(null, null);
     });
+};
+
+/**
+ * change order status
+ * @param {String} orderId the order's id
+ * @param  {Number}   newStatus the order's new status
+ * @param  {Function} callback  the cb func
+ * @return {null}             
+ */
+exports.changeOrderStatus = function (orderId, newStatus, callback) {
+    debugProxy("proxy/order/modifchangeOrderStatusyOrder");
+
+    var sql = "UPDATE ORDERS SET IS_STOCKOUT = :IS_STOCKOUT " + 
+              "               WHERE ORDER_ID = :ORDER_ID";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : {
+            IS_STOCKOUT   : newStatus,
+            ORDER_ID      : orderId
+        }
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[createOrder error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
+
+/**
+ * write order action to journal
+ * @param {String} journalContent the content of journal
+ * @param {String} status the status of order C/U/D
+ * @return {null} 
+ */
+exports.writeOrderJournal = function (journalContent, status, callback) {
+    debugProxy("proxy/order/writeOrderJournal");
+
+    async.waterfall([
+        //step 1
+        function (callback) {
+            mysqlClient.query({
+                sql   : "SELECT JT_ID FROM JOURNAL_TYPE WHERE JT_NAME = 'ORDERS'",
+                params : null
+            }, function (err, rows) {
+                return callback(err, rows[0]['JT_ID']);
+            });
+        },
+        //step 2
+        function (JT_ID, callback) {
+            mysqlClient.query({
+                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :DATETIME, :REMARK)",
+                params  : {
+                    JOURNAL_ID      : util.GUID(),
+                    JT_ID           : JT_ID,
+                    JOURNAL_CONTENT : journalContent,
+                    DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
+                    REMARK          : status
+                }
+            },  function (err, rows) {
+                return callback(err, null);
+            });
+        }
+    ],  function (err, result) {
+        if (err) {
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
+    
 };
 
