@@ -1,6 +1,6 @@
 var tdCont = {
   cell: function(item) {
-    return $("<td></td>").html(item);
+    return $("<td style='line-height: 35px;'></td>").html(item);
   },
 
   row: function(pId) {
@@ -12,25 +12,22 @@ var tdCont = {
     }
   }
 };
+function removeTemp (pId) {
+	$("#"+pId).remove();
+}
+
 
 /**
  * add the temp to the book list
  */
 function addProductToList() {
 	//without check
-	//alert($("form.productAddTemp").serialize());
 	var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
-	//alert(qs.NUM);
 	var cellData = qs;
 	var row = tdCont.row(cellData.PRODUCT_ID);
-	var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
-
 	var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 	var cellPRICE = tdCont.cell(cellData.PRICE);
-	var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
-	//var cellAmount = tdCont.cell(cellData.AMOUNT);
-	//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
-	var cellSupplier = tdCont.cell(cellData.SUPPLIER);
+	var cellNum = tdCont.cell($("<input type='number' min='1' max='20' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
 	var cellRemark = tdCont.cell(cellData.REMARK);
 	var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 	EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
@@ -43,16 +40,16 @@ function addProductToList() {
 		row.append(cellName);
 		row.append(cellPRICE);
 		row.append(cellNum);
-		//row.append(cellAmount);
-		row.append(cellSupplier);
 		row.append(cellRemark);
 		row.append(EditLink);
 		$("#add_listView").append(row);
+		$("input[type='number']").stepper();
 	} 
+
 	
 }
 
-function submitStockIn () {
+function submitStockOut () {
 	//without check 
 	//alert($("#add_listView").children());
 	//$ttd[i].eq(0).find('input').val()
@@ -64,23 +61,21 @@ function submitStockIn () {
 		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
 		data["NUM"] = $($ttd).eq(2).find('input').val();
 		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
-		data["SUPPLIER"] = $($ttd[3]).html();
-		data["REMARK"] = $($ttd[4]).html();
+		data["OPERATOR"] = "12345678";
+		data["REMARK"] = $($ttd[3]).html();
 		datas.push(data); 
 	};
 	var obj = new Object();
 	obj["data"] = datas; 
 	var jsonString = JSON.stringify(obj); 
-	// var epc=eval("("+jsonString+")");  
-	// console.log(epc);
 	$.ajax({
-		url:'/stockins',
+		url:'/stockouts',
 		type:'POST',
 		data:{"jsonStr":jsonString},
 		dataType: 'json',
 		success: function (data) {
 			if (data.statusCode === 0) {
-				bootbox.alert("入库成功", function() {
+				bootbox.alert("出库成功", function() {
 				  $("#add_listView").html("");
 				});
 			};
@@ -88,8 +83,12 @@ function submitStockIn () {
 	})
 }
 
-function removeTemp (pId) {
-	$("#"+pId).remove();
+function checkBookList () {
+	$("#bookListStockOut").clone(true).appendTo("#bookListInfo");
+	$("#bookListInfo")
+	$('#checkBookList').modal({
+		backdrop: false
+	});
 }
 
 /**
@@ -115,12 +114,6 @@ function getProductOneInfo(pId) {
 		}
 	})
 }
-
-// function checkProductAndFill (pId) {
-// 	var pInfo = getProductOneInfo(pId);
-// 	alert(pInfo.PRODUCT_NAME);
-// }
-
 jQuery.extend({
   parseQuerystring: function(str){
     var nvpair = {};
