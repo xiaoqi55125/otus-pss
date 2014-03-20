@@ -90,6 +90,7 @@ module.exports = function (app) {
 
     //inventory
     app.get("/inventories", inventoryCtrller.findAll);
+    app.get("/inventories/:productId/num", inventoryCtrller.findNum);
 
     //journal type
     app.get("/journaltypes", journalTypeCtrller.findAll);
