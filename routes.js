@@ -100,6 +100,8 @@ module.exports = function (app) {
     app.get("/orders/:orderId", orderCtrller.findOne);
     app.post("/orders", orderCtrller.add);
     app.put("/orders", orderCtrller.modify);
+    app.get("/orders/:orderId/stockstatus", orderCtrller.findStockStatus);
+    app.put("/orders/:orderId/stockstatus", orderCtrller.modifyStockStatus);
 
     //journal type
     app.get("/journaltypes", journalTypeCtrller.findAll);
