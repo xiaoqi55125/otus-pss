@@ -83,6 +83,19 @@ exports.order = function (req, res, next) {
 }
 
 /**
+ * orderDetails page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.orderDetails = function (req, res, next) {
+  debugCtrller("/controller/render/orderDetails");
+  res.render('subview/orderDetails', {layout: false});
+}
+
+
+/**
  * stockIn page controller
  * @param  {object}   req  the instance of request
  * @param  {object}   res  the instance of response
