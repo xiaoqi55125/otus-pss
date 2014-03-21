@@ -77,7 +77,7 @@ exports.getOrderById = function (orderId, callback) {
 
     mysqlClient.query({
         sql : "SELECT * FROM ORDERS " +
-              " WHERE ORDER_ID = :ORDER_ID",
+              " WHERE ORDER_ID = :ORDER_ID ORDER BY STOCK_STATUS ",
         params : {
             "ORDER_ID"  : orderId
         }
@@ -96,6 +96,41 @@ exports.getOrderById = function (orderId, callback) {
 };
 
 /**
+ * get order stock status by id
+ * @param  {string}   orderId   the order id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getStockStatusByOrderId = function (orderId, callback) {
+    debugProxy("proxy/order/getStockStatusByOrderId");
+
+    orderId = orderId || "";
+
+    if (orderId.length === 0) {
+        return callback(new InvalidParamError(), null);
+    }
+
+    mysqlClient.query({
+        sql : "SELECT STOCK_STATUS FROM ORDERS " +
+              " WHERE ORDER_ID = :ORDER_ID ",
+        params : {
+            "ORDER_ID"  : orderId
+        }
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getOrderById error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        if (rows && rows.length > 0) {
+            return callback(null, rows[0]['STOCK_STATUS']);
+        } 
+
+        return callback(null, rows);
+    });
+};
+
+/**
  * create a new order
  * @param  {Object}    orderInfo the creating order info
  * @param  {Function} callback callback func
@@ -104,7 +139,7 @@ exports.getOrderById = function (orderId, callback) {
 exports.createOrder = function (orderInfo, callback) {
     debugProxy("proxy/order/createOrder");
 
-    var sql = "INSERT INTO ORDERS VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :IS_STOCKOUT, :REMARK);"
+    var sql = "INSERT INTO ORDERS VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :STOCK_STATUS, :REMARK);"
 
     mysqlClient.query({
         sql     : sql,
@@ -131,7 +166,7 @@ exports.modifyOrder = function (orderInfo, callback) {
     var sql = "UPDATE ORDERS SET ORDER_CONTENT = :ORDER_CONTENT, " + 
               "              CUSTOMER_NAME = :CUSTOMER_NAME, " + 
               "              DATETIME = :DATETIME, " + 
-              "              IS_STOCKOUT = :IS_STOCKOUT, " + 
+              "              STOCK_STATUS = :STOCK_STATUS, " + 
               "              REMARK = :REMARK WHERE ORDER_ID = :ORDER_ID";
 
     mysqlClient.query({
@@ -157,14 +192,18 @@ exports.modifyOrder = function (orderInfo, callback) {
 exports.changeOrderStatus = function (orderId, newStatus, callback) {
     debugProxy("proxy/order/modifchangeOrderStatusyOrder");
 
-    var sql = "UPDATE ORDERS SET IS_STOCKOUT = :IS_STOCKOUT " + 
+    if (!orderId || !newStatus) {
+        return callback(new DBError(), null);
+    }
+
+    var sql = "UPDATE ORDERS SET STOCK_STATUS = :STOCK_STATUS " + 
               "               WHERE ORDER_ID = :ORDER_ID";
 
     mysqlClient.query({
         sql     : sql,
         params  : {
-            IS_STOCKOUT   : newStatus,
-            ORDER_ID      : orderId
+            STOCK_STATUS    : newStatus,
+            ORDER_ID        : orderId
         }
     },  function (err, rows) {
         if (err) {

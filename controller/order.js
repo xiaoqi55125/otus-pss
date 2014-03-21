@@ -100,7 +100,7 @@ exports.add = function (req, res, next) {
     orderInfo.ORDER_ID      = util.GUID();
     orderInfo.DATETIME      = new Date().Format("yyyy-MM-dd hh:mm:ss");
     orderInfo.ORDER_CONTENT = productsJSonStr;
-    orderInfo.IS_STOCKOUT   = 0;                //has not stock out
+    orderInfo.STOCK_STATUS   = 0;                //has not stock out
 
     async.series([
         function (callback) {
@@ -137,7 +137,7 @@ exports.modify = function (req, res, next) {
     var productsJSonStr     = req.body.jsonStr || "";
     orderInfo.CUSTOMER_NAME = req.body.CUSTOMER_NAME || "";
     orderInfo.REMARK        = req.body.REMARK || "";
-    orderInfo.IS_STOCKOUT   = req.body.IS_STOCKOUT || 0;
+    orderInfo.STOCK_STATUS   = req.body.STOCK_STATUS || 0;
 
     try {
         check(orderInfo.ORDER_ID).notEmpty();
@@ -163,6 +163,64 @@ exports.modify = function (req, res, next) {
             });
         }
     ],  function (err, results) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
+    });
+};
+
+/**
+ * find a stock status with order id
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.findStockStatus = function (req, res, next) {
+    debugCtrller("controller/order/findStockStatus");
+
+    var orderId = req.params.orderId || "";
+
+    try {
+        check(orderId).notEmpty();
+        sanitize(sanitize(orderId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Order.getStockStatusByOrderId(orderId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
+    });
+};
+
+/**
+ * modify a stock status with order id
+ * @param {Object}   req  the instance of request
+ * @param {Object}   res  the instance of response
+ * @param {Function} next the next handler
+ */
+exports.modifyStockStatus = function (req, res, next) {
+    debugCtrller("controller/order/modifyStockStatus");
+
+    var orderId   = req.params.orderId || "";
+    var newStatus = req.body.STOCK_STATUS;
+
+    try {
+        check(orderId).notEmpty();
+        sanitize(sanitize(orderId).trim()).xss();
+
+        check(newStatus).notEmpty();
+        sanitize(sanitize(newStatus).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Order.changeOrderStatus(orderId, newStatus, function (err, data) {
         if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }

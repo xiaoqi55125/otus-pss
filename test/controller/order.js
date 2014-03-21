@@ -101,5 +101,35 @@ describe('test for /controller/order.js', function () {
         });
     });
 
+    it('is testing func: /orders/:orderId/stockstatus', function(done) {
+        request(app).get("/orders/12345678/stockstatus").expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+    });
+
+    it('is testing func: /orders/:orderId/stockstatus', function(done) {
+        
+        var params = {
+            STOCK_STATUS    : 2,
+            ORDER_ID        : "12345678"
+        };
+
+        request(app).put("/orders/12345678/stockstatus").send(params).expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+    });
+
 });
 
