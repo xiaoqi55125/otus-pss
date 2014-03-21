@@ -91,7 +91,8 @@ exports.order = function (req, res, next) {
  */
 exports.orderDetails = function (req, res, next) {
   debugCtrller("/controller/render/orderDetails");
-  res.render('subview/orderDetails', {layout: false});
+  var orderId = req.params.orderId || "";
+  res.render('subview/orderDetails', {layout: false,orderId:orderId});
 }
 
 

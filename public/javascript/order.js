@@ -27,7 +27,8 @@ function addProductToList() {
 	var row = tdCont.row(cellData.PRODUCT_ID);
 	var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 	var cellPRICE = tdCont.cell(cellData.PRICE);
-	var cellNum = tdCont.cell($("<input type='number' min='1' max='20' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
+	// max='20' 
+	var cellNum = tdCont.cell($("<input type='number' min='1' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
 	var cellRemark = tdCont.cell(cellData.REMARK);
 	var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 	EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
@@ -39,6 +40,7 @@ function addProductToList() {
 		row.append(cellName);
 		row.append(cellPRICE);
 		row.append(cellNum);
+		alert(cellData.REMARK);
 		row.append(cellRemark);
 		row.append(EditLink);
 		$("#add_listView").append(row);
@@ -58,6 +60,8 @@ function submitOrder () {
 		var $ttd = $ttr[i].cells;
 		var data = {};
 		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
+		data["PRODUCT_NAME"] = $($ttd[0]).html();
+		data["PRODUCT_COUNT"] = $($ttd[1]).html();
 		data["NUM"] = $($ttd).eq(2).find('input').val();
 		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
 		data["OPERATOR"] = "12345678";
@@ -70,12 +74,16 @@ function submitOrder () {
 	$.ajax({
 		url:'/orders',
 		type:'POST',
-		data:{"jsonStr":jsonString},
+		data:{"jsonStr":jsonString,
+				"CUSTOMER_NAME":$("#orderCustName").val(),
+				"REMARK":$("#orderRemark").val()},
 		dataType: 'json',
 		success: function (data) {
 			if (data.statusCode === 0) {
 				bootbox.alert("添加订单成功", function() {
 				  $("#add_listView").html("");
+				  $("#orderCustName").val("");
+				  $("#orderRemark").val("");
 				});
 			};
 		}
@@ -84,7 +92,6 @@ function submitOrder () {
 
 function checkBookList () {
 	$("#bookListStockOut").clone(true).appendTo("#bookListInfo");
-	$("#bookListInfo")
 	$('#checkBookList').modal({
 		backdrop: false
 	});
@@ -116,6 +123,7 @@ function getProductOneInfo(pId) {
 jQuery.extend({
   parseQuerystring: function(str){
     var nvpair = {};
+    str = decodeURIComponent(str,true);
     var qs = str;
     var pairs = qs.split('&');
     $.each(pairs, function(i, v){

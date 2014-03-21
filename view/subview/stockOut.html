@@ -21,11 +21,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		getALLOrders (); 
+		getALLOrders(); 
 	});
 </script>
 <div class="main_div">
-	<h3>当前未发货订单</h3>
+	<h3>订单列表</h3>
 	<hr>
 	<table id="bookListStockOut" class="table table-striped">
         <thead>
@@ -33,7 +33,8 @@
                 <th>客户名称</th>
                 <th>订单生成时间</th>
                 <th>备注</th>
-                <th>发货出库</th>
+                <th>状态</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody id='add_listView'>
@@ -41,33 +42,38 @@
         </tbody>
     </table>
 
-    <h3>已发货订单</h3>
-    <hr>
-    <table id="bookListStockOutAlready" class="table table-striped">
-        <thead>
-            <tr>
-                <th>客户名称</th>
-                <th>订单生成时间</th>
-                <th>备注</th>
-                <th>查看详情</th>
-            </tr>
-        </thead>
-        <tbody id='add_listView_already'>
-            
-        </tbody>
-    </table>
 
-
-
-    <div class="modal fade" id="checkBookList" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
+    <div class="modal fade" id="checkStockOut" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">订单确认</h4>
+                    <h4 class="modal-title" >发货出库确认</h4>
+                    请确认订单
                 </div>
-                <div class="modal-body" id="bookListInfo">
+                <div class="modal-body" id="lastStockOutInfo">
+                    <h5>客户名:<span id="lastStockOutCustName"></span></h5>
+                    <h5>订单时间:<span id="lastStockOutTime"></span></h5>
+                    <h5>备注:<span id="lastStockOutRemark"></span></h5>
+                    <table id="lastStockOutInfoDetails" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>商品名</th>
+                                <th>单价</th>
+                                <th>数量</th>
+                                <th>备注</th>
+                                <th>发货确认</th>
+                            </tr>
+                        </thead>
+                        <tbody id='astStockOut_listView'>
+                            
+                        </tbody>
+                    </table>
                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="lastStockOutBtn" class="btn btn-primary">确认发货</button>
                 </div>
 
             </div><!-- /.modal-content -->
