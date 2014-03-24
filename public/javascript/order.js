@@ -80,6 +80,7 @@ function submitOrder () {
 		success: function (data) {
 			if (data.statusCode === 0) {
 				bootbox.alert("添加订单成功", function() {
+				  $('.productAddTemp')[0].reset();
 				  $("#add_listView").html("");
 				  $("#orderCustName").val("");
 				  $("#orderRemark").val("");

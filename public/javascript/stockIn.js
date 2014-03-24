@@ -82,6 +82,7 @@ function submitStockIn () {
 		success: function (data) {
 			if (data.statusCode === 0) {
 				bootbox.alert("入库成功", function() {
+				  $('.productAddTemp')[0].reset();
 				  $("#add_listView").html("");
 				});
 			};

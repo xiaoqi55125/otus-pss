@@ -71,6 +71,19 @@ exports.stockOut = function (req, res, next) {
 }
 
 /**
+ * inventories page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.inventory = function (req, res, next) {
+  debugCtrller("/controller/render/inventories");
+  res.render('subview/inventories');
+}
+
+
+/**
  * order page controller
  * @param  {object}   req  the instance of request
  * @param  {object}   res  the instance of response
