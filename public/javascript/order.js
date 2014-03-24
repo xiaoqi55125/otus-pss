@@ -40,7 +40,6 @@ function addProductToList() {
 		row.append(cellName);
 		row.append(cellPRICE);
 		row.append(cellNum);
-		alert(cellData.REMARK);
 		row.append(cellRemark);
 		row.append(EditLink);
 		$("#add_listView").append(row);

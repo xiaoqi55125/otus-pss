@@ -62,6 +62,7 @@ function submitStockIn () {
 		var $ttd = $ttr[i].cells;
 		var data = {};
 		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
+		data["PRODUCT_NAME"] = $($ttd[0]).html();
 		data["NUM"] = $($ttd).eq(2).find('input').val();
 		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
 		data["SUPPLIER"] = $($ttd[3]).html();
