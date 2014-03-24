@@ -56,6 +56,12 @@ exports.config = {
         "XXX@wisedu.com"
     ],
 
+    //five field: ss mm hh dd MM day-of-week
+    // * - match all
+    // / - pre field
+    // eg : "00 00 9 */7 *" means run once every 7 days at 9:00 am
+    limitCronPattern         : "00 00 23 * * *",
+
     /******************************system config **************************/
     default_page_size : 50,
 
