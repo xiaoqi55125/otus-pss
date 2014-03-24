@@ -195,7 +195,7 @@ exports.findStockStatus = function (req, res, next) {
             return res.send(util.generateRes(null, err.statusCode));
         }
 
-        return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK)); 
     });
 };
 
