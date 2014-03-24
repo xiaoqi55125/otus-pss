@@ -80,7 +80,7 @@ exports.stockOut = function (req, res, next) {
         },
         //step 3:     //change order status
         function (callback) {
-            Order.changeOrderStatus(orderId, 1, function (err, data) {
+            Order.changeOrderStatus(orderId, 2, function (err, data) {
                 callback(err);
             });
         },
