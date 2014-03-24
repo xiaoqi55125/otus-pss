@@ -125,6 +125,7 @@ exports.modify = function (req, res, next) {
     productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";
     productObj.MANUFACTURE_DATE = req.body.MANUFACTURE_DATE || "";
     productObj.PC_ID            = req.body.PC_ID || "";
+    productObj.LIMIT_NUM        = req.body.LIMIT_NUM || 0;
 
     try {
         check(productObj.PRODUCT_ID).notEmpty();
