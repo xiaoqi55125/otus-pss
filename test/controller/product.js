@@ -50,7 +50,7 @@ describe('test for /controller/product.js', function () {
             }
 
             should(res.body).have.property("statusCode", 0);
-            should(res.body.data).have.property("PRODUCT_NAME", "MAC_BOOK");
+            should(res.body.data).have.property("PRODUCT_NAME", "admin");
 
             done();
         });
