@@ -135,11 +135,12 @@ exports.createProduct = function (productInfo, callback) {
 exports.modifyProduct = function (productInfo, callback) {
     debugProxy("proxy/product/modifyProduct");
 
-    var sql = "UPDATE PRODUCT SET PRODUCT_NAME = :PRODUCT_NAME, " +
-              "                   PRICE = :PRICE, " +
+    var sql = "UPDATE PRODUCT SET PRODUCT_NAME = :PRODUCT_NAME,         " +
+              "                   PRICE = :PRICE,                       " +
               "                   MANUFACTURE_NAME = :MANUFACTURE_NAME, " +
               "                   MANUFACTURE_DATE = :MANUFACTURE_DATE, " +
-              "                   PC_ID = :PC_ID " +
+              "                   PC_ID = :PC_ID,                       " +
+              "                   LIMIT_NUM = :LIMIT_NUM                " +
               " WHERE PRODUCT_ID = :PRODUCT_ID";
 
     mysqlClient.query({
