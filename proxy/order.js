@@ -118,7 +118,7 @@ exports.getStockStatusByOrderId = function (orderId, callback) {
         }
     }, function (err, rows) {
         if (err) {
-            debugProxy("[getOrderById error]: %s", err);
+            debugProxy("[getStockStatusByOrderId error]: %s", err);
             return callback(new ServerError(), null);
         }
 
@@ -190,7 +190,7 @@ exports.modifyOrder = function (orderInfo, callback) {
  * @return {null}             
  */
 exports.changeOrderStatus = function (orderId, newStatus, callback) {
-    debugProxy("proxy/order/modifchangeOrderStatusyOrder");
+    debugProxy("proxy/order/changeOrderStatus");
 
     if (!orderId || !newStatus) {
         return callback(new DBError(), null);
@@ -251,6 +251,7 @@ exports.writeOrderJournal = function (journalContent, status, callback) {
         }
     ],  function (err, result) {
         if (err) {
+            debugProxy(err);
             return callback(new DBError(), null);
         }
 

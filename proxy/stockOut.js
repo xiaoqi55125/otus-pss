@@ -113,6 +113,7 @@ exports.writeStockOutJournal = function (orderId, callback) {
         }
     ],  function (err, result) {
         if (err) {
+            debugProxy("[writeStockOutJournal error] :%s", err);
             return callback(new DBError(), null);
         }
 
@@ -196,6 +197,7 @@ function insertIntoStockOut (conn, productInfo, callback) {
   
     conn.query(sql, productInfo, function (err, rows) {
         if (err) {
+            debugProxy("[insertIntoStockOut error] :%s", err);
             conn.rollback(function () {
                 return callback(new DBError(), null);
             });
