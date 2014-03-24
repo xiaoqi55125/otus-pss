@@ -62,7 +62,7 @@ exports.getJournalWithQueryConditions = function (queryConditions, callback) {
             return callback(new ServerError(), null);
         }
 
-        return callback(null, null);
+        return callback(null, rows);
     });
 };
 

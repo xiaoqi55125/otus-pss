@@ -39,12 +39,12 @@ exports.getAllOrders = function (callback, pagingInfo) {
 
     if (pagingInfo) {
         sql                  = "SELECT * FROM ORDERS " +
-                               " LIMIT :start, :end ";
+                               " LIMIT :start, :end ORDER BY STOCK_STATUS ";
         pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
         params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
         params.end           = config.default_page_size;
     } else {
-        sql = "SELECT * FROM ORDERS ";
+        sql = "SELECT * FROM ORDERS ORDER BY STOCK_STATUS ";
     }
 
     mysqlClient.query({
@@ -77,7 +77,7 @@ exports.getOrderById = function (orderId, callback) {
 
     mysqlClient.query({
         sql : "SELECT * FROM ORDERS " +
-              " WHERE ORDER_ID = :ORDER_ID ORDER BY STOCK_STATUS ",
+              " WHERE ORDER_ID = :ORDER_ID ",
         params : {
             "ORDER_ID"  : orderId
         }
