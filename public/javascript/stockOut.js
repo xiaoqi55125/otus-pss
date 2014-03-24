@@ -43,44 +43,133 @@ function getALLOrders () {
 					row.append(addTime);
 					row.append(remark);
 					
-					if (oInfo.IS_STOCKOUT === 0) {
+					if (oInfo.STOCK_STATUS === 0) {
 						var link = tdCont.cell($("<a href='javascript:void(0);'>发货</a>"));
+						var status = tdCont.cell("<button type='button' class='btn btn-info'>未出库</button>")
 						link.click(tdCont.stockOutClick(oInfo.ORDER_ID));
 						row.append(link);
-						$("#add_listView").append(row);
-					}else{
+						row.append(status);
+						
+					}else if (oInfo.STOCK_STATUS === 1){
 						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
+						var status = tdCont.cell("<button type='button' class='btn btn-success'>已出库</button>")
 						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
 						row.append(link);
-						$("#add_listView_already").append(row);
+						row.append(status);
+						//$("#add_listView_already").append(row);
+					}else{
+						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
+						var status = tdCont.cell("<button type='button' class='btn btn-warning'>出库中</button>")
+						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
+						row.append(link);
+						row.append(status);
+						//$("#add_listView_already").append(row);
 					}
+					$("#add_listView").append(row);
 				};
 			}
 		}
 	})
 }
 function stockOutClick (oId) {
-	alert("stockOutClick");
+	getOneOrderByOId(oId);
+	//modify stocks code to 2 , ing , when done change to 1 , defult is zero
+	modifyStockStatus(oId,2);
+	
 }
 function stockOutCheck (oId) {
-	alert("stockOutCheck");
+	window.open('/orderDetails');
 }
-function getOneOrderByOId (oId) {
+
+function getOneOrderByOId(oId) {
 	$.ajax({
 		url:'/orders/'+oId,
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
-
+				$("#astStockOut_listView").html("");
+				$("#lastStockOutCustName").html(data.data.CUSTOMER_NAME);
+				$("#lastStockOutTime").html(moment(data.data.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
+				$("#lastStockOutRemark").html(data.data.REMARK);
+				var tempStr = data.data.ORDER_CONTENT;
+				var datas = eval('(' + tempStr + ')');  
+				var list = datas.data;
+				for (var i = 0; i < list.length; i++) {
+					var cellData = list[i];
+					var row = tdCont.row(cellData.PRODUCT_ID);
+					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+					//var cellPRICE = tdCont.cell(cellData.AMOUNT);
+					var cellNum = tdCont.cell(cellData.NUM);
+					var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
+					var cellRemark = tdCont.cell(cellData.REMARK);
+					var cellCheck = tdCont.cell($("<label><input id='cb_"+cellData.PRODUCT_ID+"' type='checkbox' name='checkbox1'> 发货确认</label>"));
+					row.append(cellName);
+					row.append(cellNum);
+					//row.append(cellPRICE);
+					row.append(cellCount);
+					row.append(cellRemark);
+					row.append(cellCheck);
+					$("#astStockOut_listView").append(row);
+				}
+				$("#lastStockOutBtn").unbind('click').removeAttr('onclick');
+			  	$("#lastStockOutBtn").attr("onclick","submitStockOut('"+oId+"')");
+			  	$('#checkStockOut').modal({
+					backdrop: false
+				});
+			}else{
+				bootbox.alert("服务器出错!");
 			}
 		}
 	})
 }
 
-function checkBookList () {
-	$("#bookListStockOut").clone(true).appendTo("#bookListInfo");
-	$("#bookListInfo")
-	$('#checkBookList').modal({
-		backdrop: false
-	});
+function submitStockOut(oId) {
+	//check the box 
+	//check the stockStatusCode 0 
+
+	$.ajax({
+		url:'/stockouts',
+		type:'POST',
+		data:{'orderId':oId},
+		success:function (data) {
+			if (data.statusCode === 0) {
+				bootbox.alert("该订单出库成功");
+			};
+		}
+	})
 }
+/**
+ * modify stock status code 
+ * @param  {string } orderId 
+ * @param  {string } stId    
+ * @return {null}
+ */
+function modifyStockStatus (orderId,stId) {
+	$.ajax({
+		url:'/orders/'+orderId+'/stockstatus',
+		type:'POST',
+		data:{'STOCK_STATUS':stId},
+		success:function (data) {
+			if (data.statusCode === 0) {
+
+			}else{
+				bootbox.alert("修改订单状态失败!");
+			}
+		}
+	})
+}
+
+function getStockStatus (orderId) {
+	$.ajax({
+		url:'/orders/'+orderId+'/stockstatus',
+		type:'GET',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				alert(data.data);
+			}
+		}
+	})
+}
+
+
+
