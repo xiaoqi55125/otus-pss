@@ -28,7 +28,6 @@ var tdCont = {
  */
 function getALLOrders (sDate,eDate) {
 	$.ajax({
-		//from_dt=:from_dt&to_dt=:to_dt
 		url:'/orders?from_dt='+sDate+'&to_dt='+eDate,
 		type:'GET',
 		success:function (data) {
