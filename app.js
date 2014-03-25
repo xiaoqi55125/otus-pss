@@ -31,6 +31,7 @@ var common       = require("./common/Error");
 var errorHandler = require("./common/errorHandler");
 var AppConfig    = require("./appConfig").config;
 var Loader       = require("loader");
+var cronService  = require("./service/cron");
 
 var assets = {};
 if (AppConfig.mini_assets) {
@@ -103,3 +104,6 @@ app.listen(AppConfig.port);
 console.log("the app server run at port :%d in %s mode. ", AppConfig.port, app.settings.env);
 
 module.exports = app;
+
+//start deamon services
+cronService.startLimatationMailNotification(AppConfig.limitCronPattern);
