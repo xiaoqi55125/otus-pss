@@ -112,6 +112,7 @@ function getProductOneInfo(pId) {
 				$("#productName").val(pInfo.PRODUCT_NAME);
 				$("#productPrice").val(pInfo.PRICE);
 				$("#productNum").val("1");
+				getProductNum(pId);
 				return;
 			}else{
 				bootbox.alert("未查询到该产品,请检查!");
@@ -120,6 +121,19 @@ function getProductOneInfo(pId) {
 		}
 	})
 }
+
+function getProductNum (pId) {
+	$.ajax({
+		url:"/inventories/"+pId+"/num",
+		type:'GET',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				$("#productKucun").val( data.data);
+			};
+		}
+	})
+}
+
 jQuery.extend({
   parseQuerystring: function(str){
     var nvpair = {};

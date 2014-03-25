@@ -21,20 +21,20 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		//getALLOrders(); 
+		getAllInventories ();
 	});
 </script>
 <div class="main_div">
 	<h3>库存查看</h3>
 	<hr>
-	<table id="bookListStockOut" class="table table-striped">
+	<table class="table table-striped">
         <thead>
             <tr>
-                <th>客户名称</th>
-                <th>订单生成时间</th>
-                <th>备注</th>
-                <th>状态</th>
-                <th>操作</th>
+                <th>商品名称</th>
+                <th>当前库存</th>
+                <th>单价</th>
+                <th>生产商</th>
+                <th>生产批号(日期)</th>
             </tr>
         </thead>
         <tbody id='add_listView'>

@@ -26,13 +26,15 @@ var tdCont = {
  * get all orders 
  * @return {null} 
  */
-function getALLOrders () {
+function getALLOrders (sDate,eDate) {
 	$.ajax({
-		url:'/orders',
+		//from_dt=:from_dt&to_dt=:to_dt
+		url:'/orders?from_dt='+sDate+'&to_dt='+eDate,
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
 				$("#add_listView").html("");
+				$("#add_listView2").html("");
 				for (var i = 0; i < data.data.length; i++) {
 					var oInfo = data.data[i];
 					var row = tdCont.row(oInfo.ORDER_ID);
@@ -49,6 +51,7 @@ function getALLOrders () {
 						link.click(tdCont.stockOutClick(oInfo.ORDER_ID));
 						row.append(link);
 						row.append(status);
+						$("#add_listView").append(row);
 						
 					}else if (oInfo.STOCK_STATUS === 2){
 						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
@@ -56,6 +59,7 @@ function getALLOrders () {
 						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
 						row.append(link);
 						row.append(status);
+						$("#add_listView2").append(row);
 						//$("#add_listView_already").append(row);
 					}else{
 						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
@@ -63,14 +67,20 @@ function getALLOrders () {
 						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
 						row.append(link);
 						row.append(status);
+						$("#add_listView").append(row);
 						//$("#add_listView_already").append(row);
 					}
-					$("#add_listView").append(row);
 				};
 			}
 		}
 	})
 }
+
+function searchOrdersByDate () {
+	alert("123");
+	getALLOrders($("#sDate").val(),$("#eDate").val());
+}
+
 function stockOutClick (oId) {
 	getOneOrderByOId(oId);
 	//modify stocks code to 1 , ing , when done change to 2 , defult is zero
@@ -188,7 +198,7 @@ function modifyStockStatus (orderId,stId) {
 		data:{'STOCK_STATUS':stId},
 		success:function (data) {
 			if (data.statusCode === 0) {
-				getALLOrders ();
+				getALLOrders ('','');
 			}else{
 				bootbox.alert("修改订单状态失败!");
 			}
