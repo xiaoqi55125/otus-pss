@@ -31,21 +31,31 @@ var util        = require("../lib/util");
  * @param  {Function} callback callback func
  * @return {null}            
  */
-exports.getAllOrders = function (callback, pagingInfo) {
+exports.getAllOrders = function (queryConditions, callback, pagingInfo) {
     debugProxy("proxy/order/getAllOrders");
 
-    var sql = "";
+    var sql = " SELECT * FROM ORDERS WHERE 1 = 1 ";
     var params = {};
 
+    if (queryConditions) {
+        if (queryConditions.from_dt && queryConditions.to_dt) {
+            sql += (' AND DATETIME BETWEEN "' + queryConditions.from_dt + '" AND "' + queryConditions.to_dt + '"');
+        } else if (queryConditions.from_dt) {
+            SQL += (' AND DATETIME >= "' + queryConditions.from_dt + '"');
+        } else if (queryConditions.to_dt) {
+            SQL += (' AND DATETIME <= "' + queryConditions.to_dt + '"');
+        }
+    }
+
     if (pagingInfo) {
-        sql                  = "SELECT * FROM ORDERS " +
-                               " LIMIT :start, :end ORDER BY STOCK_STATUS ";
+        sql                 += " LIMIT :start, :end ";
         pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
         params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
         params.end           = config.default_page_size;
-    } else {
-        sql = "SELECT * FROM ORDERS ORDER BY STOCK_STATUS ";
     }
+
+    //order
+    sql += " ORDER BY STOCK_STATUS ";
 
     mysqlClient.query({
         sql     : sql,

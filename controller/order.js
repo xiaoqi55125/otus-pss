@@ -22,7 +22,7 @@
   Desc: the controller of order
  */
 
-var Order = require("../proxy").Order;
+var Order    = require("../proxy").Order;
 var util     = require("../lib/util");
 var config   = require("../appConfig").config;
 var check    = require("validator").check;
@@ -40,7 +40,18 @@ require("../lib/DateUtil");
 exports.findAll = function (req, res, next) {
     debugCtrller("controller/order/findAll");
 
-    Order.getAllOrders(function (err, data) {
+    var queryConditions       = {};
+    queryConditions.from_dt   = req.query.from_dt || "";
+    queryConditions.to_dt     = req.query.to_dt || "";
+
+    try {
+        sanitize(queryConditions.from_dt).xss();
+        sanitize(queryConditions.to_dt).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Order.getAllOrders(queryConditions, function (err, data) {
         if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }

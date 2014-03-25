@@ -31,7 +31,7 @@ require("../../lib/DateUtil");
 describe('test for /controller/order.js', function () {
 
     it('is testing func: /orders', function (done) {
-        request(app).get("/orders").expect(200).end(function (err, res) {
+        request(app).get("/orders?from_dt=2014-03-24 09:18:18&to_dt=2014-03-24 12:00:00").expect(200).end(function (err, res) {
             if (err) {
                 return done(err);
             }
