@@ -49,6 +49,8 @@ module.exports = function (app) {
     app.get("/pro_cate",pssRender.pro_cate);
     app.get("/product",pssRender.products);
     app.get("/orderDetails/:orderId",pssRender.orderDetails);
+    app.get("/journal",pssRender.journal);
+    app.get("/inventory",pssRender.inventory);
 
     
     

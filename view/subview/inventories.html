@@ -1,0 +1,45 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/inventory.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/inventory.js")
+    .js("/public/javascript/moment.min.js")
+	.js("/public/javascript/jquery.fs.stepper.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/inventory.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.css("/public/stylesheet/jquery.fs.stepper.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		//getALLOrders(); 
+	});
+</script>
+<div class="main_div">
+	<h3>库存查看</h3>
+	<hr>
+	<table id="bookListStockOut" class="table table-striped">
+        <thead>
+            <tr>
+                <th>客户名称</th>
+                <th>订单生成时间</th>
+                <th>备注</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id='add_listView'>
+
+        </tbody>
+    </table>
+
+</div>

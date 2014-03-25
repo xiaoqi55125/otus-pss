@@ -43,7 +43,7 @@
  */
 exports.index = function (req, res, next) {
   debugCtrller("/controller/render/index");
-  res.render('subview/index');
+  res.render('subview/stockIn');
 }
 
 /**
@@ -69,6 +69,19 @@ exports.stockOut = function (req, res, next) {
   debugCtrller("/controller/render/stockOut");
   res.render('subview/stockOut');
 }
+
+/**
+ * inventories page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.inventory = function (req, res, next) {
+  debugCtrller("/controller/render/inventories");
+  res.render('subview/inventories');
+}
+
 
 /**
  * order page controller
@@ -120,41 +133,15 @@ exports.products = function (req, res, next) {
   res.render('subview/products');
 }
 
-
-
-
 /**
- * upload page controller
+ * journal page controller
  * @param  {object}   req  the instance of request
  * @param  {object}   res  the instance of response
  * @param  {Function} next the next handler
  * @return {null}
  */
-exports.upload = function (req, res, next) {
-  debugCtrller("/controller/render/upload");
-  res.render('subview/upload');
+exports.journal = function (req, res, next) {
+  debugCtrller("/controller/render/journal");
+  res.render('subview/journal');
 }
 
-/**
- * show login page
- * @param  {object}   req  the request object
- * @param  {object}   res  the response object
- * @param  {Function} next the next handler
- * @return {null}        
- */
-exports.showLogin = function (req, res, next) {
-    debugCtrller("controllers/login/showLogin");
-    res.render("login");
-};
-
-/**
- * show addUser page
- * @param  {object}   req  the request object
- * @param  {object}   res  the response object
- * @param  {Function} next the next handler
- * @return {null}        
- */
-exports.addUser = function (req, res, next) {
-    debugCtrller("controllers/login/addUser");
-    res.render("subview/addUser");
-};

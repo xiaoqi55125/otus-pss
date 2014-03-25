@@ -50,7 +50,7 @@ function getALLOrders () {
 						row.append(link);
 						row.append(status);
 						
-					}else if (oInfo.STOCK_STATUS === 1){
+					}else if (oInfo.STOCK_STATUS === 2){
 						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
 						var status = tdCont.cell("<button type='button' class='btn btn-success'>已出库</button>")
 						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
@@ -73,15 +73,16 @@ function getALLOrders () {
 }
 function stockOutClick (oId) {
 	getOneOrderByOId(oId);
-	//modify stocks code to 2 , ing , when done change to 1 , defult is zero
-	modifyStockStatus(oId,2);
+	//modify stocks code to 1 , ing , when done change to 2 , defult is zero
+	modifyStockStatus(oId,1);
 	
 }
 function stockOutCheck (oId) {
-	window.open('/orderDetails');
+	window.open('/orderDetails/'+oId);
 }
 
 function getOneOrderByOId(oId) {
+
 	$.ajax({
 		url:'/orders/'+oId,
 		type:'GET',
@@ -113,9 +114,17 @@ function getOneOrderByOId(oId) {
 				}
 				$("#lastStockOutBtn").unbind('click').removeAttr('onclick');
 			  	$("#lastStockOutBtn").attr("onclick","submitStockOut('"+oId+"')");
+			  	$("#productIDCheck").keydown(function(event) {  
+			        if (event.keyCode == 13) {  
+			            getProductCheck($("#productIDCheck").val()); 
+			        }  
+			    })  
 			  	$('#checkStockOut').modal({
 					backdrop: false
 				});
+				$('#checkStockOut').on('hidden.bs.modal', function (e) {
+				  	modifyStockStatus(oId,0);
+				})
 			}else{
 				bootbox.alert("服务器出错!");
 			}
@@ -126,17 +135,45 @@ function getOneOrderByOId(oId) {
 function submitStockOut(oId) {
 	//check the box 
 	//check the stockStatusCode 0 
+	if (getStockStatus === 2) {
+		bootbox.alert("该订单已经出货,请勿重复操作,请检查时候有其他操作员操作!");
+	}else{
+		//check all checkboxs have checked already
+		if($('input[name="checkbox1"]:checked').length == $('input[name="checkbox1"]').length){
+	    	$.ajax({
+				url:'/stockouts',
+				type:'POST',
+				data:{'orderId':oId},
+				success:function (data) {
+					if (data.statusCode === 0) {
+						bootbox.alert("该订单出库成功",function () {
+							$('#checkStockOut').modal('hide');
+							$('#checkStockOut').on('hidden.bs.modal', function (e) {
+						  		modifyStockStatus(oId,2);
 
-	$.ajax({
-		url:'/stockouts',
-		type:'POST',
-		data:{'orderId':oId},
-		success:function (data) {
-			if (data.statusCode === 0) {
-				bootbox.alert("该订单出库成功");
-			};
+							});
+							
+						});
+						
+					};
+				}
+			})
+		}else{
+			bootbox.alert("出库检查未通过,请检查后重试!");
 		}
-	})
+	}
+	
+	
+}
+
+
+function getProductCheck (pId) {
+	 if ( $("#"+pId).length>0 ) {
+	 	$("#cb_"+pId).prop("checked", "checked");
+	 }else{
+	 	bootbox.alert("商品不在列表内!");
+	 	return;
+	 }
 }
 /**
  * modify stock status code 
@@ -147,11 +184,11 @@ function submitStockOut(oId) {
 function modifyStockStatus (orderId,stId) {
 	$.ajax({
 		url:'/orders/'+orderId+'/stockstatus',
-		type:'POST',
+		type:'PUT',
 		data:{'STOCK_STATUS':stId},
 		success:function (data) {
 			if (data.statusCode === 0) {
-
+				getALLOrders ();
 			}else{
 				bootbox.alert("修改订单状态失败!");
 			}

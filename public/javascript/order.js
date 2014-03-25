@@ -40,7 +40,6 @@ function addProductToList() {
 		row.append(cellName);
 		row.append(cellPRICE);
 		row.append(cellNum);
-		alert(cellData.REMARK);
 		row.append(cellRemark);
 		row.append(EditLink);
 		$("#add_listView").append(row);
@@ -81,6 +80,7 @@ function submitOrder () {
 		success: function (data) {
 			if (data.statusCode === 0) {
 				bootbox.alert("添加订单成功", function() {
+				  $('.productAddTemp')[0].reset();
 				  $("#add_listView").html("");
 				  $("#orderCustName").val("");
 				  $("#orderRemark").val("");

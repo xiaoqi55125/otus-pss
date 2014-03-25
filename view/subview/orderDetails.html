@@ -1,3 +1,54 @@
-<div>
-	<%= orderId %>
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/orderDetails.min.js")
+	.js('/public/lib/jquery/jquery-1.10.2.min.js')
+    .js('/public/lib/bootstrap/js/bootstrap.js')
+
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/orderDetails.js")
+    .js("/public/javascript/moment.min.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+		.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/orderDetails.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.css("/public/lib/bootstrap/css/bootstrap.css")
+
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		getOrderById('<%= orderId %>'); 
+	});
+</script>
+
+<div style="width:900px;margin: 0 auto;">
+	<div style="float:right;">
+		<a href="javascript:window.print();">打印</a>
+	</div>  
+	<div  id="lastStockOutInfo">
+	    <h5>客户名:<span id="lastStockOutCustName"></span></h5>
+	    <h5>订单时间:<span id="lastStockOutTime"></span></h5>
+	    <h5>备注:<span id="lastStockOutRemark"></span></h5>
+	    <table id="lastStockOutInfoDetails" class="table table-striped">
+	        <thead>
+	            <tr>
+	                <th>商品名</th>
+	                <th>单价</th>
+	                <th>数量</th>
+	                <th>备注</th>
+	            </tr>
+	        </thead>
+	        <tbody id='astStockOut_listView'>
+	            
+	        </tbody>
+	    </table>
+	    
+	</div>
 </div>
