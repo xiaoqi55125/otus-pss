@@ -77,7 +77,6 @@ function getALLOrders (sDate,eDate) {
 }
 
 function searchOrdersByDate () {
-	alert("123");
 	getALLOrders($("#sDate").val(),$("#eDate").val());
 }
 
