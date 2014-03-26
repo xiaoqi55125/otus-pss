@@ -109,7 +109,7 @@ exports.getProductNumWithId = function (productId, callback) {
     debugProxy("proxy/inventory/getProductNumWithId");
 
     mysqlClient.query({
-        sql   : "SELECT SUM(NUM) FROM INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID GROUP BY PRODUCT_ID",
+        sql   : "SELECT SUM(NUM) AS NUM FROM INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID GROUP BY PRODUCT_ID",
         params: {
             PRODUCT_ID    : productId
         }
