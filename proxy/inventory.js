@@ -63,12 +63,36 @@ exports.getAllInventories = function (callback, pagingInfo) {
 /**
  * get a product num with product id
  * @param {String} productId the product id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getProductNumWithId = function (productId, callback) {
+    debugProxy("proxy/inventory/getProductNumWithId");
+
+    mysqlClient.query({
+        sql   : "SELECT SUM(NUM) FROM INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID GROUP BY PRODUCT_ID",
+        params: {
+            PRODUCT_ID    : productId
+        }
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[getProductNumWithId error]: %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows[0]['NUM']);
+    });
+};
+
+/**
+ * get a product with batch-num's num 
+ * @param {String} productId the product id
  * @param {String} batchNum the product's batch number
  * @param  {Function} callback callback func
  * @return {null}            
  */
-exports.getProductNumWithId = function (productId, batchNum, callback) {
-    debugProxy("proxy/inventory/getProductNumWithId");
+exports.getNumWithProductIdAndBatchNum = function (productId, batchNum, callback) {
+    debugProxy("proxy/inventory/getNumWithProductIdAndBatchNum");
 
     mysqlClient.query({
         sql   : "SELECT NUM FROM INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM",
