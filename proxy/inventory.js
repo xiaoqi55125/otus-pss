@@ -60,6 +60,45 @@ exports.getAllInventories = function (callback, pagingInfo) {
     });
 };
 
+
+/**
+ * get all inventory by a product id
+ * @param {String} productId the product id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getProductAllInventory = function (productId, callback, pagingInfo) {
+    debugProxy("proxy/inventory/getProductAllInventory");
+
+    var sql = "";
+    var params = {
+        PRODUCT_ID    : productId
+    };
+
+    if (pagingInfo) {
+        sql                  = "SELECT * FROM INVENTORY I " +
+                               " WHERE PRODUCT_ID = :PRODUCT_ID " +
+                               " LIMIT :start, :end ";
+        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
+        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
+        params.end           = config.default_page_size;
+    } else {
+        sql = "SELECT * FROM INVENTORY I WHERE PRODUCT_ID = :PRODUCT_ID ";
+    }
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : params
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getProductAllInventory error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};
+
 /**
  * get a product num with product id
  * @param {String} productId the product id
