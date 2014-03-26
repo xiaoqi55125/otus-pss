@@ -26,13 +26,12 @@ function getOrderById (oId) {
 					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 					//var cellPRICE = tdCont.cell(cellData.AMOUNT);
 					var cellNum = tdCont.cell(cellData.NUM);
-					var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
-					var cellRemark = tdCont.cell(cellData.REMARK);
+					//var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
+					//var cellRemark = tdCont.cell(cellData.REMARK);
 					row.append(cellName);
 					row.append(cellNum);
-					//row.append(cellPRICE);
-					row.append(cellCount);
-					row.append(cellRemark);
+					//row.append(cellCount);
+					//row.append(cellRemark);
 					$("#astStockOut_listView").append(row);
 				}
 			}

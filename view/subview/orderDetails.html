@@ -28,7 +28,7 @@
 	});
 </script>
 
-<div style="width:900px;margin: 0 auto;">
+<div style="width:600px;margin: 30px auto;">
 	<div style="float:right;">
 		<a href="javascript:window.print();">打印</a>
 	</div>  
@@ -36,13 +36,13 @@
 	    <h5>客户名:<span id="lastStockOutCustName"></span></h5>
 	    <h5>订单时间:<span id="lastStockOutTime"></span></h5>
 	    <h5>备注:<span id="lastStockOutRemark"></span></h5>
+	    <h5>订单号:<span><%= orderId %></span></h5>
 	    <table id="lastStockOutInfoDetails" class="table table-striped">
 	        <thead>
 	            <tr>
 	                <th>商品名</th>
-	                <th>单价</th>
 	                <th>数量</th>
-	                <th>备注</th>
+	               
 	            </tr>
 	        </thead>
 	        <tbody id='astStockOut_listView'>

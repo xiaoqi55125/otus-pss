@@ -3,6 +3,7 @@
 <%- Loader("/public/javascript/StockOut.min.js")
 	.js("/public/javascript/bootstrap-select.js")
 	.js("/public/javascript/bootstrap-datepicker.js")
+    .js("/public/javascript/locales/bootstrap-datepicker.zh-CN.js")
 	.js("/public/javascript/bootbox.min.js")
 	.js("/public/javascript/StockOut.js")
     .js("/public/javascript/moment.min.js")
@@ -21,26 +22,80 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		getALLOrders(); 
+		getALLOrders($("#sDate").val(),$("#eDate").val()); 
+        $('.input-daterange').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true
+        });
 	});
 </script>
 <div class="main_div">
 	<h3>订单列表</h3>
 	<hr>
-	<table id="bookListStockOut" class="table table-striped">
-        <thead>
-            <tr>
-                <th>客户名称</th>
-                <th>订单生成时间</th>
-                <th>备注</th>
-                <th>状态</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody id='add_listView'>
+    <div style="float:right; width:300px;">
+        <button style="float: right;margin-left: 10px;height: 30px;" type='button' class='btn btn-info ' onclick="searchOrdersByDate()">搜索</button>
+        <div class="input-daterange input-group" id="datepicker">
+            <input type="text" class="input-sm form-control" id="sDate" name="start" />
+            <span class="input-group-addon">至</span>
+            <input type="text" class="input-sm form-control" id="eDate" name="end" />
+        </div>
 
-        </tbody>
-    </table>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable" id="tabs-410411">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#panel-1" data-toggle="tab">未出库</a>
+                        </li>
+                        <li>
+                            <a href="#panel-3" data-toggle="tab">已出库</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active fade in" id="panel-1">
+                            <table  class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>客户名称</th>
+                                        <th>订单生成时间</th>
+                                        <th>备注</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id='add_listView'>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane" id="panel-3">
+                             <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>客户名称</th>
+                                        <th>订单生成时间</th>
+                                        <th>备注</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id='add_listView2'>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 
     <div class="modal fade" id="checkStockOut" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
