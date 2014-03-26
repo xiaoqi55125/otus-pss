@@ -31,8 +31,14 @@ require("../../lib/DateUtil");
 describe('test for /controller/stockOut.js', function () {
 
     it('is testing func: /stockouts', function (done) {
+        var jsonStr = '{ "data" : [' +
+        '{"PRODUCT_ID":"12345678", "BATCH_NUM":"0987654321", "NUM":3, "AMOUNT":2000, "OPERATOR":"12345678", "REMARK":""},' +
+        '{"PRODUCT_ID":"43890f6c-eb7f-d253-14c4-36d44ffeb265", "BATCH_NUM":"0987654321", "NUM":10, "AMOUNT":5000, "OPERATOR":"12345678", "SO_DATE":"2014-03-18 01:01:01", "REMARK":""}' +
+        ']}';
+
         var param = {
-            orderId   : "12345678"
+            orderId   : "c4771585-aea2-df9b-7269-cdc90675f9af",
+            jsonStr   : jsonStr
         };
 
         request(app).post("/stockouts").send(param).expect(200).end(function (err, res) {

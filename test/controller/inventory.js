@@ -41,14 +41,13 @@ describe('test for /controller/inventory.js', function () {
         
     });
 
-    it('is testing func: /inventories/:productId/num', function(done) {
-        request(app).get("/inventories/12345678/num").expect(200).end(function (err, res) {
+    it('is testing func: /inventories/:productId/:batchNum/num', function(done) {
+        request(app).get("/inventories/12345678/0987654321/num").expect(200).end(function (err, res) {
             if (err) {
                 return done(err);
             }
 
             should(res.body).have.property("statusCode", 0);
-            should(res.body.data).be.ok;
 
             done();
         });

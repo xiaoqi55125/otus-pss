@@ -95,7 +95,7 @@ module.exports = function (app) {
 
     //inventory
     app.get("/inventories", inventoryCtrller.findAll);
-    app.get("/inventories/:productId/num", inventoryCtrller.findNum);
+    app.get("/inventories/:productId/:batchNum/num", inventoryCtrller.findNum);
 
     //order
     //params: from_dt=:from_dt&to_dt=:to_dt

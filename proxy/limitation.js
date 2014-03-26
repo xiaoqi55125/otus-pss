@@ -32,9 +32,9 @@ var mysqlClient = require("../lib/mysqlUtil");
 exports.getUnderLimatationProducts = function (callback) {
     debugProxy("proxy/limitation/getUnderLimatationProducts");
 
-    var sql = "SELECT p.PRODUCT_NAME, p.PRICE, i.NUM, p.LIMIT_NUM FROM INVENTORY i " +
+    var sql = "SELECT p.PRODUCT_NAME, p.PRICE, SUM(i.NUM) AS NUM, p.LIMIT_NUM FROM INVENTORY i " +
               "  LEFT JOIN PRODUCT p ON p.PRODUCT_ID = i.PRODUCT_ID " +
-              " WHERE i.NUM <= p.LIMIT_NUM";
+              " WHERE i.NUM <= p.LIMIT_NUM GROUP BY i.PRODUCT_ID";
 
     mysqlClient.query({
         sql     : sql,

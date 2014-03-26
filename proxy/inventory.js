@@ -63,15 +63,19 @@ exports.getAllInventories = function (callback, pagingInfo) {
 /**
  * get a product num with product id
  * @param {String} productId the product id
+ * @param {String} batchNum the product's batch number
  * @param  {Function} callback callback func
  * @return {null}            
  */
-exports.getProductNumWithId = function (productId, callback) {
+exports.getProductNumWithId = function (productId, batchNum, callback) {
     debugProxy("proxy/inventory/getProductNumWithId");
 
     mysqlClient.query({
-        sql   : "SELECT NUM FROM INVENTORY WHERE PRODUCT_ID = '" + productId + "'",
-        params: null
+        sql   : "SELECT NUM FROM INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM",
+        params: {
+            PRODUCT_ID    : productId,
+            BATCH_NUM     : batchNum
+        }
     },  function (err, rows) {
         if (err) {
             debugProxy("[getProductNumWithId error]: %s", err);

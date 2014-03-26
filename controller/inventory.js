@@ -58,15 +58,19 @@ exports.findNum = function (req, res, next) {
     debugCtrller("controller/inventory/findNum");
 
     var productId = req.params.productId;
+    var batchNum  = req.params.batchNum;
 
     try {
         check(productId).notEmpty();
         sanitize(sanitize(productId).trim()).xss();
+
+        check(batchNum).notEmpty();
+        sanitize(sanitize(batchNum).trim()).xss();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    Inventory.getProductNumWithId(productId, function (err, data) {
+    Inventory.getProductNumWithId(productId, batchNum, function (err, data) {
         if (err) {
             return res.send(util.generateRes(err, data));
         }

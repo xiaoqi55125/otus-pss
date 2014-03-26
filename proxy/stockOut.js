@@ -147,6 +147,7 @@ function stockOutOneProduct (conn, productInfo, callback) {
         }
     ],  function (err, values) {
         if (err) {
+            debugProxy("[stockOutOneProduct error]: %s", err);
             return callback(err, null);
         }
 
@@ -165,10 +166,10 @@ function stockOutOneProduct (conn, productInfo, callback) {
 function validateInventoryNum (conn, productInfo, callback) {
     debugProxy("proxy/stockOut/validateInventoryNum");
 
-    var sql = "SELECT COUNT(1) AS cnt FROM otusDB.INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID AND NUM >= :NUM; "
+    var sql = "SELECT COUNT(1) AS cnt FROM otusDB.INVENTORY WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM AND NUM >= :NUM; "
     conn.query(sql, productInfo, function (err, rows) {
         if (err || !rows || rows[0]['cnt'] == 0) {
-            debugProxy(err);
+            debugProxy("[validateInventoryNum error]: %s", err);
             return callback(new DBError(), null);
         }
 
@@ -188,6 +189,7 @@ function insertIntoStockOut (conn, productInfo, callback) {
 
     var sql = "INSERT INTO STOCK_OUT VALUES(:SO_ID, " +
               "                             :PRODUCT_ID, " +
+              "                             :BATCH_NUM," +
               "                             :NUM, " +
               "                             :AMOUNT, " +
               "                             :OPERATOR, " +

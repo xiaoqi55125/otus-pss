@@ -133,6 +133,7 @@ function insertIntoStockIn (conn, productInfo, callback) {
 
     var sql = "INSERT INTO STOCK_IN VALUES( :SI_ID, " +
               "                             :PRODUCT_ID, " +
+              "                             :BATCH_NUM," +
               "                             :NUM, " +
               "                             :AMOUNT, " +
               "                             :SUPPLIER, " +
