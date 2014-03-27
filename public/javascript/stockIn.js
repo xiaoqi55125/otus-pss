@@ -18,7 +18,9 @@ var tdCont = {
  */
 function addProductToList() {
 	//without check
-	//alert($("form.productAddTemp").serialize());
+	if (true) {};
+
+
 	var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
 	//alert(qs.NUM);
 	var cellData = qs;
@@ -30,6 +32,7 @@ function addProductToList() {
 	var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
 	//var cellAmount = tdCont.cell(cellData.AMOUNT);
 	//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
+	var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
 	var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 	var cellRemark = tdCont.cell(cellData.REMARK);
 	var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
@@ -45,6 +48,7 @@ function addProductToList() {
 		row.append(cellNum);
 		//row.append(cellAmount);
 		row.append(cellSupplier);
+		row.append(cellBatchNum);
 		row.append(cellRemark);
 		row.append(EditLink);
 		$("#add_listView").append(row);
@@ -54,8 +58,6 @@ function addProductToList() {
 
 function submitStockIn () {
 	//without check 
-	//alert($("#add_listView").children());
-	//$ttd[i].eq(0).find('input').val()
 	var $ttr = $("#add_listView").children();
 	var datas = [];
 	for (var i = 0; i < $ttr.length; i++) {
@@ -66,14 +68,13 @@ function submitStockIn () {
 		data["NUM"] = $($ttd).eq(2).find('input').val();
 		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
 		data["SUPPLIER"] = $($ttd[3]).html();
-		data["REMARK"] = $($ttd[4]).html();
+		data["BATCH_NUM"] = $($ttd[4]).html();
+		data["REMARK"] = $($ttd[5]).html();
 		datas.push(data); 
 	};
 	var obj = new Object();
 	obj["data"] = datas; 
 	var jsonString = JSON.stringify(obj); 
-	// var epc=eval("("+jsonString+")");  
-	// console.log(epc);
 	$.ajax({
 		url:'/stockins',
 		type:'POST',
@@ -130,7 +131,7 @@ jQuery.extend({
     var pairs = qs.split('&');
     $.each(pairs, function(i, v){
       var pair = v.split('=');
-      nvpair[pair[0]] = pair[1];
+      nvpair[pair[0]] = decodeURI(pair[1]);
     });
     return nvpair;
   }

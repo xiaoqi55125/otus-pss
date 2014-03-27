@@ -118,7 +118,6 @@
                         <thead>
                             <tr>
                                 <th>商品名</th>
-                                <th>单价</th>
                                 <th>数量</th>
                                 <th>备注</th>
                                 <th>发货确认</th>
@@ -133,6 +132,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" id="lastStockOutBtn" class="btn btn-primary">确认发货</button>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="checkProductBatch" tabindex="-1" role="dialog" aria-labelledby="checkProductBatchModleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" >选择商品个数</h4>
+                </div>
+                <div class="modal-body" id="lastStockOutInfo">
+                    <h5>商品名:<span id="lastProductName"></span></h5>
+                    <h5>应发货数量:<span id="lastProductNum"></span></h5>
+                    <table id="lastStockOutInfoDetails" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>批号</th>
+                                <th>对应库存</th>
+                            </tr>
+                        </thead>
+                        <tbody id='pro_listView'>
+                            
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="lastProBtn" class="btn btn-primary">确认发货</button>
                 </div>
 
             </div><!-- /.modal-content -->
