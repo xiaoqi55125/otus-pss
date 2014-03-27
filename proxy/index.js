@@ -33,3 +33,4 @@ exports.StockOut        = require("./stockOut");
 exports.User            = require("./user");
 exports.Order           = require("./order");
 exports.Limitation      = require("./limitation");
+exports.PreStockIn      = require("./preStockIn");

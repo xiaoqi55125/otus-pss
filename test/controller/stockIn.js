@@ -31,15 +31,7 @@ require("../../lib/DateUtil");
 describe('test for /controller/stockIn.js', function () {
 
     it('is testing func: /stockins', function (done) {
-        var jsonStr = '{ "data" : [' +
-        '{"PRODUCT_ID":"12345678", "BATCH_NUM":"0987654321", "NUM":3, "AMOUNT":2000, "SUPPLIER":"MICROSOFT", "REMARK":""},' +
-        '{"PRODUCT_ID":"43890f6c-eb7f-d253-14c4-36d44ffeb265", "BATCH_NUM":"0987654321", "NUM":10, "AMOUNT":5000, "SUPPLIER":"APPLE", "SI_DATE":"2014-03-18 01:01:01", "REMARK":""}' +
-        ']}';
-        var param = {
-            jsonStr   : jsonStr
-        };
-
-        request(app).post("/stockins").send(param).expect(200).end(function (err, res) {
+        request(app).post("/stockins/30173a8f-217c-fa7c-6335-b5a007cbd4ec").expect(200).end(function (err, res) {
             if (err) {
                 return done(err);
             }
@@ -48,7 +40,6 @@ describe('test for /controller/stockIn.js', function () {
 
             done();
         });
-        
     });
 
 });

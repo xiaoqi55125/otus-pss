@@ -22,12 +22,13 @@
   Desc: the controller of stock in
  */
 
-var StockIn  = require("../proxy").StockIn;
-var util     = require("../lib/util");
-var config   = require("../appConfig").config;
-var check    = require("validator").check;
-var sanitize = require("validator").sanitize;
-var async    = require("async");
+var StockIn    = require("../proxy").StockIn;
+var PreStockIn = require("../proxy").PreStockIn;
+var util       = require("../lib/util");
+var config     = require("../appConfig").config;
+var check      = require("validator").check;
+var sanitize   = require("validator").sanitize;
+var async      = require("async");
 require("../lib/DateUtil");
 
 /**
@@ -39,37 +40,58 @@ require("../lib/DateUtil");
 exports.stockIn = function (req, res, next) {
     debugCtrller("controller/stockIn/stockIn");
 
-    var stockInInfo     = {};
-    var productsJSonStr = req.body.jsonStr || "";
+    var psiId = req.params.psiId;
 
     try {
-        check(productsJSonStr).notEmpty();
+        check(psiId).notEmpty();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    var productsJsonObj = JSON.parse(productsJSonStr);
-    var serial_num      = util.GUID();
-    
-    var warppedObjArr = productsJsonObj.data.map(function (item) {
-        item.SERIAL_NUM = serial_num;
-        item.SI_ID      = util.GUID();
-        item.SI_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
-        return item;
-    });
+    async.waterfall([
 
-    stockInInfo.productList = warppedObjArr;
-
-    async.series([
-        //step 1:
+        //step 1: get pre stock in info
         function (callback) {
-            StockIn.doStockIn(stockInInfo, function (err, data) {
-                callback(err, null);
+            PreStockIn.getPreStockInById(psiId, function (err, data) {
+
+                if (data) {
+                    var stockInInfo     = {};
+                    var productsJSonStr = data["PSI_CONTENT"];
+
+                    var productsJsonObj = JSON.parse(productsJSonStr);
+                    var serial_num      = util.GUID();
+                    
+                    var warppedObjArr = productsJsonObj.data.map(function (item) {
+                        item.SERIAL_NUM = serial_num;
+                        item.SI_ID      = util.GUID();
+                        item.SI_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
+                        return item;
+                    });
+
+                    stockInInfo.productList = warppedObjArr;
+                    return callback(err, stockInInfo);
+                };
+                
+
+                return callback(err, data);
             });
         },
-        function (callback) {
-            StockIn.writeStockInJournal(productsJSonStr, function (err, data) {
-                callback(err, null);
+        //step 2:do stock in
+        function (stockInInfo, callback) {
+            StockIn.doStockIn(stockInInfo, function (err, data) {
+                callback(err, stockInInfo);
+            });
+        },
+        //step 3:delete pre-stock in item
+        function (stockInInfo, callback) {
+            PreStockIn.delete(psiId, function (err, data) {
+                callback(err, stockInInfo);
+            });
+        },
+        //step 4:write journal
+        function (stockInInfo, callback) {
+            StockIn.writeStockInJournal(JSON.stringify(stockInInfo.productList), function (err, data) {
+                callback(err);
             });
         }
     ],  function (err, values) {

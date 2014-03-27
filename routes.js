@@ -32,6 +32,7 @@ var userCtrller            = require("./controller/user");
 var inventoryCtrller       = require("./controller/inventory");
 var orderCtrller           = require("./controller/order");
 var pssRender              = require('./controller/render');
+var preStockInCtrller      = require("./controller/preStockIn");
 
 module.exports = function (app) {
 
@@ -80,11 +81,17 @@ module.exports = function (app) {
     app.post("/productcategories", productCategoryCtrller.add);
     app.put("/productcategories/:pcId", productCategoryCtrller.modify);
     // app.delete("/productcategories/:pcId", productCategoryCtrller.delete);
+    // 
+    
+    //pre stock in
+    app.get("/prestockins", preStockInCtrller.findAll);
+    app.get("/prestockins/:psiId", preStockInCtrller.findOne);
+    app.post("/prestockins", preStockInCtrller.preStockIn);
 
     // //stock in
     // app.get("/stockins", stockInCtrller.findAll);         //distinct serial number
     // app.get("/stockins/:sn", stockInCtrller.findOne);     //find by serial number
-    app.post("/stockins", stockInCtrller.stockIn);
+    app.post("/stockins/:psiId", stockInCtrller.stockIn);           // make sure
     // app.delete("/stockins/:sn", stockInCtrller.delete);
 
     // //stock out
