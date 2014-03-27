@@ -187,11 +187,11 @@ function validateInventoryNum (conn, productInfo, callback) {
 function insertIntoStockOut (conn, productInfo, callback) {
     debugProxy("proxy/stockOut/insertIntoStockOut");
 
-    var sql = "INSERT INTO STOCK_OUT VALUES(:SO_ID, " +
+    var sql = "INSERT INTO STOCK_OUT(SO_ID, PRODUCT_ID, BATCH_NUM, NUM, OPERATOR, SO_DATE, ORDER_ID, REMARK) " +
+              " VALUES                     (:SO_ID, " +
               "                             :PRODUCT_ID, " +
               "                             :BATCH_NUM," +
               "                             :NUM, " +
-              "                             :AMOUNT, " +
               "                             :OPERATOR, " +
               "                             :SO_DATE, " +
               "                             :ORDER_ID, " +
