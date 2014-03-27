@@ -93,3 +93,30 @@ exports.stockOut = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * find stock out info by order id
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findByOrder = function (req, res, next) {
+    debugCtrller("controller/stockOut/findByOrder");
+
+    var orderId = req.params.orderId || "";
+
+    try {
+        check(orderId).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    StockOut.getStockoutsByOrderId(orderId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
