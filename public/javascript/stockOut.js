@@ -90,7 +90,6 @@ function stockOutCheck (oId) {
 }
 
 function getOneOrderByOId(oId) {
-
 	$.ajax({
 		url:'/orders/'+oId,
 		type:'GET',
@@ -106,16 +105,16 @@ function getOneOrderByOId(oId) {
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
-					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+					var cellName = tdCont.cell("<span id='name_"+cellData.PRODUCT_ID +"'>"+cellData.PRODUCT_NAME+"</span>");
 					//var cellPRICE = tdCont.cell(cellData.AMOUNT);
-					var cellNum = tdCont.cell(cellData.NUM);
-					var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
+					var cellNum = tdCont.cell("<span id='num_"+cellData.PRODUCT_ID+"'>"+cellData.NUM+"</span>");
+					//var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
 					var cellRemark = tdCont.cell(cellData.REMARK);
 					var cellCheck = tdCont.cell($("<label><input id='cb_"+cellData.PRODUCT_ID+"' type='checkbox' name='checkbox1'> 发货确认</label>"));
 					row.append(cellName);
 					row.append(cellNum);
 					//row.append(cellPRICE);
-					row.append(cellCount);
+					//row.append(cellCount);
 					row.append(cellRemark);
 					row.append(cellCheck);
 					$("#astStockOut_listView").append(row);
@@ -140,9 +139,16 @@ function getOneOrderByOId(oId) {
 	})
 }
 
+
+/**
+ * submit stock out
+ * @param  {[type]} oId [description]
+ * @return {[type]}     [description]
+ */
 function submitStockOut(oId) {
 	//check the box 
 	//check the stockStatusCode 0 
+	
 	if (getStockStatus === 2) {
 		bootbox.alert("该订单已经出货,请勿重复操作,请检查时候有其他操作员操作!");
 	}else{
@@ -177,7 +183,26 @@ function submitStockOut(oId) {
 
 function getProductCheck (pId) {
 	 if ( $("#"+pId).length>0 ) {
-	 	$("#cb_"+pId).prop("checked", "checked");
+	 	$.ajax({
+	 		url:"/inventories/"+pId,
+	 		type:"GET",
+	 		success:function (data) {
+	 			if (data.statusCode === 0) {
+	 				$("#pro_listView").html("");
+	 				$("#lastProductName").html($("#name_"+pId).html());
+	 				$("#lastProductNum").html($("#num_"+pId).html())
+	 				
+	 				
+	 			}else{
+	 				bootbox.alert("未查询到相关数据,请检查库存!");
+	 			}
+	 		}
+	 	})
+	 	$('#checkProductBatch').modal({
+			backdrop: false
+		});
+
+	 	//$("#cb_"+pId).prop("checked", "checked");
 	 }else{
 	 	bootbox.alert("商品不在列表内!");
 	 	return;
