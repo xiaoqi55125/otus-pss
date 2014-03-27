@@ -53,4 +53,17 @@ describe('test for /controller/stockOut.js', function () {
         
     });
 
+    it('is testing func: /stockouts/:orderId', function (done) {
+
+        request(app).get("/stockouts/12345678").expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+    });
+
 });

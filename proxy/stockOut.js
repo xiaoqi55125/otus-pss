@@ -28,6 +28,42 @@ var util        = require("../lib/util");
 require("../lib/DateUtil");
 
 /**
+ * get stock out items by order id
+ * @param  {string}   productId   the product id
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getStockoutsByOrderId = function (orderId, callback) {
+    debugProxy("proxy/stockOut/getStockoutsByOrderId");
+
+    orderId = orderId || "";
+
+    if (orderId.length === 0) {
+        return callback(new InvalidParamError(), null);
+    }
+
+    mysqlClient.query({
+        sql : "SELECT * FROM STOCK_OUT " +
+              " WHERE ORDER_ID = :ORDER_ID",
+        params : {
+            "ORDER_ID"  : orderId
+        }
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getStockoutsByOrderId error]: %s", err);
+            return callback(new ServerError(), null);
+        }
+
+        if (rows && rows.length > 0) {
+            return callback(null, rows[0]);
+        }
+        
+        return callback(null, null);
+    });
+};
+
+
+/**
  * do stock out with transaction
  * @param  {Object}   stockOutInfo the stock out info
  * @param  {Function} callback  the cb func

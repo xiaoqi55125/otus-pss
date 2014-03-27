@@ -96,7 +96,7 @@ module.exports = function (app) {
 
     // //stock out
     // app.get("/stockouts", stockOutCtrller.findAll);
-    // app.get("/stockouts/:sn", stockOutCtrller.findOne);
+    app.get("/stockouts/:orderId", stockOutCtrller.findByOrder);
     app.post("/stockouts", stockOutCtrller.stockOut);
     // app.delete("/stockouts", stockOutCtrller.delete);
 
