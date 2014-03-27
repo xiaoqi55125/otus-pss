@@ -19,9 +19,15 @@
 	.css("/public/stylesheet/jquery.fs.stepper.css")
 	.done(assets)
 	%></head>
-
+<style type="text/css">
+    div.stepper 
+    {
+        width: 110px;
+    }
+</style>
 <script type="text/javascript">
 	$(document).ready(function(){
+        $("input[type='number']").stepper();
 		getALLOrders($("#sDate").val(),$("#eDate").val()); 
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
@@ -114,13 +120,14 @@
                     <h5>客户名:<span id="lastStockOutCustName"></span></h5>
                     <h5>订单时间:<span id="lastStockOutTime"></span></h5>
                     <h5>备注:<span id="lastStockOutRemark"></span></h5>
-                    <table id="lastStockOutInfoDetails" class="table table-striped">
+                    <table id="lastStockOutInfoDetails" class="table">
                         <thead>
                             <tr>
                                 <th>商品名</th>
                                 <th>数量</th>
                                 <th>备注</th>
                                 <th>发货确认</th>
+                                <th>配货</th>
                             </tr>
                         </thead>
                         <tbody id='astStockOut_listView'>
@@ -147,12 +154,13 @@
                 </div>
                 <div class="modal-body" id="lastStockOutInfo">
                     <h5>商品名:<span id="lastProductName"></span></h5>
-                    <h5>应发货数量:<span id="lastProductNum"></span></h5>
+                    <h5>应发货数量: <span style='font-size:16px;color:#2b4490' id="lastProductNum"></span></h5>
                     <table id="lastStockOutInfoDetails" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>批号</th>
                                 <th>对应库存</th>
+                                <th>数量</th>
                             </tr>
                         </thead>
                         <tbody id='pro_listView'>
@@ -163,7 +171,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" id="lastProBtn" class="btn btn-primary">确认发货</button>
+                    <button type="button" id="lastProBtn" class="btn btn-primary">确认选择</button>
                 </div>
 
             </div><!-- /.modal-content -->

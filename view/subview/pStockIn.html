@@ -1,0 +1,78 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/pStockIn.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/pStockIn.js")
+    .js("/public/javascript/moment.min.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+    .js("/public/javascript/jquery.fs.stepper.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/pStockIn.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+    .css("/public/stylesheet/jquery.fs.stepper.css")
+	.done(assets)
+	%></head>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+        getAllPreStockInList();
+	});
+</script>
+<div class="main_div">
+	<h3>确认入库操作</h3>
+	<hr>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>添加时间</th>
+                    <th>操作人</th>
+                    <th>备注</th>
+                    <th>详情</th>
+                </tr>
+            </thead>
+            <tbody id='add_listView'>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="subpStockIn" tabindex="-1" role="dialog" aria-labelledby="subpStockInModleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">确认入库</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>商品名</th>
+                                <th>批号</th>
+                                <th>数量</th>
+                                <th>供应商</th>
+                            </tr>
+                        </thead>
+                        <tbody id='p_listView'>
+                            
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="subpStockInBtn" class="btn btn-primary">确认入库</button>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
