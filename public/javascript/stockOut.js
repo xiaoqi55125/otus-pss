@@ -10,7 +10,7 @@ var tdCont = {
     return $("<tr id='"+pId+"'></tr>");
   },
   rowBatch: function(pId) {
-    return $("<tr id='pro_"+pId+"' style='background-color:#cccccc' class='proWithBatch'></tr>");
+    return $("<tr id='pro_"+pId+"'  class='proWithBatch active'></tr>");
   },
   removeTemp: function(pId) {
     return function() {
@@ -255,6 +255,11 @@ function getProductCheck (pId) {
 function addProductWithBatchNumToStockOutListView (pId,origNum) {
 	if (calculateSum(parseInt(origNum))) {
 		var $ttr = $("#pro_listView").children();
+		//deal <a>
+		var $tr_a = $($("tr#pro_"+pId));
+		$tr_a.each(function( index ) {
+		  $(this).remove();
+		});
 		for (var i = 0; i < $ttr.length; i++) {
 			//get one cell 
 			var $ttd = $($ttr[i].cells);
@@ -265,8 +270,12 @@ function addProductWithBatchNumToStockOutListView (pId,origNum) {
 			var cellNum = tdCont.cellBatch("<span>"+parseInt($($ttd).eq(2).find('input').val())+"</span>")
 			row.append(cellBatchNum);
 			row.append(cellNum);
-			$("tr#"+pId).after(row);
+			if (parseInt($($ttd).eq(2).find('input').val()) != 0) {
+				$("tr#"+pId).after(row);
+			}
+			
 		}
+
 		$('#checkProductBatch').modal('hide');
 		$("#cb_"+pId).prop("checked", "checked");
 		//to-do
