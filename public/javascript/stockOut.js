@@ -2,9 +2,15 @@ var tdCont = {
   cell: function(item) {
     return $("<td style='line-height: 35px;'></td>").html(item);
   },
+  cellBatch: function(item) {
+    return $("<td></td>").html(item);
+  },
 
   row: function(pId) {
     return $("<tr id='"+pId+"'></tr>");
+  },
+  rowBatch: function(pId) {
+    return $("<tr id='pro_"+pId+"'  class='proWithBatch active'></tr>");
   },
   removeTemp: function(pId) {
     return function() {
@@ -19,6 +25,11 @@ var tdCont = {
   stockOutCheck: function (oId) {
   	return function () {
   		stockOutCheck(oId);
+  	}
+  },
+  batchSelect:function (pId) {
+  	return function () {
+  		getProductCheck(pId);
   	}
   }
 };
@@ -97,7 +108,7 @@ function getOneOrderByOId(oId) {
 			if (data.statusCode === 0) {
 				$("#astStockOut_listView").html("");
 				$("#lastStockOutCustName").html(data.data.CUSTOMER_NAME);
-				$("#lastStockOutTime").html(moment(data.data.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
+				$("#lastStockOutTime").html(moment(data.data.DATETIME).format("YYYY年 M月 D日 H:mm:ss"));
 				$("#lastStockOutRemark").html(data.data.REMARK);
 				var tempStr = data.data.ORDER_CONTENT;
 				var datas = eval('(' + tempStr + ')');  
@@ -111,12 +122,15 @@ function getOneOrderByOId(oId) {
 					//var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
 					var cellRemark = tdCont.cell(cellData.REMARK);
 					var cellCheck = tdCont.cell($("<label><input id='cb_"+cellData.PRODUCT_ID+"' type='checkbox' name='checkbox1'> 发货确认</label>"));
+					var cellSelect = tdCont.cell($("<a href='javascript:void(0);'>点击配货</a>"));
+					cellSelect.click(tdCont.batchSelect(cellData.PRODUCT_ID));
 					row.append(cellName);
 					row.append(cellNum);
 					//row.append(cellPRICE);
 					//row.append(cellCount);
 					row.append(cellRemark);
 					row.append(cellCheck);
+					row.append(cellSelect);
 					$("#astStockOut_listView").append(row);
 				}
 				$("#lastStockOutBtn").unbind('click').removeAttr('onclick');
@@ -154,17 +168,32 @@ function submitStockOut(oId) {
 	}else{
 		//check all checkboxs have checked already
 		if($('input[name="checkbox1"]:checked').length == $('input[name="checkbox1"]').length){
+			//build json data 
+			var $ttr = $(".proWithBatch");
+			var datas = [];
+			for (var i = 0; i < $ttr.length; i++) {
+				var $ttd = $ttr[i].cells;
+				var data = {};
+				data["PRODUCT_ID"] = $($ttr[i]).attr("id").split('_')[1];
+				data["BATCH_NUM"] = $($ttd).eq(0).find('span').html();
+				data["NUM"] = $($ttd).eq(1).find('span').html();
+				data["OPERATOR"] = "12345678";
+				data["REMARK"] = "";
+				datas.push(data); 
+			};
+			var obj = new Object();
+			obj["data"] = datas; 
+			var jsonString = JSON.stringify(obj); 
 	    	$.ajax({
 				url:'/stockouts',
 				type:'POST',
-				data:{'orderId':oId},
+				data:{"jsonStr":jsonString,'orderId':oId},
 				success:function (data) {
 					if (data.statusCode === 0) {
 						bootbox.alert("该订单出库成功",function () {
 							$('#checkStockOut').modal('hide');
 							$('#checkStockOut').on('hidden.bs.modal', function (e) {
 						  		modifyStockStatus(oId,2);
-
 							});
 							
 						});
@@ -191,7 +220,21 @@ function getProductCheck (pId) {
 	 				$("#pro_listView").html("");
 	 				$("#lastProductName").html($("#name_"+pId).html());
 	 				$("#lastProductNum").html($("#num_"+pId).html())
-	 				
+	 				for (var i = 0; i < data.data.length; i++) {
+	 					var cellData = data.data[i];
+	 					var row = tdCont.row(cellData.INVENTORY_ID);
+	 					var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
+	 					var cellNum = tdCont.cell(cellData.NUM);
+	 					var wholeNum = parseInt($("#lastProductNum").html());
+	 					var cellEditNum = tdCont.cell("<input  type='number' min='0' max='"+wholeNum+"' value='0' class='editNumInput' /> ");
+	 					row.append(cellBatchNum);
+	 					row.append(cellNum);
+	 					row.append(cellEditNum);
+	 					$("#pro_listView").append(row);
+	 				};
+	 				$("#lastProBtn").unbind('click').removeAttr('onclick');
+			  		$("#lastProBtn").attr("onclick","addProductWithBatchNumToStockOutListView('"+pId+"',"+$("#lastProductNum").html()+")");
+	 				$("input[type='number']").stepper();
 	 				
 	 			}else{
 	 				bootbox.alert("未查询到相关数据,请检查库存!");
@@ -202,12 +245,46 @@ function getProductCheck (pId) {
 			backdrop: false
 		});
 
-	 	//$("#cb_"+pId).prop("checked", "checked");
+	 	
 	 }else{
 	 	bootbox.alert("商品不在列表内!");
 	 	return;
 	 }
 }
+
+function addProductWithBatchNumToStockOutListView (pId,origNum) {
+	if (calculateSum(parseInt(origNum))) {
+		var $ttr = $("#pro_listView").children();
+		//deal <a>
+		var $tr_a = $($("tr#pro_"+pId));
+		$tr_a.each(function( index ) {
+		  $(this).remove();
+		});
+		for (var i = 0; i < $ttr.length; i++) {
+			//get one cell 
+			var $ttd = $($ttr[i].cells);
+			var row = tdCont.rowBatch(pId);
+			var cellNull = tdCont.cellBatch("");
+			row.append("");
+			var cellBatchNum = tdCont.cellBatch("批号:"+"<span>"+$($ttd[0]).html()+"</span>")
+			var cellNum = tdCont.cellBatch("<span>"+parseInt($($ttd).eq(2).find('input').val())+"</span>")
+			row.append(cellBatchNum);
+			row.append(cellNum);
+			if (parseInt($($ttd).eq(2).find('input').val()) != 0) {
+				$("tr#"+pId).after(row);
+			}
+			
+		}
+
+		$('#checkProductBatch').modal('hide');
+		$("#cb_"+pId).prop("checked", "checked");
+		//to-do
+	}else{
+		bootbox.alert("商品数量分配不正确,请检查!");
+	}
+	
+}
+
 /**
  * modify stock status code 
  * @param  {string } orderId 
@@ -239,6 +316,21 @@ function getStockStatus (orderId) {
 			}
 		}
 	})
+}
+
+function calculateSum(origNum) {
+    var sum = 0;
+    $(".editNumInput").each(function() {
+        if(!isNaN(this.value) && this.value.length!=0) {
+            sum += parseFloat(this.value);
+        }
+    });
+    if (origNum != sum) {
+    	return false;
+    }else{
+    	return true;
+    }
+    
 }
 
 

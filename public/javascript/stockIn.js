@@ -76,7 +76,7 @@ function submitStockIn () {
 	obj["data"] = datas; 
 	var jsonString = JSON.stringify(obj); 
 	$.ajax({
-		url:'/stockins',
+		url:'/prestockins',
 		type:'POST',
 		data:{"jsonStr":jsonString},
 		dataType: 'json',

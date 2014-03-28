@@ -6,6 +6,7 @@
 	.js("/public/javascript/bootbox.min.js")
 	.js("/public/javascript/stockIn.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
+    .js("/public/javascript/jquery.fs.stepper.js")
 	.done(assets)
 	%>
 <!-- style -->
@@ -13,11 +14,14 @@
 	.css("/public/stylesheet/bootstrap-select.css")
 	.css("/public/stylesheet/datepicker.css")
 	.css("/public/stylesheet/simplePagination.css")
+    .css("/public/stylesheet/jquery.fs.stepper.css")
 	.done(assets)
 	%></head>
 
+
 <script type="text/javascript">
 	$(document).ready(function(){
+        $("input[type='number']").stepper();
 		$("#productID").keydown(function(event) {  
 	        if (event.keyCode == 13) {  
 	            getProductOneInfo($("#productID").val()); 

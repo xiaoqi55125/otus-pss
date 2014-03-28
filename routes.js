@@ -47,6 +47,7 @@ module.exports = function (app) {
     app.get("/stockOut",pssRender.stockOut);
     app.get("/order",pssRender.order);
     app.get("/stockIn",pssRender.stockIn);
+    app.get("/pStockIn",pssRender.pStockIn);
     app.get("/pro_cate",pssRender.pro_cate);
     app.get("/product",pssRender.products);
     app.get("/orderDetails/:orderId",pssRender.orderDetails);
