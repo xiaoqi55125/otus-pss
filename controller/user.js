@@ -27,6 +27,8 @@ var util     = require("../lib/util");
 var config   = require("../appConfig").config;
 var check    = require("validator").check;
 var sanitize = require("validator").sanitize;
+var async    = require("async");
+var SHA256   = require("crypto-js/sha256");
 
 /**
  * find all users
@@ -84,16 +86,26 @@ exports.add = function (req, res, next) {
     debugCtrller("controller/user/add");
 
     var userObj = {};
-    userObj.USER_ID   = util.GUID();
+    userObj.USER_ID   = req.body.USER_ID || "";
     userObj.USER_NAME = req.body.USER_NAME || "";
-    userObj.SEX       = req.body.SEX || "1";
+    userObj.PASSWORD  = req.body.PASSWORD || "1";
     userObj.REMARK    = req.body.REMARK || "";
 
     try {
+        check(userObj.USER_ID).notEmpty();
         check(userObj.USER_NAME).notEmpty();
+        check(userObj.PASSWORD).notEmpty();
+
+        sanitize(sanitize(userObj.USER_ID).trim).xss();
+        sanitize(sanitize(userObj.USER_NAME).trim).xss();
+        sanitize(sanitize(userObj.PASSWORD).trim).xss();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
+
+    userObj.SALT       = randomNumberWithBitNum(6);
+    userObj.PASSWORD   = SHA256(userObj.PASSWORD + userObj.SALT).toString();
+    userObj.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
     User.createUser(userObj, function (err, data) {
         if (err) {
@@ -117,15 +129,24 @@ exports.modify = function (req, res, next) {
     var userObj = {};
     userObj.USER_ID   = req.params.userId;
     userObj.USER_NAME = req.body.USER_NAME || "";
-    userObj.SEX       = req.body.SEX || "1";
+    userObj.PASSWORD  = req.body.PASSWORD || "";
     userObj.REMARK    = req.body.REMARK || "";
 
     try {
         check(userObj.USER_ID).notEmpty();
         check(userObj.USER_NAME).notEmpty();
+        check(userObj.PASSWORD).notEmpty();
+
+        sanitize(sanitize(userObj.USER_ID).trim).xss();
+        sanitize(sanitize(userObj.USER_NAME).trim).xss();
+        sanitize(sanitize(userObj.PASSWORD).trim).xss();
     } catch(e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
+
+    userObj.SALT       = randomNumberWithBitNum(6);
+    userObj.PASSWORD   = SHA256(userObj.PASSWORD + userObj.SALT).toString();
+    userObj.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
     User.modifyUser(userObj, function (err, data) {
         if (err) {
@@ -135,3 +156,82 @@ exports.modify = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * user sign in
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.signIn = function (req, res, next) {
+    debugCtrller("controller/user/signIn");
+
+    var userId      = req.body.auth.userId || "";
+    var passwd      = req.body.auth.passwd || "";
+
+    try {
+        check(userId).notEmpty();
+        check(passwd).notEmpty();
+
+        userId      = sanitize(sanitize(userId).trim()).xss();
+        passwd      = sanitize(sanitize(passwd).trim()).xss();
+    } catch (e) {
+        return res.send("5");
+    }
+
+    User.getUserById(userId, function (err, userAuthInfo) {
+        if (err) {
+            return res.send("3");
+        }
+
+        if (!userAuthInfo) {
+            return res.send("2");
+        }
+
+        var encryptPwd = SHA256(passwd + userAuthInfo.SALT).toString();
+
+        //check
+        if (userId === userAuthInfo.USER_ID && encryptPwd === userAuthInfo.PASSWORD) {
+            var user         = {};
+            user.userId      = userId;
+            user.uName       = userAuthInfo.USER_NAME; 
+            req.session.user = user;
+
+            userAuthInfo.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
+            User.modifyUser(userAuthInfo, function (err, row) {
+                if (err) {
+                    debugCtrller("[sign error]: %s", err);
+                    return res.send("0");
+                }
+
+                debugCtrller("success");
+                return res.send("1");
+            });
+
+        } else {
+            debugCtrller("fail");
+            return res.send("0");
+        }
+    });
+};
+
+
+/**
+ * generate random number with bit num [for salt]
+ * @param  {Number} bitNum the random number's bit num
+ * @return {String}        the string of random number's set
+ */
+function randomNumberWithBitNum (bitNum) {
+    var bn, num = "";
+    if (typeof bitNum === undefined) {
+        bn = 6;
+    } else {
+        bn = bitNum;
+    }
+
+    for (var i = 0; i < bn; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+    return num;
+}

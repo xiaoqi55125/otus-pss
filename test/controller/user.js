@@ -26,40 +26,41 @@ var request = require("supertest");
 var should  = require("should");
 var app     = require("../../app");
 var util    = require("../../lib/util");
+var MD5     = require("crypto-js/md5");
 
 describe('test for /controller/user.js', function () {
 
-    it('is testing func: /users', function (done) {
-        request(app).get("/users").expect(200).end(function (err, res) {
-            if (err) {
-                return done(err);
-            }
+    // it('is testing func: /users', function (done) {
+    //     request(app).get("/users").expect(200).end(function (err, res) {
+    //         if (err) {
+    //             return done(err);
+    //         }
 
-            should(res.body).have.property("statusCode", 0);
+    //         should(res.body).have.property("statusCode", 0);
 
-            done();
-        });
+    //         done();
+    //     });
         
-    });
+    // });
 
-    it('is testing func: /users/:userId', function (done) {
-        request(app).get("/users/12345678").expect(200).end(function (err, res) {
-            if (err) {
-                return done(err);
-            }
+    // it('is testing func: /users/:userId', function (done) {
+    //     request(app).get("/users/12345678").expect(200).end(function (err, res) {
+    //         if (err) {
+    //             return done(err);
+    //         }
 
-            should(res.body).have.property("statusCode", 0);
-            should(res.body.data).have.property("USER_NAME", "admin");
+    //         should(res.body).have.property("statusCode", 0);
+    //         should(res.body.data).have.property("USER_NAME", "admin");
 
-            done();
-        });
-    });
+    //         done();
+    //     });
+    // });
 
     it('is testing func: /users', function (done) {
         var param = {
-            USER_ID   : util.GUID(),
-            USER_NAME : util.GUID(),
-            SEX       : "1",
+            USER_ID   : "kobe1",
+            USER_NAME : "Kobe Bryant",
+            PASSWORD  : MD5("12345678").toString(),
             REMARK    : "test"
         };
 
@@ -76,18 +77,37 @@ describe('test for /controller/user.js', function () {
 
     it('is testing func: /users/:userId', function (done) {
         var param = {
-            USER_ID   : 12345678,
+            USER_ID   : "kobe",
             USER_NAME : "admin",
-            SEX       : "0",
-            REMARK    : "MODIFIED"
+            PASSWORD  : MD5("12345678").toString(),
+            REMARK    : "test"
         }
 
-        request(app).put("/users/12345678").send(param).expect(200).end(function (err, res) {
+        request(app).put("/users/kobe").send(param).expect(200).end(function (err, res) {
             if (err) {
                 return done(err);
             }
 
             should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+    });
+
+    it('is testing func: /signin', function(done) {
+        var encrptPasswd = MD5("12345678").toString()
+        debugTest("encrpt passwd:" + encrptPasswd);
+        var param = {
+            auth    : {
+                userId    : "admin",
+                passwd    : encrptPasswd
+            }
+        };
+
+        request(app).post("/signin").send(param).expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
 
             done();
         });

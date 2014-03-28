@@ -40,13 +40,13 @@ exports.getUserById = function (userId, callback) {
     }
 
     mysqlClient.query({
-        sql : "SELECT * FROM USER WHERE USER_ID = :USER_ID",
+        sql : "SELECT * FROM USER_LOGIN WHERE USER_ID = :USER_ID",
         params : {
             "USER_ID"  : userId
         }
     }, function (err, rows) {
         if (err) {
-            debugProxy("[getAllUsers error]: %s", err);
+            debugProxy("[getUserById error]: %s", err);
             return callback(new ServerError(), null);
         }
 
@@ -101,7 +101,7 @@ exports.getAllUsers = function (callback, pagingInfo) {
 exports.createUser = function (userInfo, callback) {
     debugProxy("proxy/user/createUser");
 
-    var sql = "INSERT INTO USER VALUES(:USER_ID, :USER_NAME, :SEX, :REMARK)";
+    var sql = "INSERT INTO USER_LOGIN VALUES(:USER_ID, :USER_NAME, :SALT, :PASSWORD, :LAST_LOGIN, :REMARK)";
 
     mysqlClient.query({
         sql     : sql,
@@ -125,7 +125,8 @@ exports.createUser = function (userInfo, callback) {
 exports.modifyUser = function (userInfo, callback) {
     debugProxy("proxy/user/modifyUserById");
 
-    var sql = "UPDATE USER SET USER_NAME = :USER_NAME, SEX = :SEX, REMARK = :REMARK " +
+    var sql = "UPDATE USER_LOGIN SET USER_NAME = :USER_NAME, SALT = :SALT, " +
+              " PASSWORD = :PASSWORD, LAST_LOGIN = :LAST_LOGIN, REMARK = :REMARK " +
               " WHERE USER_ID = :USER_ID";
 
     mysqlClient.query({

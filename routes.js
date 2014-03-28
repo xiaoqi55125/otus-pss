@@ -60,8 +60,9 @@ module.exports = function (app) {
      */
     
     //user
-    app.get("/users", userCtrller.findAll);
-    app.get("/users/:userId", userCtrller.findOne);
+    app.post("/signin", userCtrller.signIn);
+    // app.get("/users", userCtrller.findAll);
+    // app.get("/users/:userId", userCtrller.findOne);
     app.post("/users", userCtrller.add);
     app.put("/users/:userId", userCtrller.modify);
     // app.delete("/user/:userId", userCtrller.delete);
