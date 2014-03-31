@@ -111,6 +111,65 @@ function randomNumberWithBitNum (bitNum) {
 }
 
 /**
+ * common process : such authorize check
+ * @param  {Object}   req  the request's instance
+ * @param  {Object}   res  the instance of request
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.commonProcess = function (req, res, next) {
+    var necessaryAuth = isMatchedAuthList(req.path);
+    
+    var identifier    = req.get("X-Requested-With");
+    var isAjaxReq     = identifier && (identifier.toLowerCase() === AJAX_IDENTIFIER.toLowerCase());
+
+    if (necessaryAuth) {
+        if (isAjaxReq) {            //ajax request
+            debugCtrller("AJAX REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.send("AUTH_ERROR");
+            }
+        } else {                    //normal request
+            debugCtrller("NORMAL REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.redirect("/signin");
+            }
+        }
+    } else {
+        return next();
+    }
+};
+
+/**
+ * match urlPath in the auth list
+ * @param  {String}  urlPath the matching url path
+ * @return {Boolean}         if matched return true
+ */
+function isMatchedAuthList (urlPath) {
+    if (!urlPath) {
+        return true;
+    }
+
+    //handle the home / index path
+    if (urlPath === "/") {
+        return true;
+    }
+
+    //match one by one
+    for (var i = 0; i < auth_routers.length; i++) {
+        if (urlPath.indexOf(auth_routers[i]) != -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * get permission with user id
  * @param  {Object}   req  the instance of request
  * @param  {Object}   res  the instance of response

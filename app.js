@@ -68,6 +68,9 @@ app.configure(function () {
     }));
 });
 
+//custom middleware
+app.use(require("./controller/security").commonProcess);
+
 var maxAge = 3600000 * 24 * 30;
 var staticDir = path.join(__dirname, 'public');
 
