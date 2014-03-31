@@ -261,7 +261,6 @@ function addProductWithBatchNumToStockOutListView (pId,origNum) {
 		  $(this).remove();
 		});
 		for (var i = 0; i < $ttr.length; i++) {
-			//get one cell 
 			var $ttd = $($ttr[i].cells);
 			var row = tdCont.rowBatch(pId);
 			var cellNull = tdCont.cellBatch("");
