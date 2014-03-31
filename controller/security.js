@@ -35,6 +35,7 @@ var path         = require("path");
 
 var auth_routers = [];
 var re           = /app.[get,post,put,delete]/;
+var AJAX_IDENTIFIER = "XMLHttpRequest";
 
 fs.readFileSync(path.resolve(__dirname, '../routes.js')).toString().split('\n').forEach(function (line) { 
     if(re.test(line)){
@@ -43,7 +44,7 @@ fs.readFileSync(path.resolve(__dirname, '../routes.js')).toString().split('\n').
         var routeUrl = line.substring(firstQuotationIndex + 1, lastQuotationIndex);
         
         //exculde the /login url
-        if (routeUrl.indexOf("login") == -1) {
+        if ((routeUrl.indexOf("login") == -1) && (routeUrl.indexOf("signin") == -1)) {
             debugCtrller(routeUrl);
             auth_routers.push(routeUrl);
         }
@@ -180,7 +181,7 @@ function isMatchedAuthList (urlPath) {
 
     //match one by one
     for (var i = 0; i < auth_routers.length; i++) {
-        if (urlPath.indexOf(auth_routers[i]) != -1) {
+        if (urlPath.indexOf(auth_routers[i]) != -1 && auth_routers[i] !== "/") {
             return true;
         }
     }
@@ -309,4 +310,18 @@ exports.deleteUserSecurityGroup = function (req, res, next) {
 
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
     });
+};
+
+/**
+ * sign out
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.signOut = function (req, res, next) {
+    debugCtrller("controller/security/signOut");
+    req.session.destroy();
+    res.clearCookie();
+    return res.redirect("/login");
 };
