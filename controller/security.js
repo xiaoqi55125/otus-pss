@@ -44,11 +44,9 @@ fs.readFileSync(path.resolve(__dirname, '../routes.js')).toString().split('\n').
         debugCtrller(routeUrl);
 
         //exculde the /signin url
-        if (routeUrl.indexOf("signin") != -1) {
-            continue;
+        if (routeUrl.indexOf("signin") == -1) {
+            auth_routers.push(routeUrl);
         }
-
-        auth_routers.push(routeUrl);
     }
 });
 
