@@ -63,7 +63,6 @@ module.exports = function (app) {
      */
     
     //user
-    app.post("/signin", userCtrller.signIn);
     // app.get("/users", userCtrller.findAll);
     // app.get("/users/:userId", userCtrller.findOne);
     app.post("/users", userCtrller.add);
@@ -130,6 +129,7 @@ module.exports = function (app) {
     app.get("/journals", journalCtrller.findJournal);
 
     //security
+    app.post("/signin", securityCtrller.signIn);
     app.get("/users/:userId/permissions", securityCtrller.permissions);
     app.get("/securitygroups", securityCtrller.findAllSecurityGroup);
     app.delete("/usersecuritygroups", securityCtrller.addUserSecurityGroup);

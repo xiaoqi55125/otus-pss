@@ -22,11 +22,152 @@
   Desc: the controller of security
  */
 
-var Security   = require("../proxy").Security;
-var util       = require("../lib/util");
-var config     = require("../appConfig").config;
-var check      = require("validator").check;
-var sanitize   = require("validator").sanitize;
+var Security = require("../proxy").Security;
+var User     = require("../proxy").User;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+var async    = require("async");
+var SHA256   = require("crypto-js/sha256");
+
+/**
+ * user sign in
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.signIn = function (req, res, next) {
+    debugCtrller("controller/user/signIn");
+
+    var userId      = req.body.auth.userId || "";
+    var passwd      = req.body.auth.passwd || "";
+
+    try {
+        check(userId).notEmpty();
+        check(passwd).notEmpty();
+
+        userId      = sanitize(sanitize(userId).trim()).xss();
+        passwd      = sanitize(sanitize(passwd).trim()).xss();
+    } catch (e) {
+        return res.send("5");
+    }
+
+    User.getUserById(userId, function (err, userAuthInfo) {
+        if (err) {
+            return res.send("3");
+        }
+
+        if (!userAuthInfo) {
+            return res.send("2");
+        }
+
+        var encryptPwd = SHA256(passwd + userAuthInfo.SALT).toString();
+
+        //check
+        if (userId === userAuthInfo.USER_ID && encryptPwd === userAuthInfo.PASSWORD) {
+            var user         = {};
+            user.userId      = userId;
+            user.uName       = userAuthInfo.USER_NAME; 
+            req.session.user = user;
+
+            userAuthInfo.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
+            User.modifyUser(userAuthInfo, function (err, row) {
+                if (err) {
+                    debugCtrller("[sign error]: %s", err);
+                    return res.send("0");
+                }
+
+                debugCtrller("success");
+                return res.send("1");
+            });
+
+        } else {
+            debugCtrller("fail");
+            return res.send("0");
+        }
+    });
+};
+
+
+/**
+ * generate random number with bit num [for salt]
+ * @param  {Number} bitNum the random number's bit num
+ * @return {String}        the string of random number's set
+ */
+function randomNumberWithBitNum (bitNum) {
+    var bn, num = "";
+    if (typeof bitNum === undefined) {
+        bn = 6;
+    } else {
+        bn = bitNum;
+    }
+
+    for (var i = 0; i < bn; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+    return num;
+}
+
+/**
+ * common process : such authorize check
+ * @param  {Object}   req  the request's instance
+ * @param  {Object}   res  the instance of request
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.commonProcess = function (req, res, next) {
+    var necessaryAuth = isMatchedAuthList(req.path);
+    
+    var identifier    = req.get("X-Requested-With");
+    var isAjaxReq     = identifier && (identifier.toLowerCase() === AJAX_IDENTIFIER.toLowerCase());
+
+    if (necessaryAuth) {
+        if (isAjaxReq) {            //ajax request
+            debugCtrller("AJAX REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.send("AUTH_ERROR");
+            }
+        } else {                    //normal request
+            debugCtrller("NORMAL REQUEST");
+            if (req.session && req.session.user) {
+                return next();
+            } else {
+                return res.redirect("/signin");
+            }
+        }
+    } else {
+        return next();
+    }
+};
+
+/**
+ * match urlPath in the auth list
+ * @param  {String}  urlPath the matching url path
+ * @return {Boolean}         if matched return true
+ */
+function isMatchedAuthList (urlPath) {
+    if (!urlPath) {
+        return true;
+    }
+
+    //handle the home / index path
+    if (urlPath === "/") {
+        return true;
+    }
+
+    //match one by one
+    for (var i = 0; i < auth_routers.length; i++) {
+        if (urlPath.indexOf(auth_routers[i]) != -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 /**
  * get permission with user id
