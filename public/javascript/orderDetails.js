@@ -1,10 +1,13 @@
 var tdCont = {
   cell: function(item) {
-    return $("<td style='line-height: 35px;'></td>").html(item);
+    return $("<td></td>").html(item);
   },
 
   row: function(pId) {
     return $("<tr id='"+pId+"'></tr>");
+  },
+  rowInner: function() {
+    return $("<tr></tr>");
   }
 };
 function getOrderById (oId) {
@@ -24,17 +27,32 @@ function getOrderById (oId) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
 					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-					//var cellPRICE = tdCont.cell(cellData.AMOUNT);
 					var cellNum = tdCont.cell(cellData.NUM);
-					//var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
-					//var cellRemark = tdCont.cell(cellData.REMARK);
 					row.append(cellName);
 					row.append(cellNum);
-					//row.append(cellCount);
-					//row.append(cellRemark);
 					$("#astStockOut_listView").append(row);
 				}
+				$.ajax({
+					url:"/stockouts/"+oId,
+					type:"GET",
+					success:function (data) {
+						if (data.statusCode === 0 ) {
+
+							for (var i = 0; i < data.data.length; i++) {
+								var cellData = data.data[i];
+								var row = tdCont.rowInner();
+								var cellBacthNum = tdCont.cell("<div id='bar_"+cellData.BATCH_NUM+"'></div>");
+								var cellCnt = tdCont.cell(cellData.NUM);
+								row.append(cellBacthNum);
+								row.append(cellCnt);
+								$("tr#"+cellData.PRODUCT_ID).after(row);
+								$("#bar_"+cellData.BATCH_NUM).barcode(cellData.BATCH_NUM, "codabar");  
+							};
+						};
+					}
+				})
 			}
 		}
-	})
+	});
+
 }

@@ -49,16 +49,12 @@ exports.getStockoutsByOrderId = function (orderId, callback) {
             "ORDER_ID"  : orderId
         }
     }, function (err, rows) {
-        if (err) {
+        if (err || !rows) {
             debugProxy("[getStockoutsByOrderId error]: %s", err);
             return callback(new ServerError(), null);
         }
-
-        if (rows && rows.length > 0) {
-            return callback(null, rows[0]);
-        }
         
-        return callback(null, null);
+        return callback(null, rows);
     });
 };
 
