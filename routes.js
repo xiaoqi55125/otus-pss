@@ -33,6 +33,7 @@ var inventoryCtrller       = require("./controller/inventory");
 var orderCtrller           = require("./controller/order");
 var pssRender              = require('./controller/render');
 var preStockInCtrller      = require("./controller/preStockIn");
+var securityCtrller        = require("./controller/security");
 
 module.exports = function (app) {
 
@@ -127,6 +128,12 @@ module.exports = function (app) {
     //journal  
     //params : jtId=:jtId&productId=:productId&from_dt=:from_dt&to_dt=:to_dt
     app.get("/journals", journalCtrller.findJournal);
+
+    //security
+    app.get("/users/:userId/permissions", securityCtrller.permissions);
+    app.get("/securitygroups", securityCtrller.findAllSecurityGroup);
+    app.delete("/usersecuritygroups", securityCtrller.addUserSecurityGroup);
+    app.put("/usersecuritygroups/:userId/:groupId", securityCtrller.deleteUserSecurityGroup);
 
 }
 
