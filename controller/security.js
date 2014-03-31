@@ -41,10 +41,10 @@ fs.readFileSync(path.resolve(__dirname, '../routes.js')).toString().split('\n').
         var firstQuotationIndex = line.indexOf('"');
         var lastQuotationIndex = line.lastIndexOf('"');
         var routeUrl = line.substring(firstQuotationIndex + 1, lastQuotationIndex);
-        debugCtrller(routeUrl);
-
-        //exculde the /signin url
-        if (routeUrl.indexOf("signin") == -1) {
+        
+        //exculde the /login url
+        if (routeUrl.indexOf("login") == -1) {
+            debugCtrller(routeUrl);
             auth_routers.push(routeUrl);
         }
     }
