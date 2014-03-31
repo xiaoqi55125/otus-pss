@@ -45,7 +45,17 @@ exports.index = function (req, res, next) {
   debugCtrller("/controller/render/index");
   res.render('subview/stockIn');
 }
-
+/**
+ * show login page
+ * @param  {object}   req  the request object
+ * @param  {object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.showLogin = function (req, res, next) {
+    debugCtrller("controllers/login/showLogin");
+    res.render("login");
+};
 /**
  * pStockIn page controller
  * @param  {object}   req  the instance of request

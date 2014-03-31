@@ -44,6 +44,7 @@ module.exports = function (app) {
      * ----------------------------------- page ----------------------------- *
      */
     app.get("/",pssRender.index);
+    app.get("/login",pssRender.showLogin);
     app.get("/stockOut",pssRender.stockOut);
     app.get("/order",pssRender.order);
     app.get("/stockIn",pssRender.stockIn);
