@@ -22,14 +22,29 @@
   Desc: the controller of security
  */
 
-var Security = require("../proxy").Security;
-var User     = require("../proxy").User;
-var util     = require("../lib/util");
-var config   = require("../appConfig").config;
-var check    = require("validator").check;
-var sanitize = require("validator").sanitize;
-var async    = require("async");
-var SHA256   = require("crypto-js/sha256");
+var Security     = require("../proxy").Security;
+var User         = require("../proxy").User;
+var util         = require("../lib/util");
+var config       = require("../appConfig").config;
+var check        = require("validator").check;
+var sanitize     = require("validator").sanitize;
+var async        = require("async");
+var SHA256       = require("crypto-js/sha256");
+var fs           = require("fs");
+var path         = require("path");
+
+var auth_routers = [];
+var re           = /app.[get,post,put,delete]/;
+
+fs.readFileSync(path.resolve(__dirname, '../routes.js')).toString().split('\n').forEach(function (line) { 
+    if(re.test(line)){
+        var firstQuotationIndex = line.indexOf('"');
+        var lastQuotationIndex = line.lastIndexOf('"');
+        var routeUrl = line.substring(firstQuotationIndex + 1, lastQuotationIndex);
+        debugCtrller(routeUrl);
+        auth_routers.push(routeUrl);
+    }
+});
 
 /**
  * user sign in
