@@ -22,11 +22,93 @@
   Desc: the controller of security
  */
 
-var Security   = require("../proxy").Security;
-var util       = require("../lib/util");
-var config     = require("../appConfig").config;
-var check      = require("validator").check;
-var sanitize   = require("validator").sanitize;
+var Security = require("../proxy").Security;
+var User     = require("../proxy").User;
+var util     = require("../lib/util");
+var config   = require("../appConfig").config;
+var check    = require("validator").check;
+var sanitize = require("validator").sanitize;
+var async    = require("async");
+var SHA256   = require("crypto-js/sha256");
+
+/**
+ * user sign in
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.signIn = function (req, res, next) {
+    debugCtrller("controller/user/signIn");
+
+    var userId      = req.body.auth.userId || "";
+    var passwd      = req.body.auth.passwd || "";
+
+    try {
+        check(userId).notEmpty();
+        check(passwd).notEmpty();
+
+        userId      = sanitize(sanitize(userId).trim()).xss();
+        passwd      = sanitize(sanitize(passwd).trim()).xss();
+    } catch (e) {
+        return res.send("5");
+    }
+
+    User.getUserById(userId, function (err, userAuthInfo) {
+        if (err) {
+            return res.send("3");
+        }
+
+        if (!userAuthInfo) {
+            return res.send("2");
+        }
+
+        var encryptPwd = SHA256(passwd + userAuthInfo.SALT).toString();
+
+        //check
+        if (userId === userAuthInfo.USER_ID && encryptPwd === userAuthInfo.PASSWORD) {
+            var user         = {};
+            user.userId      = userId;
+            user.uName       = userAuthInfo.USER_NAME; 
+            req.session.user = user;
+
+            userAuthInfo.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
+            User.modifyUser(userAuthInfo, function (err, row) {
+                if (err) {
+                    debugCtrller("[sign error]: %s", err);
+                    return res.send("0");
+                }
+
+                debugCtrller("success");
+                return res.send("1");
+            });
+
+        } else {
+            debugCtrller("fail");
+            return res.send("0");
+        }
+    });
+};
+
+
+/**
+ * generate random number with bit num [for salt]
+ * @param  {Number} bitNum the random number's bit num
+ * @return {String}        the string of random number's set
+ */
+function randomNumberWithBitNum (bitNum) {
+    var bn, num = "";
+    if (typeof bitNum === undefined) {
+        bn = 6;
+    } else {
+        bn = bitNum;
+    }
+
+    for (var i = 0; i < bn; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+    return num;
+}
 
 /**
  * get permission with user id
