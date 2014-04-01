@@ -71,12 +71,12 @@ exports.getAllUsers = function (callback, pagingInfo) {
     var params = {};
 
     if (pagingInfo) {
-        sql                  = "SELECT * FROM USER LIMIT :start, :end ";
+        sql                  = "SELECT * FROM USER_LOGIN LIMIT :start, :end ";
         pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
         params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
         params.end           = config.default_page_size;
     } else {
-        sql = "SELECT * FROM USER ";
+        sql = "SELECT * FROM USER_LOGIN ";
     }
 
     mysqlClient.query({
