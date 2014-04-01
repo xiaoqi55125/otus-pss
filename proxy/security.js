@@ -53,6 +53,34 @@ exports.getPermissionByUserId = function (userId, callback) {
 };
 
 /**
+ * get security group by user id
+ * @param  {String}   userId   the user id
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.getSecurityGroupByUserId = function (userId, callback) {
+    debugProxy("proxy/security/getSecurityGroupByUserId");
+
+    var sql = "SELECT SG.GROUP_ID FROM otusDB.USER_LOGIN_SECURITY_GROUP USG " +
+              "  LEFT JOIN SECURITY_GROUP SG ON USG.GROUP_ID = SG.GROUP_ID " +
+              " WHERE USG.USER_LOGIN_ID = :USER_LOGIN_ID ";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : {
+            USER_LOGIN_ID     : userId
+        }
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[getSecurityGroupByUserId error] :%s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};
+
+/**
  * get all security group
  * @param  {Function} callback the cb func
  * @return {null}            

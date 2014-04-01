@@ -93,7 +93,21 @@ exports.signIn = function (req, res, next) {
             req.session.user = user;
 
             userAuthInfo.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
-            User.modifyUser(userAuthInfo, function (err, row) {
+            async.series([
+                //step 1: change last login time
+                function (callback) {
+                    User.modifyUser(userAuthInfo, function (err, data) {
+                        callback(err, null);
+                    });
+                },
+                //step 2: get current user's permission
+                function (callback) {
+                    Security.getPermissionByUserId(userId, function (err, data) {
+                        req.session.permissions = data;
+                        callback(err, null);
+                    });
+                }
+            ],  function (err, results) {
                 if (err) {
                     debugCtrller("[sign error]: %s", err);
                     return res.send("0");
@@ -209,6 +223,34 @@ exports.permissions = function (req, res, next) {
     }
 
     Security.getPermissionByUserId(userId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, config.err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
+
+/**
+ * find user security group
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findUserSecurityGroup = function (req, res, next) {
+    debugCtrller("controller/security/findUserSecurityGroup");
+
+    var userId = req.params.userId || "";
+
+    try {
+        check(userId).notEmpty();
+        sanitize(sanitize(userId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Security.getSecurityGroupByUserId(userId, function (err, data) {
         if (err) {
             return res.send(util.generateRes(null, config.err.statusCode));
         }

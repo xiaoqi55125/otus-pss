@@ -42,24 +42,24 @@ describe('test for /controller/security.js', function () {
         
     });
 
-    it('is testing func: /usersecuritygroups', function (done) {
+    // it('is testing func: /usersecuritygroups', function (done) {
 
-        var params = {
-            userId    : util.GUID(),
-            groupId   : util.GUID()
-        };
+    //     var params = {
+    //         userId    : util.GUID(),
+    //         groupId   : util.GUID()
+    //     };
 
-        request(app).post("/usersecuritygroups").send(params).expect(200).end(function (err, res) {
-            if (err) {
-                return done(err);
-            }
+    //     request(app).post("/usersecuritygroups").send(params).expect(200).end(function (err, res) {
+    //         if (err) {
+    //             return done(err);
+    //         }
 
-            should(res.body).have.property("statusCode", 0);
+    //         should(res.body).have.property("statusCode", 0);
 
-            done();
-        });
+    //         done();
+    //     });
         
-    });
+    // });
 
     // it('is testing func: /usersecuritygroups/:userId/:groupId', function (done) {
 
@@ -78,6 +78,20 @@ describe('test for /controller/security.js', function () {
     it('is testing func: /users/:userId/permissions', function (done) {
 
         request(app).get("/users/abcd/permissions").expect(200).end(function (err, res) {
+            if (err) {
+                return done(err);
+            }
+
+            should(res.body).have.property("statusCode", 0);
+
+            done();
+        });
+        
+    });
+
+    it('is testing func: /users/:userId/securitygroups', function (done) {
+
+        request(app).get("/users/abcd/securitygroups").expect(200).end(function (err, res) {
             if (err) {
                 return done(err);
             }
