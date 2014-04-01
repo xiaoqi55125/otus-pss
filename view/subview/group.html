@@ -1,0 +1,52 @@
+<head>
+<!-- script -->
+<%- Loader("/public/javascript/group.min.js")
+	.js("/public/javascript/bootstrap-select.js")
+	.js("/public/javascript/bootstrap-datepicker.js")
+	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/group.js")
+	.js("/public/lib/jquery/jquery.simplePagination.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/group.min.css")
+	.css("/public/stylesheet/bootstrap-select.css")
+	.css("/public/stylesheet/datepicker.css")
+	.css("/public/stylesheet/simplePagination.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		getAllUsers ();
+		getAllGroups ();
+	});
+</script>
+<div class="main_div">
+	<h3>权限分配</h3>
+	<hr>
+	<form class="groupSec">
+        <div class="row">
+            
+            <div class="col-md-3">
+                选择用户:
+                <select  id="userSelect" name="userId"  class="selectpicker show-tick">
+                    <option value="0">-- 请选择用户 --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                选择权限组:
+                <select  id="groupSelect" name="groupId"  class="selectpicker show-tick">
+                    <option value="0">-- 请选择权限组 --</option>
+                </select>
+            </div>
+           
+        </div>
+        <div class="row">
+             <div class="col-md-3">
+                <button type="button" class="btn btn-primary" style="margin-top:10px" onclick="allocGroup()">分配权限</button>
+            </div>
+        </div>
+    </form>
+	
+</div>

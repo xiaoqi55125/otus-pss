@@ -44,12 +44,18 @@
 					          	<li id="product"><a href="/product">商品管理</a></li>
 								<li id="product_category"><a href="/pro_cate">商品类型管理</a></li>
 								<li id="journal"><a href="/journal">操作记录</a></li>
+								<li id="group"><a href="/group">权限分配</a></li>
 					        </ul>
 					    </li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">你好</a></li>
-						<li><a href="#">设置</a></li>
+						<li><a href="#"><%= current_user.uName %>你好</a></li>
+						<li class="dropdown">
+					        <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置 <b class="caret"></b></a>
+					        <ul class="dropdown-menu">
+					          	<li id="editPwd"><a href="/editPwd">修改密码</a></li>
+					        </ul>
+					    </li>
 						<li><a href="/signout">退出</a></li>
 					</ul>
 				</div>

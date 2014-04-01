@@ -54,7 +54,19 @@ exports.index = function (req, res, next) {
  */
 exports.showLogin = function (req, res, next) {
     debugCtrller("controllers/login/showLogin");
-    res.render("login");
+    res.render("login",{layout: false});
+};
+
+/**
+ * show editPwd page
+ * @param  {object}   req  the request object
+ * @param  {object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.editPwd = function (req, res, next) {
+    debugCtrller("controllers/login/editPwd");
+    res.render("subview/editPwd");
 };
 /**
  * pStockIn page controller
@@ -165,5 +177,17 @@ exports.products = function (req, res, next) {
 exports.journal = function (req, res, next) {
   debugCtrller("/controller/render/journal");
   res.render('subview/journal');
+}
+
+/**
+ * group page controller
+ * @param  {object}   req  the instance of request
+ * @param  {object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}
+ */
+exports.group = function (req, res, next) {
+  debugCtrller("/controller/render/group");
+  res.render('subview/group');
 }
 

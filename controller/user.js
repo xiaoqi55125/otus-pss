@@ -27,6 +27,7 @@ var util     = require("../lib/util");
 var config   = require("../appConfig").config;
 var check    = require("validator").check;
 var sanitize = require("validator").sanitize;
+var SHA256       = require("crypto-js/sha256");
 
 /**
  * find all users
@@ -154,4 +155,23 @@ exports.modify = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * generate random number with bit num [for salt]
+ * @param  {Number} bitNum the random number's bit num
+ * @return {String}        the string of random number's set
+ */
+function randomNumberWithBitNum (bitNum) {
+    var bn, num = "";
+    if (typeof bitNum === undefined) {
+        bn = 6;
+    } else {
+        bn = bitNum;
+    }
+
+    for (var i = 0; i < bn; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+    return num;
+}
 

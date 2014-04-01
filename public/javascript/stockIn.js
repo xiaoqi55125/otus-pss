@@ -17,12 +17,28 @@ var tdCont = {
  * add the temp to the book list
  */
 function addProductToList() {
-	//without check
-	if (true) {};
-
+	if(!$("#productID").val()){
+	    bootbox.alert("请输入产品编号!");
+	    return;
+	}
+	if(!$("#productName").val()){
+	    bootbox.alert("请输入产品名称!");
+	    return;
+	}
+	if($('#productNum').val() <= 0 || !$("#productNum").val()){
+	    bootbox.alert("请输入正确的数量!");
+	    return;
+	}
+	if($('#productPrice').val() <= 0 || !$("#productPrice").val()|| !isDigit($('#productPrice').val()) ){
+    	bootbox.alert("请输入正确的单价!");
+    	return;
+  	}
+  	if(!$("#batchNum").val()){
+	    bootbox.alert("请输入产品批号!");
+	    return;
+	}
 
 	var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
-	//alert(qs.NUM);
 	var cellData = qs;
 	var row = tdCont.row(cellData.PRODUCT_ID);
 	var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
@@ -56,9 +72,16 @@ function addProductToList() {
 	
 }
 
+/**
+ * submit some product to pre stockIn
+ * @return {null} 
+ */
 function submitStockIn () {
-	//without check 
 	var $ttr = $("#add_listView").children();
+	if (!$ttr.length) {
+		bootbox.alert("列表中无数据");
+		return;
+	};
 	var datas = [];
 	for (var i = 0; i < $ttr.length; i++) {
 		var $ttd = $ttr[i].cells;
@@ -91,6 +114,11 @@ function submitStockIn () {
 	})
 }
 
+/**
+ * remove tr
+ * @param  {pId} pId as the id of tr
+ * @return {null}     
+ */
 function removeTemp (pId) {
 	$("#"+pId).remove();
 }
@@ -119,11 +147,6 @@ function getProductOneInfo(pId) {
 	})
 }
 
-// function checkProductAndFill (pId) {
-// 	var pInfo = getProductOneInfo(pId);
-// 	alert(pInfo.PRODUCT_NAME);
-// }
-
 jQuery.extend({
   parseQuerystring: function(str){
     var nvpair = {};
@@ -136,3 +159,18 @@ jQuery.extend({
     return nvpair;
   }
 });
+
+
+/**
+ * isDigit 
+ * @param  {string}  value value
+ * @return {Boolean}       
+ */
+function isDigit(value) {
+    var patrn = /^[0-9]*$/;
+    if (patrn.exec(value) == null || value == "") {
+        return false;
+    } else {
+        return true;
+    }
+}

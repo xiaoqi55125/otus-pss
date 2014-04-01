@@ -55,6 +55,8 @@ module.exports = function (app) {
     app.get("/orderDetails/:orderId",pssRender.orderDetails);
     app.get("/journal",pssRender.journal);
     app.get("/inventory",pssRender.inventory);
+    app.get("/group",pssRender.group);
+    app.get("/editPwd",pssRender.editPwd);
 
     
     
@@ -63,7 +65,7 @@ module.exports = function (app) {
      */
     
     //user
-    // app.get("/users", userCtrller.findAll);
+    app.get("/users", userCtrller.findAll);
     // app.get("/users/:userId", userCtrller.findOne);
     app.post("/users", userCtrller.add);
     app.put("/users/:userId", userCtrller.modify);
@@ -133,8 +135,8 @@ module.exports = function (app) {
     app.get("/signout", securityCtrller.signOut);
     app.get("/users/:userId/permissions", securityCtrller.permissions);
     app.get("/securitygroups", securityCtrller.findAllSecurityGroup);
-    app.delete("/usersecuritygroups", securityCtrller.addUserSecurityGroup);
-    app.put("/usersecuritygroups/:userId/:groupId", securityCtrller.deleteUserSecurityGroup);
+    app.post("/usersecuritygroups", securityCtrller.addUserSecurityGroup);
+    app.delete("/usersecuritygroups/:userId/:groupId", securityCtrller.deleteUserSecurityGroup);
 
 }
 

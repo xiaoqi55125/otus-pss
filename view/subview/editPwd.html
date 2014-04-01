@@ -1,0 +1,37 @@
+
+<head>
+<!-- script -->
+<%- Loader("/public/libs/js/editPwd.min.js")
+	.js("/public/javascript/editPwd.js")
+	.js("/public/lib/CryptoJS_v3.1.2/rollups/md5.js")
+	.done(assets)
+	%>
+<!-- style -->
+<%- Loader("/public/stylesheet/editPwd.min.css")
+	.css("/public/stylesheet/login.css")
+	.done(assets)
+	%></head>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#div_tip").hide();
+		
+	});
+
+</script>
+
+<div class="main_div">
+	<div class="main_div2">
+			<h2 class="form-signin-heading">修改密码</h2>
+			<input id="userId" style="display:none" value="<%= current_user.userId %>">
+			<input id="userName" style="display:none" value="<%= current_user.uName %>">
+			<input id="input_pwd" type="password" class="form-control" placeholder="旧密码" required>
+			<input id="input_pwd2" type="password" class="form-control" placeholder="新密码" required>
+			<button id="submitBtn" class="btn btn-lg btn-primary btn-block margin-topForLoginBtn" 
+			onclick="AutoPwd()">修改密码</button>
+			<div id="div_tip" class="alert alert-danger fade in margin-topForTipDiv">
+				<span id="span_tipMsg"></span>
+			</div>
+		
+	</div>
+</div>

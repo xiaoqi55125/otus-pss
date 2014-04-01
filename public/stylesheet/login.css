@@ -1,4 +1,7 @@
 
+
+
+
 .main_div2{
 	padding-top: 10px;
 	width: 300px;
@@ -14,4 +17,7 @@
 }
 #input_pwd{
 	margin: 10px auto;
+}
+#input_pwd2{
+	margin-bottom: 10px;
 }

@@ -39,7 +39,7 @@ require("../lib/DateUtil");
  */
 exports.stockIn = function (req, res, next) {
     debugCtrller("controller/stockIn/stockIn");
-
+    
     var psiId = req.params.psiId;
 
     try {

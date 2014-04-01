@@ -24,17 +24,17 @@ function getAllInventories () {
 					var num = tdCont.cell(iInfo.NUM);
 					var price = tdCont.cell(iInfo.PRICE);
 					var manName = tdCont.cell(iInfo.MANUFACTURE_NAME);
-					var manDate ;
-					if (moment(iInfo.MANUFACTURE_DATE).isValid()) {
-						manDate = tdCont.cell(moment(iInfo.MANUFACTURE_DATE).format("YYYY年 M月 D日 H:mm:ss"));
-					}else{
-						manDate = tdCont.cell('无');
-					}
+					// var manDate ;
+					// if (moment(iInfo.MANUFACTURE_DATE).isValid()) {
+					// 	manDate = tdCont.cell(moment(iInfo.MANUFACTURE_DATE).format("YYYY年 M月 D日 H:mm:ss"));
+					// }else{
+					// 	manDate = tdCont.cell('无');
+					// }
 					row.append(pName);
 					row.append(num);
 					row.append(price);
 					row.append(manName);
-					row.append(manDate);
+					//row.append(manDate);
 					$("#add_listView").append(row);
 				};
 			}

@@ -91,6 +91,7 @@ exports.signIn = function (req, res, next) {
             user.userId      = userId;
             user.uName       = userAuthInfo.USER_NAME; 
             req.session.user = user;
+            
 
             userAuthInfo.LAST_LOGIN = new Date().Format("yyyy-MM-dd hh:mm:ss");
             User.modifyUser(userAuthInfo, function (err, row) {
@@ -147,6 +148,8 @@ exports.commonProcess = function (req, res, next) {
         if (isAjaxReq) {            //ajax request
             debugCtrller("AJAX REQUEST");
             if (req.session && req.session.user) {
+                //res.local("current_user", req.session.user);
+                res.locals.current_user = req.session.user;
                 return next();
             } else {
                 return res.send("AUTH_ERROR");
@@ -154,6 +157,7 @@ exports.commonProcess = function (req, res, next) {
         } else {                    //normal request
             debugCtrller("NORMAL REQUEST");
             if (req.session && req.session.user) {
+                res.locals.current_user = req.session.user;
                 return next();
             } else {
                 return res.redirect("/login");

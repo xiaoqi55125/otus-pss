@@ -36,32 +36,31 @@ function getProductCates() {
  * add product 
  */
 function addProduct () {
-	if(!$("#productID").val()){
-		bootbox.alert("请输入产品编号!");
-		return;
-	}
+  if(!$("#productID").val()){
+    bootbox.alert("请输入产品编号!");
+    return;
+  }
 
-	if($('#proPrice').val() <= 0 || !$("#proPrice").val()|| !isDigit($('#proPrice').val()) ){
-		bootbox.alert("请输入正确的单价!");
-		return;
-	}
-	if($("#proCateType").val() == '0' ){
-		bootbox.alert("请选择产品类别!");
-		return;
-	}
-  	//without check
-  	$.ajax({
-  		url:"/products",
-  		type:"POST",
-  		data:$('form.productAdd').serialize(),
-  		success:function (data) {
-  			if (data.statusCode === 0) {
-  				bootbox.alert("商品添加成功");
-  			}else{
-  				bootbox.alert("商品添加失败");
-  			}
-  		}
-  	})
+  if($('#proPrice').val() <= 0 || !$("#proPrice").val()|| !isDigit($('#proPrice').val()) ){
+    bootbox.alert("请输入正确的单价!");
+    return;
+  }
+  if($("#proCateType").val() == '0' ){
+    bootbox.alert("请选择产品类别!");
+    return;
+  }
+    $.ajax({
+      url:"/products",
+      type:"POST",
+      data:$('form.productAdd').serialize(),
+      success:function (data) {
+        if (data.statusCode === 0) {
+          bootbox.alert("商品添加成功");
+        }else{
+          bootbox.alert("商品添加失败");
+        }
+      }
+    })
 
 }
 
@@ -107,13 +106,13 @@ function showProduct (pcList) {
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellMANU = tdCont.cell(cellData.MANUFACTURE_NAME);
-		var cellManuTime = tdCont.cell(cellData.MANUFACTURE_TIME);
+		//var cellManuTime = tdCont.cell(cellData.MANUFACTURE_TIME);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>修改</a>"));
 		EditLink.click(tdCont.editProduct(cellData.PRODUCT_ID));
 		row.append(cellName);
 		row.append(cellPRICE);
 		row.append(cellMANU);
-		row.append(cellManuTime);
+		//row.append(cellManuTime);
 		row.append(EditLink);
 		$("#pd_listView").append(row);
 	};

@@ -1,8 +1,10 @@
 <head>
 <!-- script -->
 <%- Loader("/public/javascript/login.min.js")
-	.js("/public/javascript/bootbox.min.js")
+	.js('/public/lib/jquery/jquery-1.10.2.min.js')
+	.js('/public/lib/bootstrap/js/bootstrap.js')
 	.js("/public/javascript/login.js")
+	.js("/public/javascript/bootbox.min.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
 	.js("/public/lib/CryptoJS_v3.1.2/rollups/sha256.js")
 	.js("/public/lib/CryptoJS_v3.1.2/rollups/md5.js")
@@ -11,12 +13,15 @@
 <!-- style -->
 <%- Loader("/public/stylesheet/login.min.css")
 	.css("/public/stylesheet/login.css")
+	.css("/public/lib/bootstrap/css/bootstrap.css")
+	.css("/public/stylesheet/layout.css")
+	.css("/public/stylesheet/simplePagination.css")
 	.done(assets)
 	%></head>
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".navbar-default ").hide();
+		
 	});
 </script>
 <div class="main_div">
