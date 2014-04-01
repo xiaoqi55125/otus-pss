@@ -133,6 +133,7 @@ module.exports = function (app) {
     //security
     app.post("/signin", securityCtrller.signIn);
     app.get("/signout", securityCtrller.signOut);
+    app.get("/users/:userId/securitygroups", securityCtrller.findUserSecurityGroup);
     app.get("/users/:userId/permissions", securityCtrller.permissions);
     app.get("/securitygroups", securityCtrller.findAllSecurityGroup);
     app.post("/usersecuritygroups", securityCtrller.addUserSecurityGroup);
