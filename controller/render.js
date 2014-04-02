@@ -69,6 +69,17 @@ exports.editPwd = function (req, res, next) {
     res.render("subview/editPwd");
 };
 /**
+ * show addUser page
+ * @param  {object}   req  the request object
+ * @param  {object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.addUser = function (req, res, next) {
+    debugCtrller("controllers/login/addUser");
+    res.render("subview/addUser");
+};
+/**
  * pStockIn page controller
  * @param  {object}   req  the instance of request
  * @param  {object}   res  the instance of response

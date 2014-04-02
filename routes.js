@@ -57,6 +57,7 @@ module.exports = function (app) {
     app.get("/inventory",pssRender.inventory);
     app.get("/group",pssRender.group);
     app.get("/editPwd",pssRender.editPwd);
+    app.get("/addUser",pssRender.addUser);
 
     
     
