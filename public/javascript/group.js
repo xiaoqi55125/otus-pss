@@ -72,7 +72,7 @@ function getAllGroups (uId) {
 											 temp = "<option value='" + group.GROUP_ID + "'>" + group.DESCRIPTION + "</option>";
 										}
 									}else{
-										 temp = "<option value='" + group.GROUP_ID + "' disabled='disabled'>" + group.DESCRIPTION + "</option>";
+										 temp = "<option value='" + group.GROUP_ID + "'>" + group.DESCRIPTION + "</option>";
 									}
 									
 								};
