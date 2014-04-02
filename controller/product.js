@@ -92,9 +92,10 @@ exports.add = function (req, res, next) {
     productObj.PC_ID            = req.body.PC_ID || "";
 
     try {
+        check(productObj.PRODUCT_ID).notEmpty();
         check(productObj.PRODUCT_NAME).notEmpty();
-        check(productObj.PRICE).notEmpty();
-        check(productObj.PC_ID).notEmpty();
+        // check(productObj.PRICE).notEmpty();
+        // check(productObj.PC_ID).notEmpty();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
@@ -130,8 +131,8 @@ exports.modify = function (req, res, next) {
     try {
         check(productObj.PRODUCT_ID).notEmpty();
         check(productObj.PRODUCT_NAME).notEmpty();
-        check(productObj.PRICE).notEmpty();
-        check(productObj.PC_ID).notEmpty();
+        // check(productObj.PRICE).notEmpty();
+        // check(productObj.PC_ID).notEmpty();
     } catch(e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
