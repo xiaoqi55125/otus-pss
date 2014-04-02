@@ -43,7 +43,7 @@
  */
 exports.index = function (req, res, next) {
   debugCtrller("/controller/render/index");
-  res.render('subview/stockIn');
+  res.render('subview/index');
 }
 /**
  * show login page
