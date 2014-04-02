@@ -22,72 +22,80 @@ function removeTemp (pId) {
  */
 function addProductToList() {
 	//without check
-	var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
-	var cellData = qs;
-	var row = tdCont.row(cellData.PRODUCT_ID);
-	var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-	var cellPRICE = tdCont.cell(cellData.PRICE);
-	// max='20' 
-	var cellNum = tdCont.cell($("<input type='number' min='1' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
-	var cellRemark = tdCont.cell(cellData.REMARK);
-	var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
-	EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
+	if ($("#productForm").validationEngine("validate")) {
+		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
+		var cellData = qs;
+		var row = tdCont.row(cellData.PRODUCT_ID);
+		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+		var cellPRICE = tdCont.cell(cellData.PRICE);
+		// max='20' 
+		var cellNum = tdCont.cell($("<input type='number' min='1' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
+		var cellRemark = tdCont.cell(cellData.REMARK);
+		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
 
-	if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
-	{   
-		$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
-	}else{
-		row.append(cellName);
-		row.append(cellPRICE);
-		row.append(cellNum);
-		row.append(cellRemark);
-		row.append(EditLink);
-		$("#add_listView").append(row);
-		$("input[type='number']").stepper();
-	} 
-
+		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
+		{   
+			$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
+		}else{
+			row.append(cellName);
+			row.append(cellPRICE);
+			row.append(cellNum);
+			row.append(cellRemark);
+			row.append(EditLink);
+			$("#add_listView").append(row);
+			$("input[type='number']").stepper();
+		} 
+	}
 	
 }
 
 function submitOrder () {
-	//without check 
 	//alert($("#add_listView").children());
 	//$ttd[i].eq(0).find('input').val()
 	var $ttr = $("#add_listView").children();
-	var datas = [];
-	for (var i = 0; i < $ttr.length; i++) {
-		var $ttd = $ttr[i].cells;
-		var data = {};
-		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
-		data["PRODUCT_NAME"] = $($ttd[0]).html();
-		data["PRODUCT_COUNT"] = $($ttd[1]).html();
-		data["NUM"] = $($ttd).eq(2).find('input').val();
-		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
-		data["OPERATOR"] = "12345678";
-		data["REMARK"] = $($ttd[3]).html();
-		datas.push(data); 
+	if (!$ttr.length) {
+		bootbox.alert("<h4>列表中无数据</h4>");
+		return;
 	};
-	var obj = new Object();
-	obj["data"] = datas; 
-	var jsonString = JSON.stringify(obj); 
-	$.ajax({
-		url:'/orders',
-		type:'POST',
-		data:{"jsonStr":jsonString,
-				"CUSTOMER_NAME":$("#orderCustName").val(),
-				"REMARK":$("#orderRemark").val()},
-		dataType: 'json',
-		success: function (data) {
-			if (data.statusCode === 0) {
-				bootbox.alert("添加订单成功", function() {
-				  $('.productAddTemp')[0].reset();
-				  $("#add_listView").html("");
-				  $("#orderCustName").val("");
-				  $("#orderRemark").val("");
-				});
-			};
-		}
-	})
+	if ($("#orderCustForm").validationEngine("validate")) {
+		var $ttr = $("#add_listView").children();
+		var datas = [];
+		for (var i = 0; i < $ttr.length; i++) {
+			var $ttd = $ttr[i].cells;
+			var data = {};
+			data["PRODUCT_ID"] = $($ttr[i]).attr("id");
+			data["PRODUCT_NAME"] = $($ttd[0]).html();
+			data["PRODUCT_COUNT"] = $($ttd[1]).html();
+			data["NUM"] = $($ttd).eq(2).find('input').val();
+			data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
+			data["OPERATOR"] = "12345678";
+			data["REMARK"] = $($ttd[3]).html();
+			datas.push(data); 
+		};
+		var obj = new Object();
+		obj["data"] = datas; 
+		var jsonString = JSON.stringify(obj); 
+		$.ajax({
+			url:'/orders',
+			type:'POST',
+			data:{"jsonStr":jsonString,
+					"CUSTOMER_NAME":$("#orderCustName").val(),
+					"REMARK":$("#orderRemark").val()},
+			dataType: 'json',
+			success: function (data) {
+				if (data.statusCode === 0) {
+					bootbox.alert("添加订单成功", function() {
+					  $('.productAddTemp')[0].reset();
+					  $("#add_listView").html("");
+					  $("#orderCustName").val("");
+					  $("#orderRemark").val("");
+					});
+				};
+			}
+		})
+	}
+
 }
 
 function checkBookList () {
