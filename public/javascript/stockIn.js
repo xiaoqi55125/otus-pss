@@ -17,58 +17,41 @@ var tdCont = {
  * add the temp to the book list
  */
 function addProductToList() {
-	if(!$("#productID").val()){
-	    bootbox.alert("请输入产品编号!");
-	    return;
-	}
-	if(!$("#productName").val()){
-	    bootbox.alert("请输入产品名称!");
-	    return;
-	}
-	if($('#productNum').val() <= 0 || !$("#productNum").val()){
-	    bootbox.alert("请输入正确的数量!");
-	    return;
-	}
-	if($('#productPrice').val() <= 0 || !$("#productPrice").val()|| !isDigit($('#productPrice').val()) ){
-    	bootbox.alert("请输入正确的单价!");
-    	return;
-  	}
-  	if(!$("#batchNum").val()){
-	    bootbox.alert("请输入产品批号!");
-	    return;
-	}
+	//$("#productForm").validationEngine("updatePromptsPosition");
+	if ($("#productForm").validationEngine("validate")) {
+		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
+		var cellData = qs;
+		console.log(cellData);
+		var row = tdCont.row(cellData.PRODUCT_ID);
+		var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
 
-	var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
-	var cellData = qs;
-	var row = tdCont.row(cellData.PRODUCT_ID);
-	var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
+		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+		var cellPRICE = tdCont.cell(cellData.PRICE);
+		var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
+		//var cellAmount = tdCont.cell(cellData.AMOUNT);
+		//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
+		var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
+		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
+		var cellRemark = tdCont.cell(cellData.REMARK);
+		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
 
-	var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-	var cellPRICE = tdCont.cell(cellData.PRICE);
-	var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
-	//var cellAmount = tdCont.cell(cellData.AMOUNT);
-	//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
-	var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
-	var cellSupplier = tdCont.cell(cellData.SUPPLIER);
-	var cellRemark = tdCont.cell(cellData.REMARK);
-	var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
-	EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
-
-	if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
-	{   
-		$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
-		
-	}else{
-		row.append(cellName);
-		row.append(cellPRICE);
-		row.append(cellNum);
-		//row.append(cellAmount);
-		row.append(cellSupplier);
-		row.append(cellBatchNum);
-		row.append(cellRemark);
-		row.append(EditLink);
-		$("#add_listView").append(row);
-	} 
+		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
+		{   
+			$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
+			
+		}else{
+			row.append(cellName);
+			row.append(cellPRICE);
+			row.append(cellNum);
+			//row.append(cellAmount);
+			row.append(cellSupplier);
+			row.append(cellBatchNum);
+			row.append(cellRemark);
+			row.append(EditLink);
+			$("#add_listView").append(row);
+		} 
+	}
 	
 }
 
@@ -79,7 +62,7 @@ function addProductToList() {
 function submitStockIn () {
 	var $ttr = $("#add_listView").children();
 	if (!$ttr.length) {
-		bootbox.alert("列表中无数据");
+		bootbox.alert("<h4>列表中无数据</h4>");
 		return;
 	};
 	var datas = [];
@@ -136,11 +119,11 @@ function getProductOneInfo(pId) {
 			if (data.statusCode === 0 && data.data!=null) {
 				var pInfo = data.data;
 				$("#productName").val(pInfo.PRODUCT_NAME);
-				$("#productPrice").val(pInfo.PRICE);
+				//$("#productPrice").val(pInfo.PRICE);
 				$("#productNum").val("1");
 				return;
 			}else{
-				bootbox.alert("未查询到该产品,请检查!");
+				bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
 				return;
 			}
 		}
@@ -173,4 +156,15 @@ function isDigit(value) {
     } else {
         return true;
     }
+}
+
+/**
+ * shwo login error tips
+ * @param  {string} statusCode status code
+ * @return {null}            
+ */
+function showTip (msg) {
+    $("#span_tipMsg").text(msg);
+    $("#div_tip").fadeIn(1000);
+    $("#div_tip").fadeOut(1000);
 }

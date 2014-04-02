@@ -7,13 +7,16 @@
 	.js("/public/javascript/stockIn.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
     .js("/public/javascript/jquery.fs.stepper.js")
+    .js("/public/javascript/jquery.validationEngine.js")
+    .js("/public/javascript/jquery.validationEngine-zh_CN.js")
 	.done(assets)
 	%>
 <!-- style -->
 <%- Loader("/public/stylesheet/stockIn.min.css")
 	.css("/public/stylesheet/bootstrap-select.css")
 	.css("/public/stylesheet/datepicker.css")
-	.css("/public/stylesheet/simplePagination.css")
+	.css("/public/stylesheet/validationEngine.jquery.css")
+    .css("/public/stylesheet/simplePagination.css")
     .css("/public/stylesheet/jquery.fs.stepper.css")
 	.done(assets)
 	%></head>
@@ -22,36 +25,40 @@
 <script type="text/javascript">
 	$(document).ready(function(){
         $("input[type='number']").stepper();
+        $("#productForm").validationEngine();
+        $('#productID').focus();
 		$("#productID").keydown(function(event) {  
 	        if (event.keyCode == 13) {  
 	            getProductOneInfo($("#productID").val()); 
 	        }  
-	    })  
+	    }) ; 
+
 	});
 </script>
-<div class="main_div">
+
+<div class="main_div" id="main_div_si">
 	<h3>入库操作</h3>
 	<hr>
-		<form class="productAddTemp">
+		<form class="productAddTemp" id="productForm" >
         <div class="row">
             <div class="col-md-3">
                 商品编号(条形码):
-                <input class="form-control" id="productID" name="PRODUCT_ID" />
+                <input class="form-control validate[required]" id="productID" name="PRODUCT_ID" />
             </div>
             <div class="col-md-3">
                 商品名称:
-                <input class="form-control" id="productName"  name="PRODUCT_NAME" />
+                <input class="form-control validate[required]" id="productName"  name="PRODUCT_NAME" />
             </div>
             <div class="col-md-3">
                 商品数量:
-                <input type="number" class="form-control" id="productNum"  name="NUM" />
+                <input type="number" min="0" class="form-control validate[required]" id="productNum"  name="NUM" />
             </div>
         </div>
         <div class="row">
             <div class="col-md-3">
                 商品单价:
                 <div class="input-group">
-                  <input type="text" class="form-control" id="productPrice" name="PRICE">
+                  <input type="text" class="form-control validate[required,custom[integer],min[0]]" id="productPrice" name="PRICE">
                   <span class="input-group-addon">.00</span>
                 </div>
             </div>
@@ -61,7 +68,7 @@
             </div>
             <div class="col-md-3">
                 批号(生产日期):
-                <input type="text" class="form-control" id="batchNum" name="BATCH_NUM">
+                <input type="text" class="form-control validate[required]" id="batchNum" name="BATCH_NUM">
             </div>
             <div class="col-md-3">
                 备注:
@@ -72,7 +79,9 @@
 
         <div class="row">
              <div class="col-md-3">
-                <button type="button" class="btn btn-primary" style="margin-top:10px" onclick="addProductToList()">添加商品至入库列表</button>
+                <button type="button" id="submitBtn" type="submit" class="btn btn-primary" style="margin-top:10px" onclick="addProductToList()">添加商品至入库列表</button>
+
+
             </div>
         </div>
     </form>
