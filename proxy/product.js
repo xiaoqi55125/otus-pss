@@ -108,9 +108,8 @@ exports.createProduct = function (productInfo, callback) {
     var sql = "INSERT INTO PRODUCT( PRODUCT_ID, " +
               "                     PRODUCT_NAME, " +
               "                     MANUFACTURE_NAME, " +
-              "                     MANUFACTURE_DATE, " +
               "                     PC_ID) " +
-              "VALUES(:PRODUCT_ID, :PRODUCT_NAME, :MANUFACTURE_NAME, :MANUFACTURE_DATE, :PC_ID)";
+              "VALUES(:PRODUCT_ID, :PRODUCT_NAME, :MANUFACTURE_NAME, :PC_ID)";
 
     mysqlClient.query({
         sql     : sql,
@@ -136,7 +135,6 @@ exports.modifyProduct = function (productInfo, callback) {
 
     var sql = "UPDATE PRODUCT SET PRODUCT_NAME = :PRODUCT_NAME,         " +
               "                   MANUFACTURE_NAME = :MANUFACTURE_NAME, " +
-              "                   MANUFACTURE_DATE = :MANUFACTURE_DATE, " +
               "                   PC_ID = :PC_ID,                       " +
               "                   LIMIT_NUM = :LIMIT_NUM                " +
               " WHERE PRODUCT_ID = :PRODUCT_ID";
