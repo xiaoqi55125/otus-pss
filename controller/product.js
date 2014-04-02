@@ -86,7 +86,6 @@ exports.add = function (req, res, next) {
     var productObj              = {};
     productObj.PRODUCT_ID       = req.body.PRODUCT_ID || "";
     productObj.PRODUCT_NAME     = req.body.PRODUCT_NAME || "";
-    productObj.PRICE            = req.body.PRICE || "";
     productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";
     productObj.MANUFACTURE_DATE = req.body.MANUFACTURE_DATE || "";
     productObj.PC_ID            = req.body.PC_ID || "";
@@ -94,8 +93,6 @@ exports.add = function (req, res, next) {
     try {
         check(productObj.PRODUCT_ID).notEmpty();
         check(productObj.PRODUCT_NAME).notEmpty();
-        // check(productObj.PRICE).notEmpty();
-        // check(productObj.PC_ID).notEmpty();
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
@@ -122,7 +119,6 @@ exports.modify = function (req, res, next) {
     var productObj              = {};
     productObj.PRODUCT_ID       = req.params.productId;
     productObj.PRODUCT_NAME     = req.body.PRODUCT_NAME || "";
-    productObj.PRICE            = req.body.PRICE || "";
     productObj.MANUFACTURE_NAME = req.body.MANUFACTURE_NAME || "";
     productObj.MANUFACTURE_DATE = req.body.MANUFACTURE_DATE || "";
     productObj.PC_ID            = req.body.PC_ID || "";
@@ -131,8 +127,6 @@ exports.modify = function (req, res, next) {
     try {
         check(productObj.PRODUCT_ID).notEmpty();
         check(productObj.PRODUCT_NAME).notEmpty();
-        // check(productObj.PRICE).notEmpty();
-        // check(productObj.PC_ID).notEmpty();
     } catch(e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }

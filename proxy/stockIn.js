@@ -135,7 +135,7 @@ function insertIntoStockIn (conn, productInfo, callback) {
               "                             :PRODUCT_ID, " +
               "                             :BATCH_NUM," +
               "                             :NUM, " +
-              "                             :AMOUNT, " +
+              "                             :PRICE, " +
               "                             :SUPPLIER, " +
               "                             :SI_DATE, " +
               "                             :SERIAL_NUM, " +

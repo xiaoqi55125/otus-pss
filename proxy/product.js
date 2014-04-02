@@ -107,11 +107,10 @@ exports.createProduct = function (productInfo, callback) {
 
     var sql = "INSERT INTO PRODUCT( PRODUCT_ID, " +
               "                     PRODUCT_NAME, " +
-              "                     PRICE, " +
               "                     MANUFACTURE_NAME, " +
               "                     MANUFACTURE_DATE, " +
               "                     PC_ID) " +
-              "VALUES(:PRODUCT_ID, :PRODUCT_NAME, :PRICE, :MANUFACTURE_NAME, :MANUFACTURE_DATE, :PC_ID)";
+              "VALUES(:PRODUCT_ID, :PRODUCT_NAME, :MANUFACTURE_NAME, :MANUFACTURE_DATE, :PC_ID)";
 
     mysqlClient.query({
         sql     : sql,
@@ -136,7 +135,6 @@ exports.modifyProduct = function (productInfo, callback) {
     debugProxy("proxy/product/modifyProduct");
 
     var sql = "UPDATE PRODUCT SET PRODUCT_NAME = :PRODUCT_NAME,         " +
-              "                   PRICE = :PRICE,                       " +
               "                   MANUFACTURE_NAME = :MANUFACTURE_NAME, " +
               "                   MANUFACTURE_DATE = :MANUFACTURE_DATE, " +
               "                   PC_ID = :PC_ID,                       " +
