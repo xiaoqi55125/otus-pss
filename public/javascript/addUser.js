@@ -24,7 +24,7 @@ function postAuthUserForm () {
             "USER_NAME"    : $("#input_uname").val(),
         },
         success : function (data) {
-            if (data.statusCode === 0) {   
+            if (data.statusCode === 0) {
                 showTip("0");
                 bootbox.dialog({
                   message: "添加成功，请选择操作",
