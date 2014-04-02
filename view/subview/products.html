@@ -19,14 +19,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		//$('#proCateType').selectpicker();
         getProductCates();
         getProducts();
         $('#productID').focus();
-        $('#maDate').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
 	});
 </script>
 <div class="main_div">
@@ -92,4 +87,57 @@
         <div id='paginator_div' style="float:left;padding-top:10px" ></div>
     </div>
     
+    <div class="modal fade" id="editProduct" tabindex="-1" role="dialog" aria-labelledby="PModleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" >修改商品</h4>
+                </div>
+                <div class="modal-body" id="lastStockOutInfo">
+                
+                    <form class="productEdit">
+                        <div class="row">
+                            <div class="col-md-5">
+                                商品类型:
+                                <select  id="proCateTypeE" name="PC_ID"  class="selectpicker show-tick">
+                                    <option value="0">-- 请选择商品类型 --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                商品名称:
+                                <input class="form-control" id="proName"  name="PRODUCT_NAME" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                商品价格:
+                                <div class="input-group">
+                                  <input type="text" class="form-control" id="proPriceE" name="PRICE">
+                                  <span class="input-group-addon">.00</span>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                生产厂家:
+                                <input class="form-control"  id="manuE" name="MANUFACTURE_NAME" />
+                            </div>
+                            <div style="display:none" class="col-md-3">
+                                生产日期:
+                                 <input id="maDate" class="form-control" type="text">
+                            </div>
+                        </div>
+                       
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="subpStockInBtn" class="btn btn-primary">确认修改商品</button>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
 </div>
+

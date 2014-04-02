@@ -25,8 +25,10 @@ function getProductCates() {
 				for (var i = 0; i< data.data.length; i++) {
 					var temp = "<option value='" + data.data[i].PC_ID + "'>" + data.data[i].PC_NAME + "</option>";
 				$("#proCateType").append(temp);
+        $("#proCateTypeE").append(temp);
 			};
 			$('#proCateType').selectpicker();
+      $("#proCateTypeE").selectpicker();
 		}
 	}
 })
@@ -119,7 +121,47 @@ function showProduct (pcList) {
 }
 
 function editProduct (pId) {
-	
+  $.ajax({
+    url:'/products/'+pId,
+    type:'GET',
+    success:function (data) {
+      if (data.statusCode === 0) {
+        //fill form 
+        var temp = data.data;
+        //$("#proCateTypeE").val(temp.PC_ID);
+        $('#proCateTypeE').selectpicker('val', temp.PC_ID);
+        $("#proName").val(temp.PRODUCT_NAME);
+        $("#proPriceE").val(temp.PRICE);
+        $("#manuE").val(temp.MANUFACTURE_NAME);
+        $("#maDate").val(temp.MANUFACTURE_DATE);
+        $("#subpStockInBtn").unbind('click').removeAttr('onclick');
+        $("#subpStockInBtn").attr("onclick","eidtProductBtn('"+pId+"')");
+        $('#editProduct').modal({
+            backdrop: false
+          });
+      };
+    },
+    error:function (msg) {
+      bootbox.alert("服务器错误");
+    }
+  })
+}
+
+function eidtProductBtn (pId) {
+  $.ajax({
+      url:"/products/"+pId,
+      type:"PUT",
+      data:$('form.productEdit').serialize(),
+      success:function (data) {
+        if (data.statusCode === 0) {
+          $('#editProduct').modal('hide');
+          bootbox.alert("商品修改成功");
+          getProducts();
+        }else{
+          bootbox.alert("商品修改失败");
+        }
+      }
+    })
 }
 
 /**
