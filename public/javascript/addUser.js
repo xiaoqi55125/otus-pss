@@ -2,6 +2,21 @@ $(function () {
     $("#div_tip").hide();
 });
 
+var tdCont = {
+  cell: function(item) {
+    return $("<td></td>").html(item);
+  },
+
+  row: function(uId) {
+    return $("<tr></tr>");
+  },
+  editGroup: function(uId) {
+    return function() {
+      editGroup(uId);
+    }
+  }
+};
+
 /**
  * js submit form for login
  * @return {null} 
@@ -26,6 +41,7 @@ function postAuthUserForm () {
         success : function (data) {
             if (data.statusCode === 0) {
                 showTip("0");
+                getAllUsers ();
                 bootbox.dialog({
                   message: "添加成功，请选择操作",
                   title: "成功提示",
@@ -34,7 +50,7 @@ function postAuthUserForm () {
                       label: "继续添加",
                       className: "btn-primary",
                       callback: function() {
-                        $("#signinForm")[0].reset() 
+                        $("#signinForm")[0].reset();
                       }
                     },
                     danger: {
@@ -57,6 +73,38 @@ function postAuthUserForm () {
     });
 
     return false;
+}
+
+function getAllUsers () {
+  $.ajax({
+    url:'/users',
+    type:'GET',
+    success:function(data){
+      if (data.statusCode === 0) {
+          if (data.data.length) {
+            $("#add_listViewUser").html("");
+            for (var i = data.data.length - 1; i >= 0; i--) {
+              var userOne = data.data[i];
+              var row = tdCont.row();
+              var cellUserId = tdCont.cell(userOne.USER_ID);
+              var cellUserName = tdCont.cell(userOne.USER_NAME);
+              var EditLink = tdCont.cell($("<a href='javascript:void(0);'>操作</a>"));
+              EditLink.click(tdCont.editGroup(userOne.USER_ID));
+              row.append(cellUserId);
+              row.append(cellUserName);
+              row.append(EditLink);
+              $("#add_listViewUser").append(row);
+
+            };
+          }else{
+            $("#add_listViewUser").html("<h4>暂无记录!</h4>");
+          }
+      }
+    },
+    error: function(jqXHR, exception) {
+       console.log(exception); 
+    }
+  })
 }
 
 /**

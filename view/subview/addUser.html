@@ -14,6 +14,10 @@
 	%></head>
 
 <script type="text/javascript">
+	$(document).ready(function(){
+        getAllUsers ();
+
+	});
 
 </script>
 
@@ -30,4 +34,24 @@
 			</div>
 		</form>
 	</div>
+	<hr>
+	<div>
+		<h3>所有用户列表</h3>
+		<div>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>登陆名</th>
+                    <th>用户名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id='add_listViewUser'>
+
+            </tbody>
+        </table>
+    </div>
+	</div>
+
 </div>
