@@ -19,7 +19,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		getAllUsers ();
-		getAllGroups ();
+		getAllGroups ("0");
+		$('#userSelect').change(function(){ 
+            getAllGroups($('#userSelect').val());
+        });
 	});
 </script>
 <div class="main_div">
@@ -36,7 +39,7 @@
             </div>
             <div class="col-md-3">
                 选择权限组:
-                <select  id="groupSelect" name="groupId"  class="selectpicker show-tick">
+                <select  id="groupSelect" name="groupId"  class="selectpicker show-tick" >
                     <option value="0">-- 请选择权限组 --</option>
                 </select>
             </div>
