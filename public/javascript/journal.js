@@ -30,30 +30,35 @@ function getJournals () {
     success:function (data) {
       if (data.statusCode === 0) {
         $("#add_listView").html("");
-        for (var i = 0; i < data.data.length; i++) {
-          var oInfo = data.data[i];
-          var row = tdCont.row();
-          var cellName;
-          var jDetails = tdCont.cell($("<a href='javascript:void(0);'>查看详情</a>"));
-          if (oInfo.JT_NAME == 'STOCK_IN') {
-            cellName = tdCont.cell("入库");
-            jDetails.click(tdCont.jDetailsStockIn(oInfo.JOURNAL_CONTENT));
+        if (data.data.length) {
+          for (var i = 0; i < data.data.length; i++) {
+            var oInfo = data.data[i];
+            var row = tdCont.row();
+            var cellName;
+            var jDetails = tdCont.cell($("<a href='javascript:void(0);'>查看详情</a>"));
+            if (oInfo.JT_NAME == 'STOCK_IN') {
+              cellName = tdCont.cell("入库");
+              jDetails.click(tdCont.jDetailsStockIn(oInfo.JOURNAL_CONTENT));
 
-          }else if(oInfo.JT_NAME == 'ORDERS') {
-            cellName = tdCont.cell("订单");
-            jDetails.click(tdCont.jDetailsOrder(oInfo.JOURNAL_CONTENT));
-          }else{
-            cellName = tdCont.cell("出库");
-            jDetails.click(tdCont.jDetailsStockOut(oInfo.JOURNAL_CONTENT));
+            }else if(oInfo.JT_NAME == 'ORDERS') {
+              cellName = tdCont.cell("订单");
+              jDetails.click(tdCont.jDetailsOrder(oInfo.JOURNAL_CONTENT));
+            }else{
+              cellName = tdCont.cell("出库");
+              jDetails.click(tdCont.jDetailsStockOut(oInfo.JOURNAL_CONTENT));
+            }
+            var remark = tdCont.cell(oInfo.REMARK);
+            var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
+            row.append(cellName);
+            row.append(addTime);
+            row.append(remark);
+            row.append(jDetails);
+            $("#add_listView").append(row);
           }
-          var remark = tdCont.cell(oInfo.REMARK);
-          var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
-          row.append(cellName);
-          row.append(addTime);
-          row.append(remark);
-          row.append(jDetails);
-          $("#add_listView").append(row);
+        }else{
+          $("#add_listView").html("<h4>暂无记录!</h4>");
         }
+        
       }
     }
   })
