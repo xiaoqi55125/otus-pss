@@ -7,6 +7,8 @@
 	.js("/public/javascript/product.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
     .js("/public/javascript/locales/bootstrap-datepicker.zh-CN.js")
+    .js("/public/javascript/jquery.validationEngine.js")
+    .js("/public/javascript/jquery.validationEngine-zh_CN.js")
 	.done(assets)
 	%>
 <!-- style -->
@@ -14,25 +16,37 @@
 	.css("/public/stylesheet/bootstrap-select.css")
 	.css("/public/stylesheet/datepicker3.css")
 	.css("/public/stylesheet/simplePagination.css")
+    .css("/public/stylesheet/validationEngine.jquery.css")
 	.done(assets)
 	%></head>
 
 <script type="text/javascript">
 	$(document).ready(function(){
+        $("#productForm").validationEngine();
+        $("#productForm2").validationEngine();
         getProductCates();
         getProducts();
         $('#productID').focus();
+
 	});
 </script>
 <div class="main_div">
 	<h3>商品管理</h3>
 	<hr>
-	<form class="productAdd">
+	<form class="productAdd" id="productForm">
         <div class="row">
             <div class="col-md-3">
                 商品编号:
-                <input class="form-control" id="productID" name="PRODUCT_ID" />
+                <input class="form-control validate[required]" id="productID" name="PRODUCT_ID" required/>
             </div>
+            <div class="col-md-3">
+                商品名称:
+                <input class="form-control validate[required]"  name="PRODUCT_NAME" />
+            </div>
+           
+           
+        </div>
+        <div class="row">
             <div class="col-md-3">
                 商品类型:
                 <select  id="proCateType" name="PC_ID"  class="selectpicker show-tick">
@@ -40,27 +54,10 @@
                 </select>
             </div>
             <div class="col-md-3">
-                商品名称:
-                <input class="form-control"  name="PRODUCT_NAME" />
-            </div>
-           
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                商品价格:
-                <div class="input-group">
-                  <input type="text" class="form-control" id="proPrice" name="PRICE">
-                  <span class="input-group-addon">.00</span>
-                </div>
-            </div>
-            <div class="col-md-3">
                 生产厂家:
                 <input class="form-control"  name="MANUFACTURE_NAME" />
             </div>
-            <div style="display:none" class="col-md-3">
-                生产日期:
-                 <input id="maDate" class="form-control" size="16" type="text">
-            </div>
+
         </div>
         <div class="row">
              <div class="col-md-3">
@@ -74,8 +71,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>商品编号(条码)</th>
                     <th>商品名</th>
-                    <th>价格</th>
                     <th>生产商</th>
                     <th>操作</th>
                 </tr>
@@ -96,7 +93,7 @@
                 </div>
                 <div class="modal-body" id="lastStockOutInfo">
                 
-                    <form class="productEdit">
+                    <form class="productEdit" id="productForm2">
                         <div class="row">
                             <div class="col-md-5">
                                 商品类型:
@@ -106,25 +103,16 @@
                             </div>
                             <div class="col-md-5">
                                 商品名称:
-                                <input class="form-control" id="proName"  name="PRODUCT_NAME" />
+                                <input class="form-control validate[required]" id="proName"  name="PRODUCT_NAME" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
-                                商品价格:
-                                <div class="input-group">
-                                  <input type="text" class="form-control" id="proPriceE" name="PRICE">
-                                  <span class="input-group-addon">.00</span>
-                                </div>
-                            </div>
+
                             <div class="col-md-5">
                                 生产厂家:
                                 <input class="form-control"  id="manuE" name="MANUFACTURE_NAME" />
                             </div>
-                            <div style="display:none" class="col-md-3">
-                                生产日期:
-                                 <input id="maDate" class="form-control" type="text">
-                            </div>
+
                         </div>
                        
                     </form>

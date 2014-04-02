@@ -38,31 +38,22 @@ function getProductCates() {
  * add product 
  */
 function addProduct () {
-  if(!$("#productID").val()){
-    bootbox.alert("请输入产品编号!");
-    return;
-  }
-
-  if($('#proPrice').val() <= 0 || !$("#proPrice").val()|| !isDigit($('#proPrice').val()) ){
-    bootbox.alert("请输入正确的单价!");
-    return;
-  }
-  if($("#proCateType").val() == '0' ){
-    bootbox.alert("请选择产品类别!");
-    return;
-  }
-    $.ajax({
+  if ($("#productForm").validationEngine("validate")) {
+     $.ajax({
       url:"/products",
       type:"POST",
       data:$('form.productAdd').serialize(),
       success:function (data) {
         if (data.statusCode === 0) {
-          bootbox.alert("商品添加成功");
+          bootbox.alert("<h4>商品添加成功</h4>");
+          $('#productForm')[0].reset();
+          getProducts();
         }else{
-          bootbox.alert("商品添加失败");
+          bootbox.alert("<h4>商品添加失败</h4>");
         }
       }
     })
+   }
 
 }
 
@@ -105,14 +96,16 @@ function showProduct (pcList) {
 	for (var i = pcList.length - 1; i >= 0; i--) {
 		var cellData = pcList[i];
 		var row = tdCont.row();
+    var cellId = tdCont.cell(cellData.PRODUCT_ID);
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-		var cellPRICE = tdCont.cell(cellData.PRICE);
+		//var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellMANU = tdCont.cell(cellData.MANUFACTURE_NAME);
 		//var cellManuTime = tdCont.cell(cellData.MANUFACTURE_TIME);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>修改</a>"));
 		EditLink.click(tdCont.editProduct(cellData.PRODUCT_ID));
+    row.append(cellId);
 		row.append(cellName);
-		row.append(cellPRICE);
+		//row.append(cellPRICE);
 		row.append(cellMANU);
 		//row.append(cellManuTime);
 		row.append(EditLink);
@@ -121,6 +114,7 @@ function showProduct (pcList) {
 }
 
 function editProduct (pId) {
+
   $.ajax({
     url:'/products/'+pId,
     type:'GET',
@@ -131,9 +125,7 @@ function editProduct (pId) {
         //$("#proCateTypeE").val(temp.PC_ID);
         $('#proCateTypeE').selectpicker('val', temp.PC_ID);
         $("#proName").val(temp.PRODUCT_NAME);
-        $("#proPriceE").val(temp.PRICE);
         $("#manuE").val(temp.MANUFACTURE_NAME);
-        $("#maDate").val(temp.MANUFACTURE_DATE);
         $("#subpStockInBtn").unbind('click').removeAttr('onclick');
         $("#subpStockInBtn").attr("onclick","eidtProductBtn('"+pId+"')");
         $('#editProduct').modal({
@@ -142,26 +134,31 @@ function editProduct (pId) {
       };
     },
     error:function (msg) {
-      bootbox.alert("服务器错误");
+      bootbox.alert("<h4>服务器错误</h4>");
     }
   })
 }
 
 function eidtProductBtn (pId) {
-  $.ajax({
+  if ($("#productForm2").validationEngine("validate")) {
+    $.ajax({
       url:"/products/"+pId,
       type:"PUT",
       data:$('form.productEdit').serialize(),
       success:function (data) {
         if (data.statusCode === 0) {
           $('#editProduct').modal('hide');
-          bootbox.alert("商品修改成功");
+          bootbox.alert("<h4>商品修改成功</h4>");
           getProducts();
         }else{
-          bootbox.alert("商品修改失败");
+          bootbox.alert("<h4>商品修改失败</h4>");
+          $('#editProduct').modal('hide');
         }
       }
     })
+
+  }
+  
 }
 
 /**
