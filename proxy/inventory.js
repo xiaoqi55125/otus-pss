@@ -32,19 +32,17 @@ var mysqlClient = require("../lib/mysqlUtil");
 exports.getAllInventories = function (callback, pagingInfo) {
     debugProxy("proxy/inventory/getAllInventories");
 
-    var sql = "";
     var params = {};
 
+    var sql = "SELECT I.INVENTORY_ID, I.PRODUCT_ID, SUM(I.NUM) AS SUM, P.PRODUCT_NAME FROM INVENTORY I " +
+              "  LEFT JOIN PRODUCT P ON I.PRODUCT_ID = P.PRODUCT_ID " +
+              " GROUP BY PRODUCT_ID";
+
     if (pagingInfo) {
-        sql                  = "SELECT * FROM INVENTORY I " +
-                               "  LEFT JOIN PRODUCT P ON I.PRODUCT_ID = P.PRODUCT_ID " +
-                               " LIMIT :start, :end ";
+        sql                  += " LIMIT :start, :end ";
         pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
         params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
         params.end           = config.default_page_size;
-    } else {
-        sql = "SELECT * FROM INVENTORY I " +
-              "  LEFT JOIN PRODUCT P ON I.PRODUCT_ID = P.PRODUCT_ID ";
     }
 
     mysqlClient.query({
