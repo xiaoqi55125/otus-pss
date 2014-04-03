@@ -59,6 +59,7 @@ exports.doStockIn = function (stockInInfo, cb) {
                 function (err, result) {
                     debugProxy("enter final cb");
                     if (err) {
+                        debugProxy(err);
                         conn.rollback(function () {
                             return cb(new DBError(), null);
                         });
@@ -94,6 +95,7 @@ exports.writeStockInJournal = function (journalContent, callback) {
                 sql   : "SELECT JT_ID FROM JOURNAL_TYPE WHERE JT_NAME = 'STOCK_IN'",
                 params : null
             }, function (err, rows) {
+                debugProxy("[writeStockInJournal step 1]: %s", err);
                 return callback(err, rows[0]['JT_ID']);
             });
         },
@@ -109,11 +111,13 @@ exports.writeStockInJournal = function (journalContent, callback) {
                     REMARK          : ""
                 }
             },  function (err, rows) {
+                debugProxy("[writeStockInJournal step 2]: %s", err);
                 return callback(err, null);
             });
         }
     ],  function (err, result) {
         if (err) {
+            debugProxy("[writeStockInJournal error]: %s", err);
             return callback(new DBError(), null);
         }
 
@@ -143,6 +147,7 @@ function insertIntoStockIn (conn, productInfo, callback) {
   
     conn.query(sql, productInfo, function (err, rows) {
         if (err) {
+            debugProxy("[insertIntoStockIn error]: %s", err);
             return callback(new DBError(), null);
         }
 
