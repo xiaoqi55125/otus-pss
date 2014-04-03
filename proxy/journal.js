@@ -66,12 +66,15 @@ exports.getJournalWithQueryConditions = function (queryConditions, pagingConditi
         pc.end = pc.start + pagingConditions.pageSize;
 
         pagingUtil.commonPagingProcess(sql, queryConditions, pc, function (err, data) {
-            if (err) {
+            if (err || !data) {
                 debugProxy("[getJournalWithQueryConditions error]: %s", err);
                 return callback(new ServerError(), null);
             }
 
-            return callback(null, rows);
+            data.pagingInfo.pageIndex     = pagingConditions.pageIndex;
+            data.pagingInfo.pageSize      = pagingConditions.pageSize;
+
+            return callback(null, data);
         });
     } else {
         mysqlClient.query({
