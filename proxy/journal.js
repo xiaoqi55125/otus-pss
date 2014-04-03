@@ -61,9 +61,9 @@ exports.getJournalWithQueryConditions = function (queryConditions, pagingConditi
 
     if (pagingConditions) {
         var pc = {
-            start   : pagingConditions.pageIndex * pagingConditions.pageSize
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize,
+            end     : pagingConditions.pageSize
         };
-        pc.end = pc.start + pagingConditions.pageSize;
 
         pagingUtil.commonPagingProcess(sql, queryConditions, pc, function (err, data) {
             if (err || !data) {
