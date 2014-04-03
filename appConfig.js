@@ -63,7 +63,7 @@ exports.config = {
     limitCronPattern         : "00 00 23 * * *",
 
     /******************************system config **************************/
-    default_page_size : 50,
+    default_page_size : 10,
 
     //mysql max connections
     default_max_conns : 50,
