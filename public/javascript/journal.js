@@ -28,7 +28,7 @@ var tdCont = {
   }
 };
 
-function getJournals (tpId) {
+function getJournals (tpId,sDate,eDate) {
   var getData ;
   if (tpId == 0) {
     getData ={};
@@ -36,7 +36,7 @@ function getJournals (tpId) {
     getData={'jtId':tpId};
   }
   $.ajax({
-    url:'/journals',
+    url:'/journals?from_dt='+sDate+'&to_dt='+eDate,
     type:'GET',
     data:getData,
     success:function (data) {
@@ -77,6 +77,10 @@ function getJournals (tpId) {
       }
     }
   })
+}
+
+function searchJourByDate () {
+  getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val());
 }
 
 
