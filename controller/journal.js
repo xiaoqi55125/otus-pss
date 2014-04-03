@@ -44,11 +44,22 @@ exports.findJournal = function (req, res, next) {
     queryConditions.from_dt   = req.query.from_dt || "";
     queryConditions.to_dt     = req.query.to_dt || "";
 
+    var pagingConditions      = req.query.pageIndex ? {} : null;
+    if (pagingConditions) {
+        pagingConditions.pageIndex = req.query.pageIndex;
+        pagingConditions.pageSize = req.query.pageSize || config.default_page_size;
+    }
+
     try {
         sanitize(sanitize(queryConditions.jtId).trim()).xss();
         sanitize(sanitize(queryConditions.productId).trim()).xss();
         sanitize(sanitize(queryConditions.from_dt).trim()).xss();
         sanitize(sanitize(queryConditions.to_dt).trim()).xss();
+
+        if (pagingConditions) {
+            sanitize(sanitize(pagingConditions.pageIndex).trim()).xss();
+            sanitize(sanitize(pagingConditions.pageSize).trim()).xss();
+        }
     } catch (e) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
@@ -61,7 +72,7 @@ exports.findJournal = function (req, res, next) {
         queryConditions.to_dt += " 23:59:59";
     }
 
-    Journal.getJournalWithQueryConditions(queryConditions, function (err, data) {
+    Journal.getJournalWithQueryConditions(queryConditions, pagingConditions, function (err, data) {
          if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }

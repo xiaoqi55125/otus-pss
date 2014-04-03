@@ -23,15 +23,17 @@
  */
 
 var mysqlClient = require("../lib/mysqlUtil");
+var pagingUtil = require("../lib/pagingUtil");
 
 /**
  * multi query for journal
  * @param  {Object}   queryConditions   the query conditions
+ * @param {Object} pagingConditions the paging condition info
  * @param  {Function} callback callback func
  * @return {null}            
  */
-exports.getJournalWithQueryConditions = function (queryConditions, callback) {
-    debugProxy("proxy/journal/createJournal");
+exports.getJournalWithQueryConditions = function (queryConditions, pagingConditions, callback) {
+    debugProxy("proxy/journal/getJournalWithQueryConditions");
 
     var sql = 'SELECT JOURNAL.*, UL.USER_NAME, JOURNAL_TYPE.JT_NAME FROM JOURNAL ' +
               ' LEFT JOIN USER_LOGIN UL ON UL.USER_ID = JOURNAL.OPERATOR' +
@@ -57,16 +59,33 @@ exports.getJournalWithQueryConditions = function (queryConditions, callback) {
 
     sql += " ORDER BY DATETIME DESC"
 
-    mysqlClient.query({
-        sql     : sql,
-        params  : queryConditions
-    },  function (err, rows) {
-        if (err) {
-            debugProxy("[createJournal error]: %s", err);
-            return callback(new ServerError(), null);
-        }
+    if (pagingConditions) {
+        var pc = {
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize
+        };
+        pc.end = pc.start + pagingConditions.pageSize;
 
-        return callback(null, rows);
-    });
+        pagingUtil.commonPagingProcess(sql, queryConditions, pc, function (err, data) {
+            if (err) {
+                debugProxy("[getJournalWithQueryConditions error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
+    } else {
+        mysqlClient.query({
+            sql     : sql,
+            params  : queryConditions
+        },  function (err, rows) {
+            if (err) {
+                debugProxy("[getJournalWithQueryConditions error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
+    }
+    
 };
 
