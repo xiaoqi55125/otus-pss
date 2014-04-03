@@ -3,6 +3,7 @@
 <%- Loader("/public/javascript/journal.min.js")
 	.js("/public/javascript/bootstrap-select.js")
 	.js("/public/javascript/bootstrap-datepicker.js")
+    .js("/public/javascript/locales/bootstrap-datepicker.zh-CN.js")
 	.js("/public/javascript/bootbox.min.js")
 	.js("/public/javascript/journal.js")
 	.js("/public/javascript/moment.min.js")
@@ -19,17 +20,30 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		getJournals(0);
+		getJournals(0,'','');
         getAllJournaltypes ();
         $('#JourType').change(function(){ 
-            getJournals($('#JourType').val());
+            getJournals($('#JourType').val(),'','');
+        });
+        $('.input-daterange').datepicker({
+            format: "yyyy-mm-dd",
+            language: "zh-CN",
+            autoclose: true
         });
 	});
 </script>
 <div class="main_div">
 	<h3>操作记录</h3>
-
 	<hr>
+    <div style="float:right; width:300px;">
+        <button style="float: right;margin-left: 10px;height: 30px;" type='button' class='btn btn-info ' onclick="searchJourByDate()">搜索</button>
+        <div class="input-daterange input-group" id="datepicker">
+            <input type="text" class="input-sm form-control" id="sDate" name="start" />
+            <span class="input-group-addon">至</span>
+            <input type="text" class="input-sm form-control" id="eDate" name="end" />
+        </div>
+
+    </div>
     <select id="JourType" class="selectpicker show-tick">
         <option value="0">-- 请选择操作类型 --</option>
     </select>
