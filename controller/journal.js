@@ -46,7 +46,7 @@ exports.findJournal = function (req, res, next) {
 
     var pagingConditions      = req.query.pageIndex ? {} : null;
     if (pagingConditions) {
-        pagingConditions.pageIndex = req.query.pageIndex;
+        pagingConditions.pageIndex = parseInt(req.query.pageIndex);
         pagingConditions.pageSize = req.query.pageSize || config.default_page_size;
     }
 
