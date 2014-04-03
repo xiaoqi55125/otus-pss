@@ -72,7 +72,7 @@ function submitStockIn () {
 		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
 		data["PRODUCT_NAME"] = $($ttd[0]).html();
 		data["NUM"] = $($ttd).eq(2).find('input').val();
-		data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
+		data["PRICE"] = $($ttd[1]).html();
 		data["SUPPLIER"] = $($ttd[3]).html();
 		data["BATCH_NUM"] = $($ttd[4]).html();
 		data["REMARK"] = $($ttd[5]).html();
