@@ -38,13 +38,28 @@ var sanitize = require("validator").sanitize;
 exports.findAll = function (req, res, next) {
     debugCtrller("controller/product/findAll");
 
+    var pagingConditions      = req.query.pageIndex ? {} : null;
+    if (pagingConditions) {
+        pagingConditions.pageIndex = req.query.pageIndex;
+        pagingConditions.pageSize = req.query.pageSize || config.default_page_size;
+    }
+
+    if (pagingConditions) {
+        try {
+                sanitize(sanitize(pagingConditions.pageIndex).trim()).xss();
+                sanitize(sanitize(pagingConditions.pageSize).trim()).xss();
+        } catch (e) {
+            return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+        }
+    }
+
     Product.getAllProducts(function (err, data) {
         if (err) {
             return res.send(util.generateRes(null. err.statusCode));
         }
          
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
-    });
+    }, pagingConditions);
 };
 
 /**

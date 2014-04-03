@@ -27,37 +27,48 @@ var mysqlClient = require("../lib/mysqlUtil");
 /**
  * get all product list
  * @param  {Function} callback callback func
+ * @param {Object} pagingConditions the paging condition info
  * @return {null}            
  */
-exports.getAllProducts = function (callback, pagingInfo) {
+exports.getAllProducts = function (callback, pagingConditions) {
     debugProxy("proxy/product/getAllProducts");
 
-    var sql = "";
+    var sql = "SELECT * FROM PRODUCT P " +
+              "  LEFT JOIN PRODUCT_CATEGORY PC ON P.PC_ID = PC.PC_ID ";
     var params = {};
 
-    if (pagingInfo) {
-        sql                  = "SELECT * FROM PRODUCT P " +
-                               "  LEFT JOIN PRODUCT_CATEGORY PC ON P.PC_ID = PC.PC_ID " +
-                               " LIMIT :start, :end ";
-        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
-        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
-        params.end           = config.default_page_size;
+
+    if (pagingConditions) {
+        var pc = {
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize,
+            end     : pagingConditions.pageSize
+        };
+
+        pagingUtil.commonPagingProcess(sql, params, pc, function (err, data) {
+            if (err || !data) {
+                debugProxy("[getAllProducts error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            data.pagingInfo.pageIndex     = pagingConditions.pageIndex;
+            data.pagingInfo.pageSize      = pagingConditions.pageSize;
+
+            return callback(null, data);
+        });
     } else {
-        sql = "SELECT * FROM PRODUCT P " +
-              "  LEFT JOIN PRODUCT_CATEGORY PC ON P.PC_ID = PC.PC_ID ";
+        mysqlClient.query({
+            sql     : sql,
+            params  : params
+        }, function (err, rows) {
+            if (err) {
+                debugProxy("[getAllProducts error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
     }
-
-    mysqlClient.query({
-        sql     : sql,
-        params  : params
-    }, function (err, rows) {
-        if (err) {
-            debugProxy("[getAllProducts error]: %s", err);
-            return callback(new ServerError(), null);
-        }
-
-        return callback(null, rows);
-    });
+    
 };
 
 /**
