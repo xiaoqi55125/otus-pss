@@ -53,6 +53,14 @@ exports.findJournal = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
+    if (queryConditions.from_dt) {
+        queryConditions.from_dt += " 00:00:00";
+    }
+
+    if (queryConditions.to_dt) {
+        queryConditions.to_dt += " 23:59:59";
+    }
+
     Journal.getJournalWithQueryConditions(queryConditions, function (err, data) {
          if (err) {
             return res.send(util.generateRes(null, err.statusCode));
