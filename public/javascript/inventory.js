@@ -6,6 +6,11 @@ var tdCont = {
 
   row: function() {
     return $("<tr></tr>");
+  },
+  getProductBatchs: function(pId) {
+    return function() {
+      getProductBatchs(pId);
+    }
   }
 };
 
@@ -22,26 +27,42 @@ function getAllInventories () {
 						var iInfo = invs[i];
 						var row = tdCont.row();
 						var pName = tdCont.cell(iInfo.PRODUCT_NAME);
-						var num = tdCont.cell(iInfo.NUM);
-						var price = tdCont.cell(iInfo.PRICE);
-						var manName = tdCont.cell(iInfo.MANUFACTURE_NAME);
-						// var manDate ;
-						// if (moment(iInfo.MANUFACTURE_DATE).isValid()) {
-						// 	manDate = tdCont.cell(moment(iInfo.MANUFACTURE_DATE).format("YYYY年 M月 D日 H:mm:ss"));
-						// }else{
-						// 	manDate = tdCont.cell('无');
-						// }
+						var num = tdCont.cell(iInfo.SUM);
+						var EditLink = tdCont.cell($("<a href='javascript:void(0);'>库存详细</a>"));
+              			EditLink.click(tdCont.getProductBatchs(iInfo.PRODUCT_ID));
 						row.append(pName);
 						row.append(num);
-						row.append(price);
-						row.append(manName);
-						//row.append(manDate);
+						row.append(EditLink);
 						$("#add_listView").append(row);
 					};
 				}else{
 					$("#add_listView").html("<h4>暂无记录!</h4>");
 				}
 				
+			}
+		}
+	})
+}
+
+function getProductBatchs (pId) {
+	$.ajax({
+		url:'/inventories/'+pId,
+		type:'GET',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				var temp =  data.data;
+				$("#pb_listView").html("");
+				for (var i = temp.length - 1; i >= 0; i--) {
+					console.log(i);
+					var tempPb = temp[i];
+					var row = tdCont.row();
+			        var cellBATCH_NUM = tdCont.cell(tempPb.BATCH_NUM);
+			        var cellNum = tdCont.cell(tempPb.NUM);
+			        row.append(cellBATCH_NUM);
+			        row.append(cellNum);
+			        $("#pb_listView").append(row);
+				};
+				$('#productBatchs').modal("show");
 			}
 		}
 	})

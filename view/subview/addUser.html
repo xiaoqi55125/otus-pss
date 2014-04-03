@@ -3,6 +3,7 @@
 <!-- script -->
 <%- Loader("/public/javascript/addUser.min.js")
 	.js("/public/javascript/bootbox.min.js")
+	.js("/public/javascript/bootstrap-select.js")
 	.js("/public/javascript/addUser.js")
 	.js("/public/lib/CryptoJS_v3.1.2/rollups/md5.js")
 	.done(assets)
@@ -10,12 +11,14 @@
 <!-- style -->
 <%- Loader("/public/stylesheet/addUser.min.css")
 	.css("/public/stylesheet/login.css")
+	.css("/public/stylesheet/bootstrap-select.css")
 	.done(assets)
 	%></head>
 
 <script type="text/javascript">
 	$(document).ready(function(){
         getAllUsers ();
+        getAllGroups();
 
 	});
 
@@ -27,7 +30,10 @@
 			<h2 class="form-signin-heading">新增用户</h2>
 			<input id="input_userId" type="text" class="form-control" placeholder="登陆ID" required autofocus>
 			<input id="input_pwd" type="password" class="form-control" placeholder="密 码" required>
-			<input id="input_uname" class="form-control" placeholder="用户名" required>
+			<input id="input_uname" class="form-control" style="margin-bottom:10px;"  placeholder="用户名" required>
+            <select  id="groupSelect" name="groupId"  class="selectpicker show-tick" >
+                <option value="0">-- 请选择权限组 --</option>
+            </select>
 			<button id="submitBtn" class="btn btn-lg btn-primary btn-block margin-topForLoginBtn" type="submit" >添加</button>
 			<div id="div_tip" class="alert alert-danger fade in margin-topForTipDiv">
 				<span id="span_tipMsg"></span>
@@ -52,6 +58,26 @@
             </tbody>
         </table>
     </div>
-	</div>
+	 <div class="modal fade" id="UserGroup" tabindex="-1" role="dialog" aria-labelledby="productBatchsModleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" >选择用户权限:</h4>
+                </div>
+                <div class="modal-body" >
+                   <select  id="groupSelectModal"  class="selectpicker show-tick" >
+	                <option value="0">-- 请选择权限组 --</option>
+	            </select>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="editGroupSubmit" class="btn btn-primary">确认修改权限</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 </div>

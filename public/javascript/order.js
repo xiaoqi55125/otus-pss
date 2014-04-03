@@ -46,6 +46,8 @@ function addProductToList() {
 			$("#add_listView").append(row);
 			$("input[type='number']").stepper();
 		} 
+		$('#productID').focus();
+		$('.productAddTemp')[0].reset();
 	}
 	
 }
@@ -68,7 +70,7 @@ function submitOrder () {
 			data["PRODUCT_NAME"] = $($ttd[0]).html();
 			data["PRODUCT_COUNT"] = $($ttd[1]).html();
 			data["NUM"] = $($ttd).eq(2).find('input').val();
-			data["AMOUNT"] = parseInt($($ttd).eq(2).find('input').val()) * parseInt($($ttd[1]).html());
+			data["PRICE"] = parseInt($($ttd[1]).html());
 			data["OPERATOR"] = "12345678";
 			data["REMARK"] = $($ttd[3]).html();
 			datas.push(data); 
@@ -85,7 +87,7 @@ function submitOrder () {
 			dataType: 'json',
 			success: function (data) {
 				if (data.statusCode === 0) {
-					bootbox.alert("添加订单成功", function() {
+					bootbox.alert("<h4>添加订单成功</h4>", function() {
 					  $('.productAddTemp')[0].reset();
 					  $("#add_listView").html("");
 					  $("#orderCustName").val("");

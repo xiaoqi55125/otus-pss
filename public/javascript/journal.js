@@ -21,12 +21,24 @@ var tdCont = {
       jDetailsOrder(oId);
     }
   },
+  jDetailsPreStockIn:function (data) {
+    return function () {
+      jDetailsPreStockIn(data);
+    }
+  }
 };
 
-function getJournals () {
+function getJournals (tpId) {
+  var getData ;
+  if (tpId == 0) {
+    getData ={};
+  }else{
+    getData={'jtId':tpId};
+  }
   $.ajax({
     url:'/journals',
     type:'GET',
+    data:getData,
     success:function (data) {
       if (data.statusCode === 0) {
         $("#add_listView").html("");
@@ -43,15 +55,18 @@ function getJournals () {
             }else if(oInfo.JT_NAME == 'ORDERS') {
               cellName = tdCont.cell("订单");
               jDetails.click(tdCont.jDetailsOrder(oInfo.JOURNAL_CONTENT));
+            }else if(oInfo.JT_NAME == 'PRE_STOCK_IN'){
+              cellName = tdCont.cell("预入库，待确认");
+              jDetails.click(tdCont.jDetailsPreStockIn(oInfo.JOURNAL_CONTENT));
             }else{
               cellName = tdCont.cell("出库");
               jDetails.click(tdCont.jDetailsStockOut(oInfo.JOURNAL_CONTENT));
             }
-            var remark = tdCont.cell(oInfo.REMARK);
+            var userName = tdCont.cell(oInfo.USER_NAME);
             var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
             row.append(cellName);
             row.append(addTime);
-            row.append(remark);
+            row.append(userName);
             row.append(jDetails);
             $("#add_listView").append(row);
           }
@@ -63,6 +78,27 @@ function getJournals () {
     }
   })
 }
+
+
+function getAllJournaltypes () {
+  $.ajax({
+    url:'/journaltypes',
+    type:'GET',
+    success:function(data){
+      if (data.statusCode === 0) {
+        for (var i = data.data.length - 1; i >= 0; i--) {
+          var oneType = data.data[i];
+          var temp = "<option value='" + oneType.JT_ID + "'>" + oneType.REMARK + "</option>";
+          $("#JourType").append(temp);
+        };
+        $('#JourType').selectpicker();
+       
+      }
+    },
+  });
+}
+
+
 
 function jDetailsStockOut (oId) {
   $.ajax({
@@ -81,14 +117,13 @@ function jDetailsStockOut (oId) {
           var cellData = list[i];
           var row = tdCont.row(cellData.PRODUCT_ID);
           var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-          //var cellPRICE = tdCont.cell(cellData.AMOUNT);
           var cellNum = tdCont.cell(cellData.NUM);
-          var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
+          var cellPRICE = tdCont.cell(cellData.PRICE);
           var cellRemark = tdCont.cell(cellData.REMARK);
           row.append(cellName);
+          row.append(cellPRICE);
           row.append(cellNum);
-          //row.append(cellPRICE);
-          row.append(cellCount);
+          
           row.append(cellRemark);
           $("#astStockOut_listView").append(row);
         }
@@ -100,7 +135,7 @@ function jDetailsStockOut (oId) {
   })
 }
 
-function jDetailsStockIn (data) {
+function jDetailsPreStockIn (data) {
   var datas = eval('(' + data + ')');  
   var tempData = datas.data;
   $("#astStockIn_listView").html("");
@@ -109,13 +144,36 @@ function jDetailsStockIn (data) {
     var row = tdCont.row();
     var cellName = tdCont.cell(cellData.PRODUCT_NAME);
     var cellNum = tdCont.cell(cellData.NUM);
-    var cellCount = tdCont.cell(cellData.AMOUNT);
+    var cellBATCH_NUM = tdCont.cell(cellData.BATCH_NUM);
     var cellSupplier = tdCont.cell(cellData.SUPPLIER);
     var cellRemark = tdCont.cell(cellData.REMARK);
     row.append(cellName);
     row.append(cellNum);
     //row.append(cellPRICE);
-    row.append(cellCount);
+    row.append(cellBATCH_NUM);
+    row.append(cellSupplier);
+    row.append(cellRemark);
+    $("#astStockIn_listView").append(row);
+    $('#checkStockIn').modal("show");
+  };
+}
+
+function jDetailsStockIn (data) {
+  var datas = eval('(' + data + ')');  
+  //var tempData = datas.data;
+  $("#astStockIn_listView").html("");
+  for (var i = 0; i < datas.length; i++) {
+    var cellData = datas[i];
+    var row = tdCont.row();
+    var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+    var cellNum = tdCont.cell(cellData.NUM);
+    var cellBATCH_NUM = tdCont.cell(cellData.BATCH_NUM);
+    var cellSupplier = tdCont.cell(cellData.SUPPLIER);
+    var cellRemark = tdCont.cell(cellData.REMARK);
+    row.append(cellName);
+    row.append(cellNum);
+    //row.append(cellPRICE);
+    row.append(cellBATCH_NUM);
     row.append(cellSupplier);
     row.append(cellRemark);
     $("#astStockIn_listView").append(row);

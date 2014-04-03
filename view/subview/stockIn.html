@@ -24,7 +24,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-        $("input[type='number']").stepper();
+        //$("input[type='number']").stepper();
         $("#productForm").validationEngine();
         $('#productID').focus();
 		$("#productID").keydown(function(event) {  
@@ -51,7 +51,7 @@
             </div>
             <div class="col-md-3">
                 商品数量:
-                <input type="number" min="0" class="form-control validate[required]" id="productNum"  name="NUM" />
+                <input type="number" class="form-control validate[required,custom[integer],min[0]]" id="productNum"  name="NUM" />
             </div>
         </div>
         <div class="row">

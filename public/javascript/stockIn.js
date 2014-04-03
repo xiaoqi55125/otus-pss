@@ -12,16 +12,21 @@ var tdCont = {
     }
   }
 };
+var isExist = 1;
 
 /**
  * add the temp to the book list
  */
 function addProductToList() {
-	//$("#productForm").validationEngine("updatePromptsPosition");
+	//if the product is not exist , create it 
+
 	if ($("#productForm").validationEngine("validate")) {
 		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
 		var cellData = qs;
 		console.log(cellData);
+		if (isExist == 0) {
+			createProductQuick(cellData.PRODUCT_ID,cellData.PRODUCT_NAME);
+		}
 		var row = tdCont.row(cellData.PRODUCT_ID);
 		var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
 
@@ -51,6 +56,10 @@ function addProductToList() {
 			row.append(EditLink);
 			$("#add_listView").append(row);
 		} 
+		$('#productID').focus();
+		isExist = 1;
+		$('.productAddTemp')[0].reset();
+		
 	}
 	
 }
@@ -88,7 +97,7 @@ function submitStockIn () {
 		dataType: 'json',
 		success: function (data) {
 			if (data.statusCode === 0) {
-				bootbox.alert("入库成功", function() {
+				bootbox.alert("<h4>入库成功</h4>", function() {
 				  $('.productAddTemp')[0].reset();
 				  $("#add_listView").html("");
 				});
@@ -123,11 +132,29 @@ function getProductOneInfo(pId) {
 				$("#productNum").val("1");
 				return;
 			}else{
-				bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
+				//bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
+				isExist = 0;
 				return;
 			}
 		}
 	})
+}
+
+function createProductQuick (pId,pName) {
+	// with name and id is ok
+	$.ajax({
+      url:"/products",
+      type:"POST",
+      data:{"PRODUCT_ID":pId,
+  			"PRODUCT_NAME":pName},
+      success:function (data) {
+        if (data.statusCode === 0) {
+          console.log("商品添加成功");
+        }else{
+          console.log("商品添加失败");
+        }
+      }
+    })
 }
 
 jQuery.extend({
