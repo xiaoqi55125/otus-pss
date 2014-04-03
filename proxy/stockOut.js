@@ -113,10 +113,10 @@ exports.doStockOut = function (stockOutInfo, cb) {
 
 /**
  * write stock out action to journal
- * @param {String} orderId the order id
+ * @param {Object} journalInfo the journal info
  * @return {null} 
  */
-exports.writeStockOutJournal = function (orderId, callback) {
+exports.writeStockOutJournal = function (journalInfo, callback) {
     debugProxy("proxy/stockOut/writeStockOutJournal");
 
     async.waterfall([
@@ -131,11 +131,12 @@ exports.writeStockOutJournal = function (orderId, callback) {
         },
         function (JT_ID, callback) {
             mysqlClient.query({
-                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :DATETIME, :REMARK)",
+                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :OPERATOR, :DATETIME, :REMARK)",
                 params  : {
                     JOURNAL_ID      : util.GUID(),
                     JT_ID           : JT_ID,
-                    JOURNAL_CONTENT : orderId,
+                    JOURNAL_CONTENT : journalInfo.orderId,
+                    OPERATOR        : journalInfo.operator,
                     DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
                     REMARK          : ""
                 }

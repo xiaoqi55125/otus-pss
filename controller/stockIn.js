@@ -90,7 +90,11 @@ exports.stockIn = function (req, res, next) {
         },
         //step 4:write journal
         function (stockInInfo, callback) {
-            StockIn.writeStockInJournal(JSON.stringify(stockInInfo.productList), function (err, data) {
+            var journalInfo = {
+                journalContent    : JSON.stringify(stockInInfo.productList),
+                operator          : req.session.user.userId
+            }
+            StockIn.writeStockInJournal(journalInfo, function (err, data) {
                 callback(err);
             });
         }

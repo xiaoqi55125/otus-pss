@@ -147,10 +147,10 @@ exports.delete = function (preStockInId ,callback) {
 
 /**
  * write pre stock in action to journal
- * @param {String} journalContent the content of journal
+ * @param {Object} journalInfo the journal info
  * @return {null} 
  */
-exports.writePreStockInJournal = function (journalContent, callback) {
+exports.writePreStockInJournal = function (journalInfo, callback) {
     debugProxy("proxy/stockIn/writePreStockInJournal");
 
     async.waterfall([
@@ -166,11 +166,12 @@ exports.writePreStockInJournal = function (journalContent, callback) {
         //step 2
         function (JT_ID, callback) {
             mysqlClient.query({
-                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :DATETIME, :REMARK)",
+                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :OPERATOR, :DATETIME, :REMARK)",
                 params  : {
                     JOURNAL_ID      : util.GUID(),
                     JT_ID           : JT_ID,
-                    JOURNAL_CONTENT : journalContent,
+                    JOURNAL_CONTENT : journalInfo.journalContent,
+                    OPERATOR        : journalInfo.operator,
                     DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
                     REMARK          : ""
                 }

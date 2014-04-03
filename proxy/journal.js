@@ -33,7 +33,9 @@ var mysqlClient = require("../lib/mysqlUtil");
 exports.getJournalWithQueryConditions = function (queryConditions, callback) {
     debugProxy("proxy/journal/createJournal");
 
-    var sql = 'SELECT JOURNAL.*, JOURNAL_TYPE.JT_NAME FROM JOURNAL LEFT JOIN JOURNAL_TYPE ON JOURNAL.JT_ID = JOURNAL_TYPE.JT_ID WHERE 1 = 1 ';
+    var sql = 'SELECT JOURNAL.*, UL.USER_NAME, JOURNAL_TYPE.JT_NAME FROM JOURNAL ' +
+              ' LEFT JOIN USER_LOGIN UL ON UL.USER_ID = JOURNAL.OPERATOR' +
+              ' LEFT JOIN JOURNAL_TYPE ON JOURNAL.JT_ID = JOURNAL_TYPE.JT_ID WHERE 1 = 1 ';
 
     if (queryConditions) {
         if (queryConditions.jtId) {

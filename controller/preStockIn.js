@@ -112,7 +112,10 @@ exports.preStockIn = function (req, res, next) {
             });
         },
         function (callback) {
-            PreStockIn.writePreStockInJournal(productsJSonStr, function (err, data) {
+            PreStockIn.writePreStockInJournal({
+                journalContent  : productsJSonStr,
+                operator        : req.session.user.userId
+            }, function (err, data) {
                 callback(err, null);
             });
         }

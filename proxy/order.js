@@ -227,11 +227,10 @@ exports.changeOrderStatus = function (orderId, newStatus, callback) {
 
 /**
  * write order action to journal
- * @param {String} journalContent the content of journal
- * @param {String} status the status of order C/U/D
+ * @param {Object} journalInfo the journal info
  * @return {null} 
  */
-exports.writeOrderJournal = function (journalContent, status, callback) {
+exports.writeOrderJournal = function (journalInfo, callback) {
     debugProxy("proxy/order/writeOrderJournal");
 
     async.waterfall([
@@ -247,13 +246,14 @@ exports.writeOrderJournal = function (journalContent, status, callback) {
         //step 2
         function (JT_ID, callback) {
             mysqlClient.query({
-                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :DATETIME, :REMARK)",
+                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :OPERATOR, :DATETIME, :REMARK)",
                 params  : {
                     JOURNAL_ID      : util.GUID(),
                     JT_ID           : JT_ID,
-                    JOURNAL_CONTENT : journalContent,
+                    JOURNAL_CONTENT : journalInfo.journalContent,
+                    OPERATOR        : journalInfo.operator,
                     DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
-                    REMARK          : status
+                    REMARK          : journalInfo.status
                 }
             },  function (err, rows) {
                 return callback(err, null);

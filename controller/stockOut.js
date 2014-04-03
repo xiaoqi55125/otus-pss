@@ -81,7 +81,7 @@ exports.stockOut = function (req, res, next) {
         },
         //step 3:
         function (callback) {
-            StockOut.writeStockOutJournal(orderId, function (err, data) {
+            StockOut.writeStockOutJournal({ orderId : orderId, operator : req.session.user.userId }, function (err, data) {
                 callback(err, null);
             });
         }

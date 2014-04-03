@@ -129,7 +129,11 @@ exports.add = function (req, res, next) {
             });
         },
         function (callback) {
-            Order.writeOrderJournal(JSON.stringify(orderInfo), "C", function (err, data) {
+            Order.writeOrderJournal({
+                operator        : req.session.user.userId,
+                journalContent  : JSON.stringify(orderInfo),
+                status          : "C"
+            }, function (err, data) {
                 callback(err, data);
             });
         }
