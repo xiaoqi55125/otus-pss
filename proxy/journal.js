@@ -53,6 +53,8 @@ exports.getJournalWithQueryConditions = function (queryConditions, callback) {
         }
     }
 
+    sql += " ORDER BY DATETIME DESC"
+
     mysqlClient.query({
         sql     : sql,
         params  : queryConditions
