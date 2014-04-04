@@ -23,7 +23,7 @@
  */
 
 var mysqlClient = require("../lib/mysqlUtil");
-var pagingUtil = require("../lib/pagingUtil");
+var pagingUtil  = require("../lib/pagingUtil");
 
 /**
  * multi query for journal
