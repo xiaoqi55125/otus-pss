@@ -46,7 +46,7 @@ exports.getAllInventories = function (callback, pagingConditions) {
             end     : pagingConditions.pageSize
         };
 
-        pagingUtil.commonPagingProcess(sql, queryConditions, pc, function (err, data) {
+        pagingUtil.commonPagingProcess(sql, params, pc, function (err, data) {
             if (err || !data) {
                 debugProxy("[getAllInventories error]: %s", err);
                 return callback(new ServerError(), null);

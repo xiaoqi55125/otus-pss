@@ -57,7 +57,7 @@ exports.findAll = function (req, res, next) {
         }
          
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
-    });
+    },  pagingConditions);
 };
 
 /**
