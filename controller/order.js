@@ -43,6 +43,7 @@ exports.findAll = function (req, res, next) {
     var queryConditions       = {};
     queryConditions.from_dt   = req.query.from_dt || "";
     queryConditions.to_dt     = req.query.to_dt || "";
+    queryConditions.status    = req.query.status || "";
 
     var pagingConditions      = req.query.pageIndex ? {} : null;
     if (pagingConditions) {
@@ -53,6 +54,7 @@ exports.findAll = function (req, res, next) {
     try {
         sanitize(queryConditions.from_dt).xss();
         sanitize(queryConditions.to_dt).xss();
+        sanitize(queryConditions.status).xss();
 
         if (pagingConditions) {
             sanitize(sanitize(pagingConditions.pageIndex).trim()).xss();

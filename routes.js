@@ -113,7 +113,7 @@ module.exports = function (app) {
     app.get("/inventories/:productId/:batchNum/num", inventoryCtrller.findNum);
 
     //order
-    //params: from_dt=:from_dt&to_dt=:to_dt
+    //params: from_dt=:from_dt&to_dt=:to_dt&status=0/1/2
     app.get("/orders", orderCtrller.findAll);
     app.get("/orders/:orderId", orderCtrller.findOne);
     app.post("/orders", orderCtrller.add);

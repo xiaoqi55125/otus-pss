@@ -47,6 +47,10 @@ exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
         } else if (queryConditions.to_dt) {
             sql += (' AND DATETIME <= "' + queryConditions.to_dt + '"');
         }
+
+        if (queryConditions.status) {
+            sql += (' AND STOCK_STATUS = ' + queryConditions.status);
+        }
     }
 
     //order
