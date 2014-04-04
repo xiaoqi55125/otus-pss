@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		getAllInventories ();
+		getAllInventories (0);
 	});
 </script>
 <div class="main_div">
@@ -39,6 +39,7 @@
 
         </tbody>
     </table>
+    <div id='paginator_div' style="float:left;margin-bottom:60px" ></div>
     <div class="modal fade" id="productBatchs" tabindex="-1" role="dialog" aria-labelledby="productBatchsModleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

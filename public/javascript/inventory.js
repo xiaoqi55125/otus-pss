@@ -14,13 +14,13 @@ var tdCont = {
   }
 };
 
-function getAllInventories () {
+function getAllInventories (pageIndex) {
 	$.ajax({
-		url:'/inventories',
+		url:'/inventories?pageIndex='+pageIndex,
 		type:'get',
 		success:function (data) {
 			if (data.statusCode === 0) {
-				var invs = data.data;
+				var invs = data.data.items;
 				$("#add_listView").html("");
 				if (invs.length) {
 					for (var i = 0; i < invs.length; i++) {
@@ -34,7 +34,21 @@ function getAllInventories () {
 						row.append(num);
 						row.append(EditLink);
 						$("#add_listView").append(row);
-					};
+						
+			        }
+			        var pageInfo = data.data.pagingInfo;
+			        if (pageInfo.totalNum>10) {
+	                  $('#paginator_div').pagination('destroy');
+	                  $('#paginator_div').pagination({
+	                    items: data.data.pagingInfo.totalNum,
+	                    itemsOnPage: 10,
+	                    currentPage: parseInt(pageInfo.pageIndex)+1,
+	                    cssStyle: 'light-theme',
+	                    onPageClick: function(pageNum){
+	                      getAllInventories(pageNum-1);
+	                    }
+	                  });
+	                };
 				}else{
 					$("#add_listView").html("<h4>暂无记录!</h4>");
 				}
