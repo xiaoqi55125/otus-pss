@@ -25,6 +25,7 @@
 var mysqlClient = require("../lib/mysqlUtil");
 var async       = require("async");
 var util        = require("../lib/util");
+var pagingUtil  = require("../lib/pagingUtil");
 
 /**
  * get all product list
