@@ -14,13 +14,13 @@ var tdCont = {
 };
 
 
-function getAllPreStockInList() {
+function getAllPreStockInList(pageIndex) {
 	$.ajax({
-		url:'/prestockins',
+		url:'/prestockins?pageIndex='+pageIndex,
 		type:"get",
 		success:function (data) {
 			if (data.statusCode === 0) {
-				var tempStr = data.data;
+				var tempStr = data.data.items;
 				if (!tempStr.length) {
 					$("#add_listView").html("<h4>暂无记录!</h4>");
 				}else{
@@ -38,7 +38,21 @@ function getAllPreStockInList() {
 						row.append(cellRemark);
 						row.append(cellDetails);
 						$("#add_listView").append(row);
+						
+			          };
 					}
+					$('#paginator_div').pagination('destroy');
+					var pageInfo = data.data.pagingInfo;
+		          	if (pageInfo.totalNum>10) {
+		            	$('#paginator_div').pagination({
+		              	items: data.data.pagingInfo.totalNum,
+		              	itemsOnPage: 10,
+		              	currentPage: pageInfo.pageIndex+1,
+		              	cssStyle: 'light-theme',
+		              	onPageClick: function(pageNum){
+		                	getAllPreStockInList(pageNum-1);
+		              	}
+		            });
 				}
 				
 			}

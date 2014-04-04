@@ -70,11 +70,14 @@ function getJournals (tpId,sDate,eDate,pageIndex) {
             row.append(jDetails);
             $("#add_listView").append(row);
           }
-          if (data.data.pagingInfo.totalNum>10) {
+          var pageInfo = data.data.pagingInfo;
+          $('#paginator_div').pagination('destroy');
+          if (pageInfo.totalNum>10) {
+
             $('#paginator_div').pagination({
               items: data.data.pagingInfo.totalNum,
               itemsOnPage: 10,
-              currentPage: 1,
+              currentPage: pageInfo.pageIndex+1,
               cssStyle: 'light-theme',
               onPageClick: function(pageNum){
                 getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val(),pageNum-1);

@@ -25,7 +25,7 @@
         $("#productForm").validationEngine();
         $("#productForm2").validationEngine();
         getProductCates();
-        getProducts();
+        getProducts(0);
         $('#productID').focus();
 
 	});
@@ -81,7 +81,7 @@
 
             </tbody>
         </table>
-        <div id='paginator_div' style="float:left;padding-top:10px" ></div>
+        <div id='paginator_div' style="float:left;margin-bottom:60px" ></div>
     </div>
     
     <div class="modal fade" id="editProduct" tabindex="-1" role="dialog" aria-labelledby="PModleLabel" aria-hidden="true">
