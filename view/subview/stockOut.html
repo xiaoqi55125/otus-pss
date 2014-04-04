@@ -28,7 +28,9 @@
 <script type="text/javascript">
 	$(document).ready(function(){
         $("input[type='number']").stepper();
-		getALLOrders($("#sDate").val(),$("#eDate").val()); 
+		getALLOrders0($("#sDate").val(),$("#eDate").val(),0); 
+        getALLOrders1($("#sDate").val(),$("#eDate").val(),0); 
+        getALLOrders2($("#sDate").val(),$("#eDate").val(),0); 
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
             language: "zh-CN",
@@ -58,6 +60,9 @@
                         </li>
                         <li>
                             <a href="#panel-3" data-toggle="tab">已出库</a>
+                        </li>
+                        <li>
+                            <a href="#panel-2" data-toggle="tab">出库中</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -92,6 +97,25 @@
                                     </tr>
                                 </thead>
                                 <tbody id='add_listView2'>
+
+                                </tbody>
+                            </table>
+                            <div id='paginator_div2' style="float:left;margin-bottom:60px" ></div>
+                        </div>
+
+                        <div class="tab-pane" id="panel-2">
+                             <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>客户名称</th>
+                                        <th>订单生成时间</th>
+                                        <th>备注</th>
+                                        <th>操作</th>
+                                        <th>状态</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id='add_listView1'>
 
                                 </tbody>
                             </table>

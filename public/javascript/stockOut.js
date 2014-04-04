@@ -37,9 +37,9 @@ var tdCont = {
  * get all orders 
  * @return {null} 
  */
-function getALLOrders (sDate,eDate) {
+function getALLOrders0 (sDate,eDate,pageIndex) {
 	$.ajax({
-		url:'/orders?from_dt='+sDate+'&to_dt='+eDate,
+		url:'/orders?from_dt='+sDate+'&to_dt='+eDate+'&status=0'+'&pageIndex='+pageIndex,
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
@@ -54,33 +54,91 @@ function getALLOrders (sDate,eDate) {
 					row.append(customerName);
 					row.append(addTime);
 					row.append(remark);
-					
-					if (oInfo.STOCK_STATUS === 0) {
-						var link = tdCont.cell($("<a href='javascript:void(0);'>发货</a>"));
-						var status = tdCont.cell("<button type='button' class='btn btn-info'>未出库</button>")
-						link.click(tdCont.stockOutClick(oInfo.ORDER_ID));
-						row.append(link);
-						row.append(status);
-						$("#add_listView").append(row);
-						
-					}else if (oInfo.STOCK_STATUS === 2){
-						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
-						var status = tdCont.cell("<button type='button' class='btn btn-success'>已出库</button>")
-						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
-						row.append(link);
-						row.append(status);
-						$("#add_listView2").append(row);
-						//$("#add_listView_already").append(row);
-					}else{
-						var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
-						var status = tdCont.cell("<button type='button' class='btn btn-warning'>出库中</button>")
-						link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
-						row.append(link);
-						row.append(status);
-						$("#add_listView").append(row);
-						//$("#add_listView_already").append(row);
-					}
+					var link = tdCont.cell($("<a href='javascript:void(0);'>发货</a>"));
+					var status = tdCont.cell("<button type='button' class='btn btn-info'>未出库</button>")
+					link.click(tdCont.stockOutClick(oInfo.ORDER_ID));
+					row.append(link);
+					row.append(status);
+					$("#add_listView").append(row);
 				};
+			}
+		}
+	})
+}
+/**
+ * get all orders 
+ * @return {null} 
+ */
+function getALLOrders1 (sDate,eDate,pageIndex) {
+	$.ajax({
+		url:'/orders?from_dt='+sDate+'&to_dt='+eDate+'&status=1'+'&pageIndex='+pageIndex,
+		type:'GET',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				$("#add_listView").html("");
+				$("#add_listView2").html("");
+				for (var i = 0; i < data.data.length; i++) {
+					var oInfo = data.data[i];
+					var row = tdCont.row(oInfo.ORDER_ID);
+					var customerName = tdCont.cell(oInfo.CUSTOMER_NAME);
+					var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
+					var remark = tdCont.cell(oInfo.REMARK);
+					row.append(customerName);
+					row.append(addTime);
+					row.append(remark);
+					var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
+					var status = tdCont.cell("<button type='button' class='btn btn-warning'>出库中</button>")
+					link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
+					row.append(link);
+					row.append(status);
+					$("#add_listView1").append(row);
+					//$("#add_listView_already").append(row);
+				};
+			}
+		}
+	})
+}
+/**
+ * get all orders 
+ * @return {null} 
+ */
+function getALLOrders2 (sDate,eDate,pageIndex) {
+	$.ajax({
+		url:'/orders?from_dt='+sDate+'&to_dt='+eDate+'&status=2'+'&pageIndex='+pageIndex,
+		type:'GET',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				$("#add_listView").html("");
+				$("#add_listView2").html("");
+				for (var i = 0; i < data.data.items.length; i++) {
+					var oInfo = data.data.items[i];
+					var row = tdCont.row(oInfo.ORDER_ID);
+					var customerName = tdCont.cell(oInfo.CUSTOMER_NAME);
+					var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
+					var remark = tdCont.cell(oInfo.REMARK);
+					row.append(customerName);
+					row.append(addTime);
+					row.append(remark);
+					var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
+					var status = tdCont.cell("<button type='button' class='btn btn-success'>已出库</button>")
+					link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
+					row.append(link);
+					row.append(status);
+					$("#add_listView2").append(row);
+				};
+				var pageInfo = data.data.pagingInfo;
+	          	$('#paginator_div2').pagination('destroy');
+	          	if (pageInfo.totalNum>10) {
+	            	$('#paginator_div').pagination({
+	              	items: data.data.pagingInfo.totalNum,
+	              	itemsOnPage: 10,
+	              	currentPage: pageInfo.pageIndex+1,
+	              	cssStyle: 'light-theme',
+	              	onPageClick: function(pageNum){
+	                	getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val(),pageNum-1);
+	              	}
+	            });
+	          };
 			}
 		}
 	})
