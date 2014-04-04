@@ -57,31 +57,29 @@ function addProduct () {
 
 }
 
-function getProducts() {
+function getProducts(pageIndex) {
 	$.ajax({
-        url: '/products',
+        url: '/products?pageIndex='+pageIndex,
         type: 'GET',
         success: function(data) {
             if (data.statusCode === 0) {
             	$("#pd_listView").html("");
-                showProduct(data.data);
-                if (data.data.length > 10) {
-                    $('#paginator_div').show();
-                    $('#paginator_div').pagination({
-                        items: data.data.total,
-                        itemsOnPage: 10,
-                        currentPage: pageIndex,
-                        cssStyle: 'light-theme',
-                        displayedPages: 0,
-                        edges: 0,
-                        onPageClick: function(pageNum) {
-                            
-                        }
-                    });
-                }
+                showProduct(data.data.items);
+                var pageInfo = data.data.pagingInfo;
+                if (pageInfo.totalNum>10) {
+                  $('#paginator_div').pagination('destroy');
+                  $('#paginator_div').pagination({
+                    items: data.data.pagingInfo.totalNum,
+                    itemsOnPage: 10,
+                    currentPage: parseInt(pageInfo.pageIndex)+1,
+                    cssStyle: 'light-theme',
+                    onPageClick: function(pageNum){
+                      getProducts(pageNum-1);
+                    }
+                  });
+                };
             } else {
-                $("#pd_listView").html("");
-                $('#paginator_div').hide();
+                $("#pd_listView").html("<h4>暂无数据</h4>");
             }
 
         }
