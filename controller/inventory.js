@@ -38,6 +38,19 @@ var sanitize  = require("validator").sanitize;
 exports.findAll = function (req, res, next) {
     debugCtrller("controller/inventory/findAll");
 
+    var pagingConditions      = req.query.pageIndex ? {} : null;
+    if (pagingConditions) {
+        pagingConditions.pageIndex = parseInt(req.query.pageIndex);
+        pagingConditions.pageSize = req.query.pageSize || config.default_page_size;
+
+        try {
+            sanitize(sanitize(pagingConditions.pageIndex).trim()).xss();
+            sanitize(sanitize(pagingConditions.pageSize).trim()).xss();
+        } catch (e) {
+            return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+        }
+    }
+
     Inventory.getAllInventories(function (err, data) {
         if (err) {
             return res.send(util.generateRes(null. err.statusCode));
