@@ -20,10 +20,10 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		getJournals(0,'','');
+		getJournals(0,'','',0);
         getAllJournaltypes ();
         $('#JourType').change(function(){ 
-            getJournals($('#JourType').val(),'','');
+            getJournals($('#JourType').val(),'','',0);
         });
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
@@ -59,7 +59,9 @@
         <tbody id='add_listView'>
 
         </tbody>
+
     </table>
+     <div id='paginator_div' style="float:left;margin-bottom:60px" ></div>
 	 <div class="modal fade" id="checkStockOut" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

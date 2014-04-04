@@ -28,7 +28,7 @@ var tdCont = {
   }
 };
 
-function getJournals (tpId,sDate,eDate) {
+function getJournals (tpId,sDate,eDate,pageIndex) {
   var getData ;
   if (tpId == 0) {
     getData ={};
@@ -36,15 +36,15 @@ function getJournals (tpId,sDate,eDate) {
     getData={'jtId':tpId};
   }
   $.ajax({
-    url:'/journals?from_dt='+sDate+'&to_dt='+eDate,
+    url:'/journals?from_dt='+sDate+'&to_dt='+eDate+'&pageIndex='+pageIndex,
     type:'GET',
     data:getData,
     success:function (data) {
       if (data.statusCode === 0) {
         $("#add_listView").html("");
-        if (data.data.length) {
-          for (var i = 0; i < data.data.length; i++) {
-            var oInfo = data.data[i];
+        if (data.data.items.length) {
+          for (var i = 0; i < data.data.items.length; i++) {
+            var oInfo = data.data.items[i];
             var row = tdCont.row();
             var cellName;
             var jDetails = tdCont.cell($("<a href='javascript:void(0);'>查看详情</a>"));
@@ -70,6 +70,17 @@ function getJournals (tpId,sDate,eDate) {
             row.append(jDetails);
             $("#add_listView").append(row);
           }
+          if (data.data.pagingInfo.totalNum>10) {
+            $('#paginator_div').pagination({
+              items: data.data.pagingInfo.totalNum,
+              itemsOnPage: 10,
+              currentPage: 1,
+              cssStyle: 'light-theme',
+              onPageClick: function(pageNum){
+                getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val(),pageNum-1);
+              }
+            });
+          };
         }else{
           $("#add_listView").html("<h4>暂无记录!</h4>");
         }
@@ -80,7 +91,7 @@ function getJournals (tpId,sDate,eDate) {
 }
 
 function searchJourByDate () {
-  getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val());
+  getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val(),0);
 }
 
 
