@@ -25,39 +25,51 @@
 var mysqlClient = require("../lib/mysqlUtil");
 var async       = require("async");
 var util        = require("../lib/util");
+var pagingUtil  = require("../lib/pagingUtil");
 
 /**
  * get all pre stock in items
  * @param  {Function} callback callback func
+ * @param {Object} pagingConditions the paging condition info
  * @return {null}            
  */
-exports.getAllPreStockIns = function (callback, pagingInfo) {
+exports.getAllPreStockIns = function (callback, pagingConditions) {
     debugProxy("proxy/preStockIn/getAllPreStockIns");
 
-    var sql = "";
+    var sql = "SELECT * FROM PRE_STOCK_IN ";
     var params = {};
 
-    if (pagingInfo) {
-        sql                  = "SELECT * FROM PRE_STOCK_IN " +
-                               " LIMIT :start, :end ";
-        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
-        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
-        params.end           = config.default_page_size;
+    if (pagingConditions) {
+        var pc = {
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize,
+            end     : pagingConditions.pageSize
+        };
+
+        pagingUtil.commonPagingProcess(sql, params, pc, function (err, data) {
+            if (err || !data) {
+                debugProxy("[getAllPreStockIns error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            data.pagingInfo.pageIndex     = pagingConditions.pageIndex;
+            data.pagingInfo.pageSize      = pagingConditions.pageSize;
+
+            return callback(null, data);
+        });
     } else {
-        sql = "SELECT * FROM PRE_STOCK_IN ";
+        mysqlClient.query({
+            sql     : sql,
+            params  : params
+        }, function (err, rows) {
+            if (err) {
+                debugProxy("[getAllPreStockIns error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
     }
-
-    mysqlClient.query({
-        sql     : sql,
-        params  : params
-    }, function (err, rows) {
-        if (err) {
-            debugProxy("[getAllPreStockIns error]: %s", err);
-            return callback(new ServerError(), null);
-        }
-
-        return callback(null, rows);
-    });
+        
 };
 
 /**
