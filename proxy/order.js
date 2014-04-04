@@ -28,10 +28,12 @@ var util        = require("../lib/util");
 
 /**
  * get all product list
+ * @param {Object} queryConditions sql query condition
  * @param  {Function} callback callback func
+ * @param {Object} pagingConditions the paging info
  * @return {null}            
  */
-exports.getAllOrders = function (queryConditions, callback, pagingInfo) {
+exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
     debugProxy("proxy/order/getAllOrders");
 
     var sql = " SELECT * FROM ORDERS WHERE 1 = 1 ";
@@ -41,33 +43,46 @@ exports.getAllOrders = function (queryConditions, callback, pagingInfo) {
         if (queryConditions.from_dt && queryConditions.to_dt) {
             sql += (' AND DATETIME BETWEEN "' + queryConditions.from_dt + '" AND "' + queryConditions.to_dt + '"');
         } else if (queryConditions.from_dt) {
-            SQL += (' AND DATETIME >= "' + queryConditions.from_dt + '"');
+            sql += (' AND DATETIME >= "' + queryConditions.from_dt + '"');
         } else if (queryConditions.to_dt) {
-            SQL += (' AND DATETIME <= "' + queryConditions.to_dt + '"');
+            sql += (' AND DATETIME <= "' + queryConditions.to_dt + '"');
         }
-    }
-
-    if (pagingInfo) {
-        sql                 += " LIMIT :start, :end ";
-        pagingInfo.pageIndex = pagingInfo.pageIndex ? pagingInfo.pageIndex : 1;
-        params.start         = (pagingInfo.pageIndex - 1) * config.default_page_size;
-        params.end           = config.default_page_size;
     }
 
     //order
     sql += " ORDER BY STOCK_STATUS ";
 
-    mysqlClient.query({
-        sql     : sql,
-        params  : params
-    }, function (err, rows) {
-        if (err) {
-            debugProxy("[getAllOrders error]: %s", err);
-            return callback(new ServerError(), null);
-        }
+    if (pagingConditions) {
+        var pc = {
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize,
+            end     : pagingConditions.pageSize
+        };
 
-        return callback(null, rows);
-    });
+        pagingUtil.commonPagingProcess(sql, params, pc, function (err, data) {
+            if (err || !data) {
+                debugProxy("[getAllOrders error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            data.pagingInfo.pageIndex     = pagingConditions.pageIndex;
+            data.pagingInfo.pageSize      = pagingConditions.pageSize;
+
+            return callback(null, data);
+        });
+    } else {
+        mysqlClient.query({
+            sql     : sql,
+            params  : params
+        }, function (err, rows) {
+            if (err) {
+                debugProxy("[getAllOrders error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
+    }
+
 };
 
 /**
