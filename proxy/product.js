@@ -23,6 +23,7 @@
  */
 
 var mysqlClient = require("../lib/mysqlUtil");
+var pagingUtil  = require("../lib/pagingUtil");
 
 /**
  * get all product list
