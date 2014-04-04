@@ -55,7 +55,7 @@ exports.findAll = function (req, res, next) {
 
     Product.getAllProducts(function (err, data) {
         if (err) {
-            return res.send(util.generateRes(null. err.statusCode));
+            return res.send(util.generateRes(null, err.statusCode));
         }
          
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
