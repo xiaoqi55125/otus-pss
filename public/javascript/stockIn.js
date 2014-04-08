@@ -2,6 +2,9 @@ var tdCont = {
   cell: function(item) {
     return $("<td></td>").html(item);
   },
+  cellBatch: function(pId,item) {
+    return $("<td id='batch_"+pId+"_"+item+"'></td>").html(item);
+  },
 
   row: function(pId) {
     return $("<tr id='"+pId+"'></tr>");
@@ -32,24 +35,23 @@ function addProductToList() {
 
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
-		var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
+		var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
 		//var cellAmount = tdCont.cell(cellData.AMOUNT);
 		//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
-		var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
+		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
 		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
-
-		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0)         
+		//batch_123
+		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0 && $("#add_listView:has('#batch_"+cellData.PRODUCT_ID+"_"+cellData.BATCH_NUM+"')").length > 0 )         
 		{   
-			$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
+			$("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val(parseInt($("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val())+parseInt(cellData.NUM));
 			
 		}else{
 			row.append(cellName);
 			row.append(cellPRICE);
 			row.append(cellNum);
-			//row.append(cellAmount);
 			row.append(cellSupplier);
 			row.append(cellBatchNum);
 			row.append(cellRemark);
