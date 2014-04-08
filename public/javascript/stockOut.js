@@ -44,9 +44,8 @@ function getALLOrders0 (sDate,eDate,pageIndex) {
 		success:function (data) {
 			if (data.statusCode === 0) {
 				$("#add_listView").html("");
-				$("#add_listView2").html("");
-				for (var i = 0; i < data.data.length; i++) {
-					var oInfo = data.data[i];
+				for (var i = 0; i < data.data.items.length; i++) {
+					var oInfo = data.data.items[i];
 					var row = tdCont.row(oInfo.ORDER_ID);
 					var customerName = tdCont.cell(oInfo.CUSTOMER_NAME);
 					var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
@@ -60,7 +59,20 @@ function getALLOrders0 (sDate,eDate,pageIndex) {
 					row.append(link);
 					row.append(status);
 					$("#add_listView").append(row);
-				};
+				}
+				var pageInfo = data.data.pagingInfo;
+	          	$('#paginator_div0').pagination('destroy');
+	          	if (pageInfo.totalNum>10) {
+	            	$('#paginator_div0').pagination({
+		              	items: data.data.pagingInfo.totalNum,
+		              	itemsOnPage: 10,
+		              	currentPage: pageInfo.pageIndex+1,
+		              	cssStyle: 'light-theme',
+		              	onPageClick: function(pageNum){
+		                	getALLOrders0($("#sDate").val(),$("#eDate").val(),pageNum-1);
+		              	}
+		            })
+	            }
 			}
 		}
 	})
@@ -75,10 +87,9 @@ function getALLOrders1 (sDate,eDate,pageIndex) {
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
-				$("#add_listView").html("");
-				$("#add_listView2").html("");
-				for (var i = 0; i < data.data.length; i++) {
-					var oInfo = data.data[i];
+				$("#add_listView1").html("");
+				for (var i = 0; i < data.data.items.length; i++) {
+					var oInfo = data.data.items[i];
 					var row = tdCont.row(oInfo.ORDER_ID);
 					var customerName = tdCont.cell(oInfo.CUSTOMER_NAME);
 					var addTime = tdCont.cell(moment(oInfo.DATETIME).format("YYYY年 M月 D日 , H:mm:ss"));
@@ -94,6 +105,19 @@ function getALLOrders1 (sDate,eDate,pageIndex) {
 					$("#add_listView1").append(row);
 					//$("#add_listView_already").append(row);
 				};
+				var pageInfo = data.data.pagingInfo;
+	          	$('#paginator_div1').pagination('destroy');
+	          	if (pageInfo.totalNum>10) {
+		            	$('#paginator_div1').pagination({
+		              	items: data.data.pagingInfo.totalNum,
+		              	itemsOnPage: 10,
+		              	currentPage: pageInfo.pageIndex+1,
+		              	cssStyle: 'light-theme',
+		              	onPageClick: function(pageNum){
+		                	getALLOrders1($("#sDate").val(),$("#eDate").val(),pageNum-1);
+		              	}
+		            });
+		        }
 			}
 		}
 	})
@@ -108,7 +132,6 @@ function getALLOrders2 (sDate,eDate,pageIndex) {
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
-				$("#add_listView").html("");
 				$("#add_listView2").html("");
 				for (var i = 0; i < data.data.items.length; i++) {
 					var oInfo = data.data.items[i];
@@ -129,13 +152,13 @@ function getALLOrders2 (sDate,eDate,pageIndex) {
 				var pageInfo = data.data.pagingInfo;
 	          	$('#paginator_div2').pagination('destroy');
 	          	if (pageInfo.totalNum>10) {
-	            	$('#paginator_div').pagination({
+	            	$('#paginator_div2').pagination({
 	              	items: data.data.pagingInfo.totalNum,
 	              	itemsOnPage: 10,
 	              	currentPage: pageInfo.pageIndex+1,
 	              	cssStyle: 'light-theme',
 	              	onPageClick: function(pageNum){
-	                	getJournals($('#JourType').val(),$("#sDate").val(),$("#eDate").val(),pageNum-1);
+	                	getALLOrders2($("#sDate").val(),$("#eDate").val(),pageNum-1);
 	              	}
 	            });
 	          };
