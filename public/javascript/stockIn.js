@@ -1,6 +1,6 @@
 var tdCont = {
   cell: function(item) {
-    return $("<td></td>").html(item);
+    return $("<td style='line-height: 35px;'></td>").html(item);
   },
   cellBatch: function(pId,item) {
     return $("<td id='batch_"+pId+"_"+item+"'></td>").html(item);
@@ -35,7 +35,7 @@ function addProductToList() {
 
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
-		var cellNum = tdCont.cell($("<input type='number' style='width: 70px;'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
+		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
 		//var cellAmount = tdCont.cell(cellData.AMOUNT);
 		//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
 		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
@@ -61,6 +61,7 @@ function addProductToList() {
 		$('#productID').focus();
 		isExist = 1;
 		$('.productAddTemp')[0].reset();
+		$("input[type='number']").stepper();
 		
 	}
 	
