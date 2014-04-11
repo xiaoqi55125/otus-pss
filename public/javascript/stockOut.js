@@ -168,7 +168,9 @@ function getALLOrders2 (sDate,eDate,pageIndex) {
 }
 
 function searchOrdersByDate () {
-	getALLOrders($("#sDate").val(),$("#eDate").val());
+	getALLOrders0($("#sDate").val(),$("#eDate").val(),0); 
+    getALLOrders1($("#sDate").val(),$("#eDate").val(),0); 
+    getALLOrders2($("#sDate").val(),$("#eDate").val(),0); 
 }
 
 function stockOutClick (oId) {
