@@ -71,7 +71,8 @@ function submitOrder () {
 			data["PRODUCT_COUNT"] = $($ttd[1]).html();
 			data["NUM"] = $($ttd).eq(2).find('input').val();
 			data["PRICE"] = parseInt($($ttd[1]).html());
-			data["OPERATOR"] = "12345678";
+			data["OPERATOR"] = $("#currentUserId").html();
+			data["OPERATORNAME"] = $("#currentUserName").html();
 			data["REMARK"] = $($ttd[3]).html();
 			datas.push(data); 
 		};

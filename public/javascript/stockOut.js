@@ -22,6 +22,11 @@ var tdCont = {
   		stockOutClick(oId);
   	}
   },
+  orderDeleteClick:function (oId) {
+  	return function	() {
+  		orderDeleteClick(oId);
+  	}
+  },
   stockOutCheck: function (oId) {
   	return function () {
   		stockOutCheck(oId);
@@ -53,11 +58,20 @@ function getALLOrders0 (sDate,eDate,pageIndex) {
 					row.append(customerName);
 					row.append(addTime);
 					row.append(remark);
+					var tempStr = oInfo.ORDER_CONTENT;
+					var datas = eval('(' + tempStr + ')');  
+					var ccUser = tdCont.cell(datas.data[0].OPERATORNAME);
+					row.append(ccUser);
 					var link = tdCont.cell($("<a href='javascript:void(0);'>发货</a>"));
+					var link2 = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 					var status = tdCont.cell("<button type='button' class='btn btn-info'>未出库</button>")
 					link.click(tdCont.stockOutClick(oInfo.ORDER_ID));
+					link2.click(tdCont.orderDeleteClick(oInfo.ORDER_ID));
+					
 					row.append(link);
+					row.append(link2);
 					row.append(status);
+					
 					$("#add_listView").append(row);
 				}
 				var pageInfo = data.data.pagingInfo;
@@ -103,7 +117,6 @@ function getALLOrders1 (sDate,eDate,pageIndex) {
 					row.append(link);
 					row.append(status);
 					$("#add_listView1").append(row);
-					//$("#add_listView_already").append(row);
 				};
 				var pageInfo = data.data.pagingInfo;
 	          	$('#paginator_div1').pagination('destroy');
@@ -177,6 +190,23 @@ function stockOutClick (oId) {
 	getOneOrderByOId(oId);
 	//modify stocks code to 1 , ing , when done change to 2 , defult is zero
 	modifyStockStatus(oId,1);
+	
+}
+function orderDeleteClick (oId) {
+	bootbox.confirm("<h4>确认删除订单?</h4>", function(result) {
+	  if (result) {
+	  	$.ajax({
+			url:'/orders/'+oId,
+			type:'delete',
+			success:function (data) {
+				if (data.statusCode ===0 ) {
+					bootbox.alert("<h4>删除订单成功!</h4>");
+					searchOrdersByDate();
+				}
+			}
+		})
+	  };
+	})
 	
 }
 function stockOutCheck (oId) {
