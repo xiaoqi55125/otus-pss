@@ -218,6 +218,7 @@ function getOneOrderByOId(oId) {
 				}
 				$("#lastStockOutBtn").unbind('click').removeAttr('onclick');
 			  	$("#lastStockOutBtn").attr("onclick","submitStockOut('"+oId+"')");
+			  	$('#productIDCheck').focus();
 			  	$("#productIDCheck").keydown(function(event) {  
 			        if (event.keyCode == 13) {  
 			            getProductCheck($("#productIDCheck").val()); 
@@ -226,10 +227,14 @@ function getOneOrderByOId(oId) {
 			  	$('#checkStockOut').modal({
 					backdrop: false
 				});
+			  	$('#checkStockOut').on('shown.bs.modal', function () {
+			  		$('#productIDCheck').val("");
+				    $('#productIDCheck').focus();
+				})
 				$('#checkStockOut').on('hidden.bs.modal', function (e) {
 				  	modifyStockStatus(oId,0);
 				})
-				$('#productIDCheck').focus();
+				
 			}else{
 				bootbox.alert("服务器出错!");
 			}
