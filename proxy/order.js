@@ -55,7 +55,7 @@ exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
     }
 
     //order
-    sql += " ORDER BY STOCK_STATUS,DATETIME ";
+    sql += " ORDER BY STOCK_STATUS,DATETIME DESC";
 
     if (pagingConditions) {
         var pc = {
@@ -288,5 +288,32 @@ exports.writeOrderJournal = function (journalInfo, callback) {
         return callback(null, null);
     });
     
+};
+
+/**
+ * remove order item by orderId
+ * @param  {String}   orderId  the order's id
+ * @param {String} stockStatus the order's status
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.removeById = function (orderId, stockStatus, callback) {
+    debugProxy("proxy/order/removeById");
+
+    var sql = "DELETE FROM ORDERS WHERE ORDER_ID = :ORDER_ID AND STOCK_STATUS = :STOCK_STATUS ";
+    mysqlClient.query({
+        sql         : sql,
+        params      : {
+            ORDER_ID    : orderId,
+            STOCK_STATUS: stockStatus
+        }
+    },  function (err, rows) {
+        if (err || rows.affectedRows === 0) {
+            debugProxy("[removeById error]: %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
 };
 

@@ -265,3 +265,33 @@ exports.modifyStockStatus = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
     });
 };
+
+/**
+ * delete a order item
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.delete = function (req, res, next) {
+    debugCtrller("controller/order/delete");
+
+    var orderId   = req.params.orderId || "";
+
+    try {
+        check(orderId).notEmpty();
+        sanitize(sanitize(orderId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    var notStockInStatus = 0;
+
+    Order.removeById(orderId, notStockInStatus, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
+    });
+};
