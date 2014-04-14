@@ -40,7 +40,7 @@ exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
     var sql = " SELECT O.*, UL0.USER_NAME AS OPERATOR_0_NAME, UL1.USER_NAME AS OPERATOR_1_NAME, UL2.USER_NAME AS OPERATOR_2_NAME FROM ORDERS O " +
               " LEFT JOIN USER_LOGIN UL0 ON O.OPERATOR_0 = UL0.USER_ID " +
               " LEFT JOIN USER_LOGIN UL1 ON O.OPERATOR_1 = UL1.USER_ID " +
-              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID "
+              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID " +
               " WHERE 1 = 1 ";
     var params = {};
 
@@ -112,7 +112,7 @@ exports.getOrderById = function (orderId, callback) {
     var sql = " SELECT O.*, UL0.USER_NAME AS OPERATOR_0_NAME, UL1.USER_NAME AS OPERATOR_1_NAME, UL2.USER_NAME AS OPERATOR_2_NAME FROM ORDERS O " +
               " LEFT JOIN USER_LOGIN UL0 ON O.OPERATOR_0 = UL0.USER_ID " +
               " LEFT JOIN USER_LOGIN UL1 ON O.OPERATOR_1 = UL1.USER_ID " +
-              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID "
+              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID " +
               " WHERE ORDER_ID = :ORDER_ID ";
 
     mysqlClient.query({
@@ -178,7 +178,7 @@ exports.getStockStatusByOrderId = function (orderId, callback) {
 exports.createOrder = function (orderInfo, callback) {
     debugProxy("proxy/order/createOrder");
 
-    var sql = "INSERT INTO ORDERS(ORDER_ID, ORDER_CONTENT, CUSTOMER_NAME, DATETIME, STOCK_STATUS, OPERATOR_0 REMARK) " +
+    var sql = "INSERT INTO ORDERS(ORDER_ID, ORDER_CONTENT, CUSTOMER_NAME, DATETIME, STOCK_STATUS, OPERATOR_0, REMARK) " +
               " VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :STOCK_STATUS, :OPERATOR_0, :REMARK);"
 
     mysqlClient.query({

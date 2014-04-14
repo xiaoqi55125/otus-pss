@@ -58,9 +58,7 @@ function getALLOrders0 (sDate,eDate,pageIndex) {
 					row.append(customerName);
 					row.append(addTime);
 					row.append(remark);
-					var tempStr = oInfo.ORDER_CONTENT;
-					var datas = eval('(' + tempStr + ')');  
-					var ccUser = tdCont.cell(datas.data[0].OPERATORNAME);
+					var ccUser = tdCont.cell(oInfo.OPERATOR_0_NAME);
 					row.append(ccUser);
 					var link = tdCont.cell($("<a href='javascript:void(0);'>发货</a>"));
 					var link2 = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
@@ -111,6 +109,10 @@ function getALLOrders1 (sDate,eDate,pageIndex) {
 					row.append(customerName);
 					row.append(addTime);
 					row.append(remark);
+					var ccUser1 = tdCont.cell(oInfo.OPERATOR_0_NAME);
+					row.append(ccUser1);
+					var ccUser2 = tdCont.cell(oInfo.OPERATOR_2_NAME);
+					row.append(ccUser2);
 					var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
 					var status = tdCont.cell("<button type='button' class='btn btn-warning'>出库中</button>")
 					link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
@@ -155,6 +157,10 @@ function getALLOrders2 (sDate,eDate,pageIndex) {
 					row.append(customerName);
 					row.append(addTime);
 					row.append(remark);
+					var ccUser0 = tdCont.cell(oInfo.OPERATOR_0_NAME);
+					row.append(ccUser0);
+					var ccUser1 = tdCont.cell(oInfo.OPERATOR_1_NAME);
+					row.append(ccUser1);
 					var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
 					var status = tdCont.cell("<button type='button' class='btn btn-success'>已出库</button>")
 					link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
