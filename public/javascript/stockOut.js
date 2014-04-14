@@ -232,7 +232,7 @@ function getOneOrderByOId(oId) {
 				})
 				
 			}else{
-				bootbox.alert("服务器出错!");
+				bootbox.alert("<h4>服务器出错!</h4>");
 			}
 		}
 	})
@@ -247,7 +247,7 @@ function getOneOrderByOId(oId) {
 function submitStockOut(oId) {
 	//check the box 
 	//check the stockStatusCode 0 
-	if (getStockStatus != 0) {
+	if (getStockStatus === 0) {
 		bootbox.alert("<h4>该订单已经出货,请勿重复操作,请检查时候有其他操作员操作!</h4>");
 	}else{
 		//check all checkboxs have checked already
@@ -284,7 +284,7 @@ function submitStockOut(oId) {
 				}
 			})
 		}else{
-			bootbox.alert("出库检查未通过,请检查后重试!");
+			bootbox.alert("<h4>出库检查未通过,请检查后重试!</h4>");
 		}
 	}
 	
@@ -308,7 +308,7 @@ function getProductCheck (pId) {
 	 					var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
 	 					var cellNum = tdCont.cell(cellData.NUM);
 	 					var wholeNum = parseInt($("#lastProductNum").html());
-	 					var cellEditNum = tdCont.cell("<input  type='number' min='0' max='"+wholeNum+"' value='0' class='editNumInput' /> ");
+	 					var cellEditNum = tdCont.cell("<input  type='number' min='0' max='"+cellData.NUM+"' value='0' class='editNumInput' /> ");
 	 					row.append(cellBatchNum);
 	 					row.append(cellNum);
 	 					row.append(cellEditNum);
@@ -319,7 +319,7 @@ function getProductCheck (pId) {
 	 				$("input[type='number']").stepper();
 	 				
 	 			}else{
-	 				bootbox.alert("未查询到相关数据,请检查库存!");
+	 				bootbox.alert("<h4>未查询到相关数据,请检查库存!</h4>");
 	 			}
 	 		}
 	 	})
@@ -329,7 +329,7 @@ function getProductCheck (pId) {
 
 	 	
 	 }else{
-	 	bootbox.alert("商品不在列表内!");
+	 	bootbox.alert("<h4>商品不在列表内!</h4>");
 	 	return;
 	 }
 }
@@ -361,7 +361,7 @@ function addProductWithBatchNumToStockOutListView (pId,origNum) {
 		$("#cb_"+pId).prop("checked", "checked");
 		//to-do
 	}else{
-		bootbox.alert("商品数量分配不正确,请检查!");
+		bootbox.alert("<h4>商品数量分配不正确,请检查!</h4>");
 	}
 	
 }
@@ -381,7 +381,7 @@ function modifyStockStatus (orderId,stId) {
 			if (data.statusCode === 0) {
 				searchOrdersByDate();
 			}else{
-				bootbox.alert("修改订单状态失败!");
+				bootbox.alert("<h4>修改订单状态失败!</h4>");
 			}
 		}
 	})
@@ -393,7 +393,7 @@ function getStockStatus (orderId) {
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
-				alert(data.data);
+				//alert(data.data);
 			}
 		}
 	})
