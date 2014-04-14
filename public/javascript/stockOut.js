@@ -36,6 +36,11 @@ var tdCont = {
   	return function () {
   		getProductCheck(pId);
   	}
+  },
+  cancelStockOuting:function (oId) {
+  	return function () {
+  		modifyStockStatus(oId,0);
+  	}
   }
 };
 /**
@@ -111,11 +116,12 @@ function getALLOrders1 (sDate,eDate,pageIndex) {
 					row.append(remark);
 					var ccUser1 = tdCont.cell(oInfo.OPERATOR_0_NAME);
 					row.append(ccUser1);
-					var ccUser2 = tdCont.cell(oInfo.OPERATOR_2_NAME);
-					row.append(ccUser2);
 					var link = tdCont.cell($("<a href='javascript:void(0);'>查看</a>"));
 					var status = tdCont.cell("<button type='button' class='btn btn-warning'>出库中</button>")
 					link.click(tdCont.stockOutCheck(oInfo.ORDER_ID));
+					var cancelStock = tdCont.cell($("<a href='javascript:void(0);'>取消出库</a>"));
+					cancelStock.click(tdCont.cancelStockOuting(oInfo.ORDER_ID));
+					row.append(cancelStock);
 					row.append(link);
 					row.append(status);
 					$("#add_listView1").append(row);
