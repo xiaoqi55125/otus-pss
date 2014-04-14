@@ -55,7 +55,7 @@ exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
     }
 
     //order
-    sql += " ORDER BY STOCK_STATUS ";
+    sql += " ORDER BY STOCK_STATUS,DATETIME ";
 
     if (pagingConditions) {
         var pc = {
