@@ -284,7 +284,7 @@ function submitStockOut(oId) {
 				}
 			})
 		}else{
-			bootbox.alert("出库检查未通过,请检查后重试!");
+			bootbox.alert("<h4>出库检查未通过,请检查后重试!</h4>");
 		}
 	}
 	
@@ -329,7 +329,7 @@ function getProductCheck (pId) {
 
 	 	
 	 }else{
-	 	bootbox.alert("商品不在列表内!");
+	 	bootbox.alert("<h4>商品不在列表内!</h4>");
 	 	return;
 	 }
 }
@@ -381,7 +381,7 @@ function modifyStockStatus (orderId,stId) {
 			if (data.statusCode === 0) {
 				searchOrdersByDate();
 			}else{
-				bootbox.alert("修改订单状态失败!");
+				bootbox.alert("<h4>修改订单状态失败!</h4>");
 			}
 		}
 	})
