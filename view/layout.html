@@ -56,8 +56,8 @@
 					    </li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#" id="currentUserName"><%= current_user.uName %></a>你好</li>
-						<li style="display:none"><a href="#" id="currentUserId"><%= current_user.userId %></a></li>
+						<li><a href="#" id="currentUserName"><%= current_user.uName %></a></li>
+						
 						<li class="dropdown">
 					        <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置 <b class="caret"></b></a>
 					        <ul class="dropdown-menu">
@@ -76,6 +76,7 @@
 	</div>
 	<div id="footer">
 		<div id="copyright">欢迎访问 <%= config.name %> Copyright ©2014</div>
+		<li style="display:none;"><a href="#" id="currentUserId"><%= current_user.userId %></a></li>
 	</div>
 </body>
 </html>
