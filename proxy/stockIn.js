@@ -49,7 +49,7 @@ exports.doStockIn = function (stockInInfo, cb) {
             var context = {
                 conn      : conn,
                 processor : function (product, callback) {
-                    insertIntoStockIn(this.conn, product, callback);
+                    stockInOneProduct(this.conn, product, callback);
                 }
             };
 
@@ -127,6 +127,68 @@ exports.writeStockInJournal = function (journalInfo, callback) {
 };
 
 /**
+ * stock in one product
+ * @param  {Object}   conn        the mysql's connection
+ * @param  {Object}   productInfo the product info
+ * @param  {Function} callback    the cb func
+ * @return {null}               
+ */
+function stockInOneProduct (conn, productInfo, callback) {
+    debugProxy("proxy/stockIn/stockInOneProduct");
+
+    async.waterfall([
+        //step 1
+        function (callback) {
+            checkExists(conn, productInfo, function (err, recordExists) {
+                callback(err, recordExists);
+            });
+        },
+        //step 2
+        function (recordExists, callback) {
+            if (!recordExists) {                    //not exists
+                insertIntoStockIn(conn, productInfo, function (err) {
+                    callback(err, null);
+                });
+            } else {
+                updateStockIn(conn, productInfo, function (err) {
+                    callback(err, null);
+                });
+            }
+        }
+    ],  function (err, values) {
+        if (err) {
+            debugProxy("[stockOutOneProduct error]: %s", err);
+            return callback(err, null);
+        }
+
+        return callback(null, null);
+    });
+}
+
+/**
+ * check a stock in product is exists
+ * @param  {Object}   conn        the connection object
+ * @param  {Object}   productInfo the product info
+ * @param  {Function} callback    the cb func
+ * @return {null}               
+ */
+function checkExists (conn, productInfo, callback) {
+    debugProxy("proxy/stockIn/checkExists");
+
+    var sql = " SELECT COUNT(1) AS CNT FROM STOCK_IN WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM ";
+
+    conn.query(sql, productInfo, function (err, rows) {
+        if (err || !rows[0]) {
+            debugProxy("[checkExists error]: %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(err, rows[0]['CNT'].toString() === "0" ? false : true);
+    })
+}
+
+
+/**
  * insert stock in
  * @param  {Object}   conn        the mysql's connection
  * @param  {Object}   productInfo the product info
@@ -155,3 +217,26 @@ function insertIntoStockIn (conn, productInfo, callback) {
         return callback(null, null);
     });
 };
+
+/**
+ * update a exist stock in item
+ * @param  {Object}   conn        the mysql's connection
+ * @param  {Object}   productInfo the product info
+ * @param  {Function} callback    the cb func
+ * @return {null}               
+ */
+function updateStockIn (conn, productInfo, callback) {
+    debugProxy("proxy/stockIn/updateStockIn");
+
+    var sql = "UPDATE STOCK_IN SET NUM = NUM + :NUM " + 
+              " WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM";
+
+    conn.query(sql, productInfo, function (err, rows) {
+        if (err) {
+            debugProxy("[updateStockIn error]: %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
+}

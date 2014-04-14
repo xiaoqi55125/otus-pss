@@ -29,7 +29,7 @@ function getAllPreStockInList(pageIndex) {
 						var cellData = tempStr[i];
 						var row = tdCont.row(cellData.PSI_ID);
 						var cellTime = tdCont.cell(moment(cellData.PSI_TIME).format("YYYY年 M月 D日 H:mm:ss"));
-						var cellOpeator = tdCont.cell(cellData.OPERATOR);
+						var cellOpeator = tdCont.cell(cellData.USER_NAME);
 						var cellRemark = tdCont.cell(cellData.REMARK);
 						var cellDetails = tdCont.cell($("<a href='javascript:void(0);'>查看详情</a>"));
 						cellDetails.click(tdCont.proStockDetail(cellData.PSI_ID));

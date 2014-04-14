@@ -113,7 +113,7 @@ exports.preStockIn = function (req, res, next) {
         PSI_CONTENT     : productsJSonStr,
         PSI_ID          : psiId,
         PSI_TIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
-        OPERATOR        : "",
+        OPERATOR        : req.session.user.userId,
         REMARK          : ""
     };
 

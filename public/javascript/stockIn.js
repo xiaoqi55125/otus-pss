@@ -32,18 +32,15 @@ function addProductToList() {
 		}
 		var row = tdCont.row(cellData.PRODUCT_ID);
 		var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
-
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
-		//var cellAmount = tdCont.cell(cellData.AMOUNT);
-		//var cellAmount = tdCont.cell(cellData.NUM*cellData.PRICE);
 		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
 		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
-		//batch_123
+
 		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0 && $("#add_listView:has('#batch_"+cellData.PRODUCT_ID+"_"+cellData.BATCH_NUM+"')").length > 0 )         
 		{   
 			$("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val(parseInt($("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val())+parseInt(cellData.NUM));
@@ -62,6 +59,7 @@ function addProductToList() {
 		isExist = 1;
 		$('.productAddTemp')[0].reset();
 		$("input[type='number']").stepper();
+		$("#productForm").validationEngine("hide");
 		
 	}
 	
@@ -72,6 +70,7 @@ function addProductToList() {
  * @return {null} 
  */
 function submitStockIn () {
+
 	var $ttr = $("#add_listView").children();
 	if (!$ttr.length) {
 		bootbox.alert("<h4>列表中无数据</h4>");

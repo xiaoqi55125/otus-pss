@@ -36,7 +36,9 @@ var pagingUtil  = require("../lib/pagingUtil");
 exports.getAllPreStockIns = function (callback, pagingConditions) {
     debugProxy("proxy/preStockIn/getAllPreStockIns");
 
-    var sql = "SELECT * FROM PRE_STOCK_IN ";
+    var sql = "SELECT PSI.*, UL.USER_NAME AS USER_NAME FROM PRE_STOCK_IN PSI " +
+              " LEFT JOIN USER_LOGIN UL ON PSI.OPERATOR = UL.USER_ID " +
+              " ORDER BY PSI_TIME DESC ";
     var params = {};
 
     if (pagingConditions) {

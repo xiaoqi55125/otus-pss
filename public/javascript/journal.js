@@ -147,7 +147,7 @@ function jDetailsStockOut (oId) {
         }
         $('#checkStockOut').modal("show");
       }else{
-        bootbox.alert("服务器出错!");
+        bootbox.alert("<h4>服务器出错!</h4>");
       }
     }
   })
