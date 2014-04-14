@@ -92,11 +92,11 @@ function getAllGroups (uId) {
 function allocGroup () {
 
 	if($("#userSelect").val() == '0' ){
-		bootbox.alert("请选择用户!");
+		bootbox.alert("<h4>请选择用户!</h4>");
 		return;
 	}
 	if($("#groupSelect").val() == '0' ){
-		bootbox.alert("请选择权限分组!");
+		bootbox.alert("<h4>请选择权限分组!</h4>");
 		return;
 	}
 	$.ajax({
@@ -105,7 +105,7 @@ function allocGroup () {
 		data:$('form.groupSec').serialize(),
 		success:function (data) {
 			if (data.statusCode === 0) {
-				bootbox.alert("分配权限成功!");
+				bootbox.alert("<h4>分配权限成功!</h4>");
 			}
 		}
 	})

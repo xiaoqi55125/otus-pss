@@ -232,7 +232,7 @@ function getOneOrderByOId(oId) {
 				})
 				
 			}else{
-				bootbox.alert("服务器出错!");
+				bootbox.alert("<h4>服务器出错!</h4>");
 			}
 		}
 	})
@@ -393,7 +393,7 @@ function getStockStatus (orderId) {
 		type:'GET',
 		success:function (data) {
 			if (data.statusCode === 0) {
-				alert(data.data);
+				//alert(data.data);
 			}
 		}
 	})

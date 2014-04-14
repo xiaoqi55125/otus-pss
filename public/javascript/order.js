@@ -125,7 +125,7 @@ function getProductOneInfo(pId) {
 				getProductNum(pId);
 				return;
 			}else{
-				bootbox.alert("未查询到该产品,请检查!");
+				bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
 				return;
 			}
 		}
