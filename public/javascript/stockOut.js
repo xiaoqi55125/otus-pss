@@ -229,6 +229,7 @@ function getOneOrderByOId(oId) {
 				$('#checkStockOut').on('hidden.bs.modal', function (e) {
 				  	modifyStockStatus(oId,0);
 				})
+				$('#productIDCheck').focus();
 			}else{
 				bootbox.alert("服务器出错!");
 			}
