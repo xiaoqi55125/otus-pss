@@ -37,7 +37,11 @@ var pagingUtil  = require("../lib/pagingUtil");
 exports.getAllOrders = function (queryConditions, callback, pagingConditions) {
     debugProxy("proxy/order/getAllOrders");
 
-    var sql = " SELECT * FROM ORDERS WHERE 1 = 1 ";
+    var sql = " SELECT O.*, UL0.USER_NAME AS OPERATOR_0_NAME, UL1.USER_NAME AS OPERATOR_1_NAME, UL2.USER_NAME AS OPERATOR_2_NAME FROM ORDERS O " +
+              " LEFT JOIN USER_LOGIN UL0 ON O.OPERATOR_0 = UL0.USER_ID " +
+              " LEFT JOIN USER_LOGIN UL1 ON O.OPERATOR_1 = UL1.USER_ID " +
+              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID "
+              " WHERE 1 = 1 ";
     var params = {};
 
     if (queryConditions) {
@@ -105,9 +109,14 @@ exports.getOrderById = function (orderId, callback) {
         return callback(new InvalidParamError(), null);
     }
 
+    var sql = " SELECT O.*, UL0.USER_NAME AS OPERATOR_0_NAME, UL1.USER_NAME AS OPERATOR_1_NAME, UL2.USER_NAME AS OPERATOR_2_NAME FROM ORDERS O " +
+              " LEFT JOIN USER_LOGIN UL0 ON O.OPERATOR_0 = UL0.USER_ID " +
+              " LEFT JOIN USER_LOGIN UL1 ON O.OPERATOR_1 = UL1.USER_ID " +
+              " LEFT JOIN USER_LOGIN UL2 ON O.OPERATOR_2 = UL2.USER_ID "
+              " WHERE ORDER_ID = :ORDER_ID ";
+
     mysqlClient.query({
-        sql : "SELECT * FROM ORDERS " +
-              " WHERE ORDER_ID = :ORDER_ID ",
+        sql : sql,
         params : {
             "ORDER_ID"  : orderId
         }
@@ -169,7 +178,8 @@ exports.getStockStatusByOrderId = function (orderId, callback) {
 exports.createOrder = function (orderInfo, callback) {
     debugProxy("proxy/order/createOrder");
 
-    var sql = "INSERT INTO ORDERS VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :STOCK_STATUS, :REMARK);"
+    var sql = "INSERT INTO ORDERS(ORDER_ID, ORDER_CONTENT, CUSTOMER_NAME, DATETIME, STOCK_STATUS, OPERATOR_0 REMARK) " +
+              " VALUES(:ORDER_ID, :ORDER_CONTENT, :CUSTOMER_NAME, :DATETIME, :STOCK_STATUS, :OPERATOR_0, :REMARK);"
 
     mysqlClient.query({
         sql     : sql,
@@ -216,28 +226,39 @@ exports.modifyOrder = function (orderInfo, callback) {
  * change order status
  * @param {String} orderId the order's id
  * @param  {Number}   newStatus the order's new status
+ * @param {String} operator the operator
  * @param  {Function} callback  the cb func
  * @return {null}             
  */
-exports.changeOrderStatus = function (orderId, newStatus, callback) {
+exports.changeOrderStatus = function (orderId, newStatus, operator, callback) {
     debugProxy("proxy/order/changeOrderStatus");
 
-    if (!orderId || !newStatus) {
+    if (!orderId || !newStatus || !operator) {
         return callback(new DBError(), null);
     }
 
-    var sql = "UPDATE ORDERS SET STOCK_STATUS = :STOCK_STATUS " + 
-              "               WHERE ORDER_ID = :ORDER_ID";
+    var sql    = "UPDATE ORDERS SET STOCK_STATUS = :STOCK_STATUS ";
+    var params = {
+        STOCK_STATUS    : newStatus,
+        ORDER_ID        : orderId
+    };
+
+    if (newStatus.toString() === "1") {
+        sql += ", OPERATOR_1 = :OPERATOR_1 ";
+        params.OPERATOR_1 = operator;
+    } else if (newStatus.toString() === "2") {
+        sql += ", OPERATOR_2 = :OPERATOR_2 ";
+        params.OPERATOR_2 = operator;
+    }
+
+    sql += " WHERE ORDER_ID = :ORDER_ID ";
 
     mysqlClient.query({
         sql     : sql,
-        params  : {
-            STOCK_STATUS    : newStatus,
-            ORDER_ID        : orderId
-        }
+        params  : params
     },  function (err, rows) {
         if (err) {
-            debugProxy("[createOrder error]: %s", err);
+            debugProxy("[changeOrderStatus error]: %s", err);
             return callback(new ServerError(), null);
         }
 
