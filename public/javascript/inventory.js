@@ -27,10 +27,12 @@ function getAllInventories (pageIndex) {
 						var iInfo = invs[i];
 						var row = tdCont.row();
 						var pName = tdCont.cell(iInfo.PRODUCT_NAME);
+						var cellPId = tdCont.cell(iInfo.PRODUCT_ID);
 						var num = tdCont.cell(iInfo.SUM);
 						var EditLink = tdCont.cell($("<a href='javascript:void(0);'>库存详细</a>"));
               			EditLink.click(tdCont.getProductBatchs(iInfo.PRODUCT_ID));
 						row.append(pName);
+						row.append(cellPId);
 						row.append(num);
 						row.append(EditLink);
 						$("#add_listView").append(row);

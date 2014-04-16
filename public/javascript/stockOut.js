@@ -242,12 +242,14 @@ function getOneOrderByOId(oId) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
 					var cellName = tdCont.cell("<span id='name_"+cellData.PRODUCT_ID +"'>"+cellData.PRODUCT_NAME+"</span>");
+					var cellProId = tdCont.cell(cellData.PRODUCT_ID);
 					var cellNum = tdCont.cell("<span id='num_"+cellData.PRODUCT_ID+"'>"+cellData.NUM+"</span>");
 					var cellRemark = tdCont.cell(cellData.REMARK);
 					var cellCheck = tdCont.cell($("<label><input id='cb_"+cellData.PRODUCT_ID+"' type='checkbox' name='checkbox1' disabled> 发货确认</label>"));
 					var cellSelect = tdCont.cell($("<a href='javascript:void(0);'>点击配货</a>"));
 					cellSelect.click(tdCont.batchSelect(cellData.PRODUCT_ID));
 					row.append(cellName);
+					row.append(cellProId);
 					row.append(cellNum);
 					row.append(cellRemark);
 					row.append(cellCheck);

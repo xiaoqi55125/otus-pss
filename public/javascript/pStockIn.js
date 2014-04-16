@@ -73,11 +73,13 @@ function proStockDetail (psId) {
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
+					var cellPId = tdCont.cell(cellData.PRODUCT_ID);
 					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 					var cellNum = tdCont.cell(cellData.NUM);
 					var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
 					var cellRemark = tdCont.cell(cellData.REMARK);
 					row.append(cellName);
+					row.append(cellPId);
 					row.append(cellBatchNum);
 					row.append(cellNum);
 					row.append(cellRemark);
