@@ -26,6 +26,7 @@ function addProductToList() {
 		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
 		var cellData = qs;
 		var row = tdCont.row(cellData.PRODUCT_ID);
+		var cellPid = tdCont.cell(cellData.PRODUCT_ID);
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		// max='20' 
@@ -39,6 +40,7 @@ function addProductToList() {
 			$("#productNum"+cellData.PRODUCT_ID).val(parseInt($("#productNum"+cellData.PRODUCT_ID).val())+parseInt(cellData.NUM));
 		}else{
 			row.append(cellName);
+			row.append(cellPid);
 			row.append(cellPRICE);
 			row.append(cellNum);
 			row.append(cellRemark);
@@ -68,12 +70,12 @@ function submitOrder () {
 			var data = {};
 			data["PRODUCT_ID"] = $($ttr[i]).attr("id");
 			data["PRODUCT_NAME"] = $($ttd[0]).html();
-			data["PRODUCT_COUNT"] = $($ttd[1]).html();
-			data["NUM"] = $($ttd).eq(2).find('input').val();
-			data["PRICE"] = parseInt($($ttd[1]).html());
+			data["PRODUCT_COUNT"] = $($ttd[2]).html();
+			data["NUM"] = $($ttd).eq(3).find('input').val();
+			data["PRICE"] = parseInt($($ttd[2]).html());
 			data["OPERATOR"] = $("#currentUserId").html();
 			data["OPERATORNAME"] = $("#currentUserName").html();
-			data["REMARK"] = $($ttd[3]).html();
+			data["REMARK"] = $($ttd[4]).html();
 			datas.push(data); 
 		};
 		var obj = new Object();

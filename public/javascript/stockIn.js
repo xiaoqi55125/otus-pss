@@ -33,6 +33,7 @@ function addProductToList() {
 		var row = tdCont.row(cellData.PRODUCT_ID);
 		var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+		var cellPId = tdCont.cell(cellData.PRODUCT_ID);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
 		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
@@ -47,6 +48,7 @@ function addProductToList() {
 			
 		}else{
 			row.append(cellName);
+			row.append(cellPId);
 			row.append(cellPRICE);
 			row.append(cellNum);
 			row.append(cellSupplier);
@@ -82,11 +84,11 @@ function submitStockIn () {
 		var data = {};
 		data["PRODUCT_ID"] = $($ttr[i]).attr("id");
 		data["PRODUCT_NAME"] = $($ttd[0]).html();
-		data["NUM"] = $($ttd).eq(2).find('input').val();
-		data["PRICE"] = $($ttd[1]).html();
-		data["SUPPLIER"] = $($ttd[3]).html();
-		data["BATCH_NUM"] = $($ttd[4]).html();
-		data["REMARK"] = $($ttd[5]).html();
+		data["NUM"] = $($ttd).eq(3).find('input').val();
+		data["PRICE"] = $($ttd[2]).html();
+		data["SUPPLIER"] = $($ttd[4]).html();
+		data["BATCH_NUM"] = $($ttd[5]).html();
+		data["REMARK"] = $($ttd[6]).html();
 		datas.push(data); 
 	};
 	var obj = new Object();

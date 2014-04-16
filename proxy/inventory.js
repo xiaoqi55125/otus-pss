@@ -127,9 +127,13 @@ exports.getProductNumWithId = function (productId, callback) {
             PRODUCT_ID    : productId
         }
     },  function (err, rows) {
-        if (err) {
+        if (err || !rows) {
             debugProxy("[getProductNumWithId error]: %s", err);
             return callback(new DBError(), null);
+        }
+
+        if (!rows[0] || !rows[0]['NUM']) {
+            return callback(null, 0);
         }
 
         return callback(null, rows[0]['NUM']);

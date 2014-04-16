@@ -67,6 +67,8 @@ function getProductBatchs (pId) {
 		success:function (data) {
 			if (data.statusCode === 0) {
 				var temp =  data.data;
+				$("#invProId").html("");
+				$("#invProId").html(pId);
 				$("#pb_listView").html("");
 				for (var i = temp.length - 1; i >= 0; i--) {
 					console.log(i);

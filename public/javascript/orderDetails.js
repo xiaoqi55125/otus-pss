@@ -26,7 +26,7 @@ function getOrderById (oId) {
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
-					var cellName = tdCont.cell(cellData.PRODUCT_NAME+"("+cellData.PRODUCT_ID+")");
+					var cellName = tdCont.cell(cellData.PRODUCT_NAME+" ("+cellData.PRODUCT_ID+") ");
 					var cellNum = tdCont.cell(cellData.NUM);
 					row.append(cellName);
 					row.append(cellNum);
