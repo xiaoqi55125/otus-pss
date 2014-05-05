@@ -78,9 +78,9 @@ function submitOrder () {
 			data["REMARK"] = $($ttd[4]).html();
 			datas.push(data); 
 		};
-		var obj = new Object();
-		obj["data"] = datas; 
-		var jsonString = JSON.stringify(obj); 
+		// var obj = new Object();
+		// obj["data"] = datas; 
+		var jsonString = JSON.stringify(datas); 
 		$.ajax({
 			url:'/orders',
 			type:'POST',
