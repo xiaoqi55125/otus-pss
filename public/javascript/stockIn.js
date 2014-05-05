@@ -91,9 +91,9 @@ function submitStockIn () {
 		data["REMARK"] = $($ttd[6]).html();
 		datas.push(data); 
 	};
-	var obj = new Object();
-	obj["data"] = datas; 
-	var jsonString = JSON.stringify(obj); 
+	// var obj = new Object();
+	// obj["data"] = datas; 
+	var jsonString = JSON.stringify(datas); 
 	$.ajax({
 		url:'/prestockins',
 		type:'POST',
@@ -169,6 +169,7 @@ jQuery.extend({
     var pairs = qs.split('&');
     $.each(pairs, function(i, v){
       var pair = v.split('=');
+      
       nvpair[pair[0]] = decodeURI(pair[1]);
     });
     return nvpair;
