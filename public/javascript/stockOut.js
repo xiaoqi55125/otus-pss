@@ -305,7 +305,7 @@ function submitStockOut(oId) {
 				data["PRODUCT_ID"] = $($ttr[i]).attr("id").split('_')[1];
 				data["BATCH_NUM"] = $($ttd).eq(0).find('span').html();
 				data["NUM"] = $($ttd).eq(1).find('span').html();
-				data["OPERATOR"] = "12345678";
+				data["OPERATOR"] = "";
 				data["REMARK"] = "";
 				datas.push(data); 
 			};
