@@ -237,7 +237,8 @@ function getOneOrderByOId(oId) {
 				$("#lastStockOutRemark").html(data.data.REMARK);
 				var tempStr = data.data.ORDER_CONTENT;
 				var datas = eval('(' + tempStr + ')');  
-				var list = datas.data;
+				//var list = datas.data;
+				var list = datas;
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
@@ -305,8 +306,6 @@ function submitStockOut(oId) {
 				data["PRODUCT_ID"] = $($ttr[i]).attr("id").split('_')[1];
 				data["BATCH_NUM"] = $($ttd).eq(0).find('span').html();
 				data["NUM"] = $($ttd).eq(1).find('span').html();
-				data["OPERATOR"] = "";
-				data["REMARK"] = "";
 				datas.push(data); 
 			};
 			// var obj = new Object();
