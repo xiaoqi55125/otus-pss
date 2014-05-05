@@ -309,9 +309,9 @@ function submitStockOut(oId) {
 				data["REMARK"] = "";
 				datas.push(data); 
 			};
-			var obj = new Object();
-			obj["data"] = datas; 
-			var jsonString = JSON.stringify(obj); 
+			// var obj = new Object();
+			// obj["data"] = datas; 
+			var jsonString = JSON.stringify(datas); 
 	    	$.ajax({
 				url:'/stockouts',
 				type:'POST',
