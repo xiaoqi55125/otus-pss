@@ -68,7 +68,8 @@ function proStockDetail (psId) {
 			if (data.statusCode === 0) {
 				var tempStr = data.data.PSI_CONTENT;
 				var datas = eval('(' + tempStr + ')');  
-				var list = datas.data;
+				//var list = datas.data;
+				var list = datas;
 				$("#p_listView").html("");
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
