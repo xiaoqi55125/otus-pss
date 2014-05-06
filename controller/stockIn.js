@@ -69,7 +69,7 @@ exports.stockIn = function (req, res, next) {
                         item.OPERATE_TIME  = new Date().Format("yyyy-MM-dd hh:mm:ss");
                         item.OPERATOR_NAME = req.session.user.uName;
                         item.OPERATOR      = req.session.user.userId;
-                        item.RELATED_ID    = item.SI_ID;
+                        item.RELATED_ID    = serial_num;
 
                         return item;
                     });

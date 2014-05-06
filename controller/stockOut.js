@@ -64,7 +64,7 @@ exports.stockOut = function (req, res, next) {
         item.SO_DATE       = new Date().Format("yyyy-MM-dd hh:mm:ss");
         item.OPERATOR      = req.session.user.userId;
         item.OPERATOR_NAME = req.session.user.uName;
-        item.RELATED_ID    = item.SO_ID;
+        item.RELATED_ID    = serial_num;
         item.REMARK        = "";
         item.OPERATE_TIME  = new Date().Format("yyyy-MM-dd hh:mm:ss");    
 
