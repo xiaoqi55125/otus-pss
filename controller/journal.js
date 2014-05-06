@@ -38,7 +38,7 @@ var sanitize = require("validator").sanitize;
 exports.findJournal = function (req, res, next) {
     debugCtrller("controller/journal/findJournal");
 
-    var result = beforeAction();
+    var result = beforeAction(req, res);
 
     if (!result) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
@@ -64,7 +64,7 @@ exports.findJournal = function (req, res, next) {
 exports.findStockJournal = function (req, res, next) {
     debugCtrller("controller/journal/findStockJournal");
 
-    var result = beforeAction();
+    var result = beforeAction(req, res);
 
     if (!result) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
@@ -89,7 +89,7 @@ exports.findStockJournal = function (req, res, next) {
 exports.statistics = function (req, res, next) {
     debugCtrller("controller/journal/findStockJournal");
 
-    var result = beforeAction();
+    var result = beforeAction(req, res);
 
     if (!result) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
