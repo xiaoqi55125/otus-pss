@@ -56,7 +56,7 @@ exports.stockOut = function (req, res, next) {
     }
 
     var productsJsonObj = JSON.parse(productsJSonStr);
-    var serial_num      = util.GUID();
+    var serial_num      = new Date().Format("yyyyMMddhhmmssS")
     
     var warppedObjArr = productsJsonObj.map(function (item) {
         item.ORDER_ID      = orderId;

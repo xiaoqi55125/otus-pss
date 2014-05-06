@@ -60,7 +60,7 @@ exports.stockIn = function (req, res, next) {
                     var productsJSonStr = data["PSI_CONTENT"];
 
                     var productsJsonObj = JSON.parse(productsJSonStr);
-                    var serial_num      = util.GUID();
+                    var serial_num      = new Date().Format("yyyyMMddhhmmssS");
                     
                     var warppedObjArr = productsJsonObj.map(function (item) {
                         item.SERIAL_NUM    = serial_num;
