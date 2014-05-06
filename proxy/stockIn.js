@@ -81,49 +81,32 @@ exports.doStockIn = function (stockInInfo, cb) {
 };
 
 /**
- * write stock in action to journal
- * @param {Object} journalInfo the journal info
- * @return {null} 
+ * get product detail with product id and batch num
+ * @param  {String}   productId product id
+ * @param  {String}   batchNum  batch number
+ * @param  {Function} callback  the cb func
+ * @return {null}             
  */
-exports.writeStockInJournal = function (journalInfo, callback) {
-    debugProxy("proxy/stockIn/writeStockInJournal");
+exports.getProductDetail = function (productId, batchNum, callback) {
+    debugProxy("proxy/stockIn/getProductDetail");
 
-    async.waterfall([
-        //step 1
-        function (callback) {
-            mysqlClient.query({
-                sql   : "SELECT JT_ID FROM JOURNAL_TYPE WHERE JT_NAME = 'STOCK_IN'",
-                params : null
-            }, function (err, rows) {
-                debugProxy("[writeStockInJournal step 1]: %s", err);
-                return callback(err, rows[0]['JT_ID']);
-            });
-        },
-        //step 2
-        function (JT_ID, callback) {
-            mysqlClient.query({
-                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :OPERATOR, :DATETIME, :REMARK)",
-                params  : {
-                    JOURNAL_ID      : util.GUID(),
-                    JT_ID           : JT_ID,
-                    JOURNAL_CONTENT : journalInfo.journalContent,
-                    OPERATOR        : journalInfo.operator,
-                    DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
-                    REMARK          : ""
-                }
-            },  function (err, rows) {
-                debugProxy("[writeStockInJournal step 2]: %s", err);
-                return callback(err, null);
-            });
+    var sql = "SELECT * FROM STOCK_IN WHERE PRODUCT_ID = :PRODUCT_ID AND BATCH_NUM = :BATCH_NUM";
+
+    mysqlClient.query({
+        sql   : sql,
+        params: {
+            PRODUCT_ID    : productId,
+            BATCH_NUM     : batchNum
         }
-    ],  function (err, result) {
-        if (err) {
-            debugProxy("[writeStockInJournal error]: %s", err);
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[getProductDetail error] : " + err);
             return callback(new DBError(), null);
         }
 
-        return callback(null, null);
+        return callback(null, rows);
     });
+
 };
 
 /**

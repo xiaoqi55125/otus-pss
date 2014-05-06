@@ -24,6 +24,7 @@
 
 var StockIn    = require("../proxy").StockIn;
 var PreStockIn = require("../proxy").PreStockIn;
+var Journal    = require("../proxy").Journal;
 var util       = require("../lib/util");
 var config     = require("../appConfig").config;
 var check      = require("validator").check;
@@ -61,10 +62,15 @@ exports.stockIn = function (req, res, next) {
                     var productsJsonObj = JSON.parse(productsJSonStr);
                     var serial_num      = util.GUID();
                     
-                    var warppedObjArr = productsJsonObj.data.map(function (item) {
-                        item.SERIAL_NUM = serial_num;
-                        item.SI_ID      = util.GUID();
-                        item.SI_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
+                    var warppedObjArr = productsJsonObj.map(function (item) {
+                        item.SERIAL_NUM    = serial_num;
+                        item.SI_ID         = util.GUID();
+                        item.SI_DATE       = new Date().Format("yyyy-MM-dd hh:mm:ss");
+                        item.OPERATE_TIME  = new Date().Format("yyyy-MM-dd hh:mm:ss");
+                        item.OPERATOR_NAME = req.session.user.uName;
+                        item.OPERATOR      = req.session.user.userId;
+                        item.RELATED_ID    = item.SI_ID;
+
                         return item;
                     });
 
@@ -72,7 +78,6 @@ exports.stockIn = function (req, res, next) {
                     return callback(err, stockInInfo);
                 };
                 
-
                 return callback(err, data);
             });
         },
@@ -88,13 +93,21 @@ exports.stockIn = function (req, res, next) {
                 callback(err, stockInInfo);
             });
         },
-        //step 4:write journal
+        //step 4:get journal type id
         function (stockInInfo, callback) {
-            var journalInfo = {
-                journalContent    : JSON.stringify(stockInInfo.productList),
-                operator          : req.session.user.userId
-            }
-            StockIn.writeStockInJournal(journalInfo, function (err, data) {
+            Journal.getJournalTypeId('STOCK_IN', function (err, data) {
+                callback(err, stockInInfo, data);
+            });
+        },
+        //step 5:write journal
+        function (stockInInfo, jt_id, callback) {
+            stockInInfo.productList.map(function (item) {
+                item.JT_ID = jt_id;
+
+                return item;
+            });
+
+            Journal.writeStockJournal(stockInInfo.productList, function (err, data) {
                 callback(err);
             });
         }

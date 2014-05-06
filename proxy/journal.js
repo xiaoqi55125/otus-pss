@@ -24,6 +24,7 @@
 
 var mysqlClient = require("../lib/mysqlUtil");
 var pagingUtil  = require("../lib/pagingUtil");
+var async       = require("async");
 
 /**
  * multi query for journal
@@ -90,5 +91,82 @@ exports.getJournalWithQueryConditions = function (queryConditions, pagingConditi
         });
     }
     
+};
+
+/**
+ * get journal type id with journal name
+ * @param  {String}   jt_name  journal type name
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.getJournalTypeId = function (jt_name, callback) {
+    debugProxy("proxy/journal/getJournalTypeId");
+
+    mysqlClient.query({
+        sql   : "SELECT JT_ID FROM JOURNAL_TYPE WHERE JT_NAME = :JT_NAME",
+        params : {
+            JT_NAME   : jt_name
+        }
+    }, function (err, rows) {
+        if (err) {
+            debugProxy("[getJournalTypeId] error : " + err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(err, rows[0]['JT_ID']);
+    });
+};
+
+/**
+ * write stock in / out journal 
+ * @param  {Object}   stockJournalArr the stock journal
+ * @param  {Function} callback     the cb func
+ * @return {null}                
+ */
+exports.writeStockJournal = function (stockJournalArr, callback) {
+    debugProxy("proxy/journal/writeStockJournal");
+
+    async.mapSeries(stockJournalArr, writeStockJournalOneByOne, 
+        function (err, result) {
+            if (err) {
+                debugProxy("[writeStockJournal error] : " + err);
+                return callback(new DBError(), null);
+            }
+
+            return callback(null, null);
+        }
+    );
+};
+
+/**
+ * write stock journal one by one
+ * @param  {Object}   stockJournal the model of stock journal
+ * @param  {Function} callback     the cb func
+ * @return {null}               
+ */
+function writeStockJournalOneByOne (stockJournal, callback) {
+    mysqlClient.query({
+        sql     : "INSERT INTO STOCK_JOURNAL VALUES( " + 
+                  "                                 :PRODUCT_ID,  " +
+                  "                                 :BATCH_NUM,   " +
+                  "                                 :RELATED_ID,  " +
+                  "                                 :JT_ID,       " +
+                  "                                 :PRODUCT_NAME," +
+                  "                                 :NUM,         " +
+                  "                                 :PRICE,       " +
+                  "                                 :SUPPLIER,    " +
+                  "                                 :OPERATOR,    " +
+                  "                                 :OPERATOR_NAME," +
+                  "                                 :OPERATE_TIME"  +
+                  ")",
+        params  : stockJournal
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[writeStockJournalOneByOne error] : " + err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
 };
 

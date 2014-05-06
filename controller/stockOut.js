@@ -23,6 +23,8 @@
  */
 
 var StockOut = require("../proxy").StockOut;
+var StockIn  = require("../proxy").StockIn;
+var Journal  = require("../proxy").Journal;
 var Order    = require("../proxy").Order;
 var util     = require("../lib/util");
 var config   = require("../appConfig").config;
@@ -56,12 +58,27 @@ exports.stockOut = function (req, res, next) {
     var productsJsonObj = JSON.parse(productsJSonStr);
     var serial_num      = util.GUID();
     
-    var warppedObjArr = productsJsonObj.data.map(function (item) {
-        item.ORDER_ID   = orderId;
-        item.SO_ID      = util.GUID();
-        item.SO_DATE    = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    var warppedObjArr = productsJsonObj.map(function (item) {
+        item.ORDER_ID      = orderId;
+        item.SO_ID         = util.GUID();
+        item.SO_DATE       = new Date().Format("yyyy-MM-dd hh:mm:ss");
+        item.OPERATOR      = req.session.user.userId;
+        item.OPERATOR_NAME = req.session.user.uName;
+        item.RELATED_ID    = item.SO_ID;
+        item.REMARK        = "";
+        item.OPERATE_TIME  = new Date().Format("yyyy-MM-dd hh:mm:ss");    
+
         return item;
     });
+
+    //box more properties for write stock journal
+    async.mapSeries(warppedObjArr, boxPropertiesForStockJournal, 
+        function (err, result) {
+            if (err) {
+                debugCtrller("stockOut error");
+            }
+        }
+    );
 
     var stockOutInfo = {};
     stockOutInfo.productList = warppedObjArr;
@@ -70,19 +87,35 @@ exports.stockOut = function (req, res, next) {
         //step 1:
         function (callback) {
             StockOut.doStockOut(stockOutInfo, function (err, data) {
+                if (err) {
+                    debugCtrller("[doStockOut error] : " + err);
+                }
+
                 callback(err);
             });
         },
         //step 2:     //change order status
         function (callback) {
             Order.changeOrderStatus(orderId, 2, req.session.user.userId || "", function (err, data) {
+                if (err) {
+                    debugCtrller("[changeOrderStatus error] : " + err);
+                }
+
                 callback(err);
             });
         },
         //step 3:
         function (callback) {
-            StockOut.writeStockOutJournal({ orderId : orderId, operator : req.session.user.userId }, function (err, data) {
-                callback(err, null);
+            // StockOut.writeStockOutJournal({ orderId : orderId, operator : req.session.user.userId }, function (err, data) {
+            //     callback(err, null);
+            // });
+            
+            Journal.writeStockJournal(stockOutInfo.productList, function (err, data) {
+                if (err) {
+                    debugCtrller("[writeStockJournal error] : " + err);
+                }
+
+                callback(err);
             });
         }
     ],  function (err, values) {
@@ -120,3 +153,45 @@ exports.findByOrder = function (req, res, next) {
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * box multi properties for stock out journal
+ * @param  {Object} item single boxing object
+ * @param {Function} callback the cb func
+ * @return {null}      
+ */
+function boxPropertiesForStockJournal (item, callback) {
+    debugCtrller("controller/stockOut/boxPropertiesForStockJournal");
+
+    async.waterfall([
+        //step 1: get product detail
+        function (callback) {
+            StockIn.getProductDetail(item.PRODUCT_ID, item.BATCH_NUM, function (err, data) {
+                if (err || data.length === 0) {
+                    debugCtrller("[boxPropertiesForStockJournal -> getProductDetail] error : " + err);
+                    callback(err);
+                } else {
+                    item.PRICE    = data[0].PRICE;
+                    item.SUPPLIER = data[0].SUPPLIER;
+
+                    callback(null);
+                }
+            });
+        },
+        //step 2: get journal type id
+        function (callback) {
+            Journal.getJournalTypeId('STOCK_OUT', function (err, data) {
+                item.JT_ID = data;
+
+                callback(err);
+            });  
+        }
+    ],  function (err, values) {
+        if (err) {
+            debugCtrller("[boxPropertiesForStockJournal error] : " + err);
+            return callback(err, null);
+        }
+
+        return callback(null, item);
+    });
+}

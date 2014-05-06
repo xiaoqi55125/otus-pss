@@ -112,50 +112,6 @@ exports.doStockOut = function (stockOutInfo, cb) {
 };
 
 /**
- * write stock out action to journal
- * @param {Object} journalInfo the journal info
- * @return {null} 
- */
-exports.writeStockOutJournal = function (journalInfo, callback) {
-    debugProxy("proxy/stockOut/writeStockOutJournal");
-
-    async.waterfall([
-        //step 1
-        function (callback) {
-            mysqlClient.query({
-                sql   : "SELECT JT_ID FROM JOURNAL_TYPE WHERE JT_NAME = 'STOCK_OUT'",
-                params : null
-            }, function (err, rows) {
-                return callback(err, rows[0]['JT_ID']);
-            });
-        },
-        function (JT_ID, callback) {
-            mysqlClient.query({
-                sql     : "INSERT INTO JOURNAL VALUES(:JOURNAL_ID, :JT_ID, :JOURNAL_CONTENT, :OPERATOR, :DATETIME, :REMARK)",
-                params  : {
-                    JOURNAL_ID      : util.GUID(),
-                    JT_ID           : JT_ID,
-                    JOURNAL_CONTENT : journalInfo.orderId,
-                    OPERATOR        : journalInfo.operator,
-                    DATETIME        : new Date().Format("yyyy-MM-dd hh:mm:ss"),
-                    REMARK          : ""
-                }
-            },  function (err, rows) {
-                return callback(err, null);
-            });
-        }
-    ],  function (err, result) {
-        if (err) {
-            debugProxy("[writeStockOutJournal error] :%s", err);
-            return callback(new DBError(), null);
-        }
-
-        return callback(null, null);
-    });
-    
-};
-
-/**
  * stock out one product
  * @param  {Object}   conn        the mysql's connection
  * @param  {Object}   productInfo one product info
