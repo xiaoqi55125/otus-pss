@@ -54,6 +54,7 @@ module.exports = function (app) {
     app.get("/product",pssRender.products);
     app.get("/orderDetails/:orderId",pssRender.orderDetails);
     app.get("/journal",pssRender.journal);
+    app.get("/journal2",pssRender.journal2);
     app.get("/inventory",pssRender.inventory);
     app.get("/group",pssRender.group);
     app.get("/editPwd",pssRender.editPwd);
