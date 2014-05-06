@@ -126,7 +126,7 @@ exports.findStockJournal = function (req, res, next) {
         queryConditions.to_dt += " 23:59:59";
     }
 
-    Journal.getStockJournalWithQueryConditions(queryConditions, pagingConditions, function (err, data) {
+    Journal.getStockJournalWithQueryConditions(queryConditions, function (err, data) {
          if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }
