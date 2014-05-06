@@ -133,6 +133,7 @@ module.exports = function (app) {
     //params : jtId=:jtId&productId=:productId&from_dt=:from_dt&to_dt=:to_dt
     app.get("/journals", journalCtrller.findJournal);
     app.get("/stockjournals", journalCtrller.findStockJournal);
+    app.get("/stockjournals/statistics", journalCtrller.statistics);
 
     //security
     app.post("/signin", securityCtrller.signIn);

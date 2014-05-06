@@ -134,3 +134,56 @@ exports.findStockJournal = function (req, res, next) {
         return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
     });
 };
+
+/**
+ * statistics stock in / out
+ * @param  {Object}   req  the request object
+ * @param  {Object}   res  the response object
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.statistics = function (req, res, next) {
+    debugCtrller("controller/journal/findStockJournal");
+
+    var queryConditions       = {};
+    queryConditions.jtId      = req.query.jtId || "";
+    queryConditions.productId = req.query.productId || "";
+    queryConditions.from_dt   = req.query.from_dt || "";
+    queryConditions.to_dt     = req.query.to_dt || "";
+
+    var pagingConditions      = req.query.pageIndex ? {} : null;
+    if (pagingConditions) {
+        pagingConditions.pageIndex = parseInt(req.query.pageIndex);
+        pagingConditions.pageSize = req.query.pageSize || config.default_page_size;
+    }
+
+    try {
+        sanitize(sanitize(queryConditions.jtId).trim()).xss();
+        sanitize(sanitize(queryConditions.productId).trim()).xss();
+        sanitize(sanitize(queryConditions.from_dt).trim()).xss();
+        sanitize(sanitize(queryConditions.to_dt).trim()).xss();
+
+        if (pagingConditions) {
+            sanitize(sanitize(pagingConditions.pageIndex).trim()).xss();
+            sanitize(sanitize(pagingConditions.pageSize).trim()).xss();
+        }
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    if (queryConditions.from_dt) {
+        queryConditions.from_dt += " 00:00:00";
+    }
+
+    if (queryConditions.to_dt) {
+        queryConditions.to_dt += " 23:59:59";
+    }
+
+    Journal.getStockStatisticsWithQueryConditions(queryConditions, pagingConditions, function (err, data) {
+         if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};
