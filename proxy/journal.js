@@ -94,6 +94,72 @@ exports.getJournalWithQueryConditions = function (queryConditions, pagingConditi
 };
 
 /**
+ * multi query for journal
+ * @param  {Object}   queryConditions   the query conditions
+ * @param {Object} pagingConditions the paging condition info
+ * @param  {Function} callback callback func
+ * @return {null}            
+ */
+exports.getStockJournalWithQueryConditions = function (queryConditions, pagingConditions, callback) {
+    debugProxy("proxy/journal/getJournalWithQueryConditions");
+
+    var sql = 'SELECT STOCK_JOURNAL.*, JOURNAL_TYPE.JT_NAME FROM STOCK_JOURNAL ' +
+              ' LEFT JOIN JOURNAL_TYPE ON STOCK_JOURNAL.JT_ID = JOURNAL_TYPE.JT_ID WHERE 1 = 1 ';
+
+    if (queryConditions) {
+        if (queryConditions.jtId) {
+            sql += (' AND STOCK_JOURNAL.JT_ID = "' + queryConditions.jtId + '" ');
+        }
+
+        if (queryConditions.productId) {
+            sql += (' AND STOCK_JOURNAL.PRODUCT_ID = "' + queryConditions.productId + '" ')
+        }
+
+        if (queryConditions.from_dt && queryConditions.to_dt) {
+            sql += (' AND OPERATE_TIME BETWEEN "' + queryConditions.from_dt + '" AND "' + queryConditions.to_dt + '"');
+        } else if (queryConditions.from_dt) {
+            SQL += (' AND OPERATE_TIME >= "' + queryConditions.from_dt + '"');
+        } else if (queryConditions.to_dt) {
+            SQL += (' AND OPERATE_TIME <= "' + queryConditions.to_dt + '"');
+        }
+    }
+
+    sql += " ORDER BY OPERATE_TIME DESC"
+
+    if (pagingConditions) {
+        var pc = {
+            start   : pagingConditions.pageIndex * pagingConditions.pageSize,
+            end     : pagingConditions.pageSize
+        };
+
+        pagingUtil.commonPagingProcess(sql, queryConditions, pc, function (err, data) {
+            if (err || !data) {
+                debugProxy("[getJournalWithQueryConditions error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            data.pagingInfo.pageIndex     = pagingConditions.pageIndex;
+            data.pagingInfo.pageSize      = pagingConditions.pageSize;
+
+            return callback(null, data);
+        });
+    } else {
+        mysqlClient.query({
+            sql     : sql,
+            params  : queryConditions
+        },  function (err, rows) {
+            if (err) {
+                debugProxy("[getJournalWithQueryConditions error]: %s", err);
+                return callback(new ServerError(), null);
+            }
+
+            return callback(null, rows);
+        });
+    }
+    
+};
+
+/**
  * get journal type id with journal name
  * @param  {String}   jt_name  journal type name
  * @param  {Function} callback the cb func
