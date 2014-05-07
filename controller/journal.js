@@ -80,6 +80,35 @@ exports.findStockJournal = function (req, res, next) {
 };
 
 /**
+ * find stock journal with related id
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findStockJournalWithRelatedId = function (req, res, next) {
+    debugCtrller("controller/journal/findStockJournalWithRelatedId");
+
+    var relatedId = req.params.relatedId || "";
+
+    try {
+        check(relatedId).notEmpty();
+        sanitize(sanitize(relatedId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Journal.getJournalsWithRelatedId(relatedId, function (err, rows) {
+        if (err) {
+            return res.send(util.generateRes(null, config.err.statusCode));
+        }
+
+        return res.send(util.generateRes(rows, config.statusCode.STATUS_OK));
+    })
+
+};
+
+/**
  * statistics stock in / out
  * @param  {Object}   req  the request object
  * @param  {Object}   res  the response object

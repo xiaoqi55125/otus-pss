@@ -212,6 +212,31 @@ exports.getStockStatisticsWithQueryConditions = function (queryConditions, callb
 };
 
 /**
+ * get journal items with related id
+ * @param  {String}   relatedId the related id assocated with current journal (serial number)
+ * @param  {Function} callback  the cb func
+ * @return {null}             
+ */
+exports.getJournalsWithRelatedId = function (relatedId, callback) {
+    debugProxy("proxy/journal/getJournalsWithRelatedId");
+
+    var sql = " SELECT * FROM STOCK_JOURNAL WHERE RELATED_ID = :RELATED_ID ";
+    mysqlClient.query({
+        sql     : sql,
+        params  : {
+            RELATED_ID  : relatedId
+        }
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[getJournalsWithRelatedId error] : %s ", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};
+
+/**
  * get journal type id with journal name
  * @param  {String}   jt_name  journal type name
  * @param  {Function} callback the cb func
