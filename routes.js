@@ -71,7 +71,7 @@ module.exports = function (app) {
     // app.get("/users/:userId", userCtrller.findOne);
     app.post("/users", userCtrller.add);
     app.put("/users/:userId", userCtrller.modify);
-    // app.delete("/user/:userId", userCtrller.delete);
+    app.delete("/user/:userId", userCtrller.delete);
 
     //product
     app.get("/products", productCtrller.findAll);
@@ -141,7 +141,7 @@ module.exports = function (app) {
     app.get("/users/:userId/securitygroups", securityCtrller.findUserSecurityGroup);
     app.get("/users/:userId/permissions", securityCtrller.permissions);
     app.get("/securitygroups", securityCtrller.findAllSecurityGroup);
-    app.post("/usersecuritygroups", securityCtrller.addUserSecurityGroup);
+    app.post("/usersecuritygroups", securityCtrller.addUserSecurityGroup);    
     app.delete("/usersecuritygroups/:userId/:groupId", securityCtrller.deleteUserSecurityGroup);
 
 }

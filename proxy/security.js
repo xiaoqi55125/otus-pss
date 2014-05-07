@@ -153,6 +153,32 @@ exports.deleteUserSecurityGroup = function (userSecurityGroupInfo, callback) {
 };
 
 /**
+ * delete a user's all security group
+ * @param  {String}   userId   the user id
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.deleteUserAllSecurityGroup = function (userId, callback) {
+    debugProxy("proxy/security/deleteAllUserSecurityGroup");
+
+    var sql = " DELETE FROM otusDB.USER_LOGIN_SECURITY_GROUP WHERE USER_LOGIN_ID = :USER_LOGIN_ID ";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : {
+            USER_LOGIN_ID    : userId
+        }
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[deleteUserAllSecurityGroup error] : %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
+};
+
+/**
  * get permission by user id
  * @param  {String}   userId   the user id
  * @param  {Function} callback the cb func

@@ -23,11 +23,13 @@
  */
 
 var User     = require("../proxy").User;
+var Security = require("../proxy").Security;
 var util     = require("../lib/util");
 var config   = require("../appConfig").config;
 var check    = require("validator").check;
 var sanitize = require("validator").sanitize;
-var SHA256       = require("crypto-js/sha256");
+var SHA256   = require("crypto-js/sha256");
+var async    = require("async");
 
 /**
  * find all users
@@ -154,6 +156,57 @@ exports.modify = function (req, res, next) {
 
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
     });
+};
+
+/**
+ * delete a user 
+ * Note: it's a remark-delete not real-delete
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.delete = function (req, res, next) {
+    debugCtrller("controller/user/delete");
+
+    //set delete-remarker
+    var userId = req.params.userId || "";
+
+    try {
+        check(userId).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    async.waterfall([
+        //step 1: mark the user as "DELETED"
+        function (callback) {
+            User.setDeleteRemarker(userId, function (err, rows) {
+                if (err) {
+                    return callback(err, null);
+                }
+
+                return callback(null, null);
+            });
+        },
+        //step 2: delete user's security group
+        function (callback) {
+            Security.deleteUserAllSecurityGroup(userId, function (err, rows) {
+                if (err) {
+                    return callback(err, null);
+                }
+
+                return callback(null, null);
+            });
+        }
+    ],  function (err, results) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+
 };
 
 /**

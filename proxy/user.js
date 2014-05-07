@@ -141,3 +141,30 @@ exports.modifyUser = function (userInfo, callback) {
         return callback(null, null);
     });
 };
+
+/**
+ * set a user's delete remarker to identify a user expired
+ * @param {String} userId the user id
+ * @param {Function} callback the cb func
+ */
+exports.setDeleteRemarker = function (userId, callback) {
+    debugProxy("proxy/user/setDeleteRemarker");
+
+    var sql = "UPDATE USER_LOGIN SET REMARK = :REMARK WHERE USER_ID = :USER_ID";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : {
+            USER_ID   : userId,
+            REMARK    : 'DELETED'
+        }
+    },  function (err, rows) {
+        if (err) {
+            debugProxy("[setDeleteRemarker error] : " + err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, null);
+    });
+
+};
