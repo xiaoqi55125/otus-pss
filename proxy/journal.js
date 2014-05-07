@@ -196,7 +196,7 @@ exports.getStockStatisticsWithQueryConditions = function (queryConditions, callb
         }
     }
 
-    sql += ' GROUP BY STOCK_JOURNAL.JT_ID ';
+    sql += ' GROUP BY STOCK_JOURNAL.JT_ID ORDER BY JOURNAL_TYPE.JT_NAME';
 
     mysqlClient.query({
         sql     : sql,
