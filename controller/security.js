@@ -86,7 +86,7 @@ exports.signIn = function (req, res, next) {
         var encryptPwd = SHA256(passwd + userAuthInfo.SALT).toString();
 
         //check
-        if (userId === userAuthInfo.USER_ID && encryptPwd === userAuthInfo.PASSWORD) {
+        if (userId === userAuthInfo.USER_ID && encryptPwd === userAuthInfo.PASSWORD && userAuthInfo.REMARK != "DELETED") {
             var user         = {};
             user.userId      = userId;
             user.uName       = userAuthInfo.USER_NAME; 
