@@ -172,7 +172,6 @@ function boxPropertiesForStockJournal (item, callback) {
                     callback(err);
                 } else {
                     item.PRICE    = data[0].PRICE;
-                    item.SUPPLIER = data[0].SUPPLIER;
 
                     callback(null);
                 }
