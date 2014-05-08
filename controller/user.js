@@ -183,20 +183,20 @@ exports.delete = function (req, res, next) {
         function (callback) {
             User.setDeleteRemarker(userId, function (err, rows) {
                 if (err) {
-                    return callback(err, null);
+                    callback(err);
                 }
 
-                return callback(null, null);
+                callback(null);
             });
         },
         //step 2: delete user's security group
         function (callback) {
             Security.deleteUserAllSecurityGroup(userId, function (err, rows) {
                 if (err) {
-                    return callback(err, null);
+                    callback(err);
                 }
 
-                return callback(null, null);
+                callback(null);
             });
         }
     ],  function (err, results) {

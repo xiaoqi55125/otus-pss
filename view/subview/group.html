@@ -18,10 +18,12 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+        $("#groupDeleteList").hide();
 		getAllUsers ();
 		getAllGroups ("0");
 		$('#userSelect').change(function(){ 
             getAllGroups($('#userSelect').val());
+
         });
 	});
 </script>
@@ -50,6 +52,18 @@
                 <button type="button" class="btn btn-primary" style="margin-top:10px" onclick="allocGroup()">分配权限</button>
             </div>
         </div>
+        <table id="groupDeleteList" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>权限</th>
+                    <th>删除</th>
+                </tr>
+            </thead>
+            <tbody id='add_listViewUserGroup'>
+
+            </tbody>
+
+        </table>
     </form>
 	
 </div>

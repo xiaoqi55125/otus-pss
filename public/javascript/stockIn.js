@@ -36,7 +36,7 @@ function addProductToList() {
 		var cellPId = tdCont.cell(cellData.PRODUCT_ID);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
-		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
+		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,decodeURIComponent(cellData.BATCH_NUM));
 		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));

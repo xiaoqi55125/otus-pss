@@ -61,7 +61,7 @@ exports.getPermissionByUserId = function (userId, callback) {
 exports.getSecurityGroupByUserId = function (userId, callback) {
     debugProxy("proxy/security/getSecurityGroupByUserId");
 
-    var sql = "SELECT SG.GROUP_ID FROM otusDB.USER_LOGIN_SECURITY_GROUP USG " +
+    var sql = "SELECT SG.GROUP_ID, SG.DESCRIPTION FROM otusDB.USER_LOGIN_SECURITY_GROUP USG " +
               "  LEFT JOIN SECURITY_GROUP SG ON USG.GROUP_ID = SG.GROUP_ID " +
               " WHERE USG.USER_LOGIN_ID = :USER_LOGIN_ID ";
 
