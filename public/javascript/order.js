@@ -124,7 +124,7 @@ function getProductOneInfo(pId) {
 				var pInfo = data.data;
 				$("#productName").val(pInfo.PRODUCT_NAME);
 				$("#productPrice").val(pInfo.PRICE);
-				$("#productNum").val("1");
+				//$("#productNum").val("1");
 				getProductNum(pId);
 				return;
 			}else{

@@ -133,12 +133,13 @@ function getProductOneInfo(pId) {
 				var pInfo = data.data;
 				$("#productName").val(pInfo.PRODUCT_NAME);
 				//$("#productPrice").val(pInfo.PRICE);
-				$("#productNum").val("1");
+				//$("#productNum").val("1");
+				isExist = 1;
 				return;
 			}else{
 				//bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
 				isExist = 0;
-				$("#productNum").val("1");
+				//$("#productNum").val("1");
 				return;
 			}
 		}
