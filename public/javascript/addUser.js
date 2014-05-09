@@ -35,6 +35,11 @@ var tdCont = {
     return function() {
       editGroup(uId);
     }
+  },
+  deleteUser: function(uId) {
+    return function() {
+      deleteUser(uId);
+    }
   }
 };
 
@@ -134,11 +139,14 @@ function getAllUsers () {
               var row = tdCont.row();
               var cellUserId = tdCont.cell(userOne.USER_ID);
               var cellUserName = tdCont.cell(userOne.USER_NAME);
-              var EditLink = tdCont.cell($("<a href='javascript:void(0);'>操作</a>"));
+              var EditLink = tdCont.cell($("<a href='javascript:void(0);'>配置权限</a>"));
               EditLink.click(tdCont.editGroup(userOne.USER_ID));
+              var EditLinkDel = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+              EditLinkDel.click(tdCont.deleteUser(userOne.USER_ID));
               row.append(cellUserId);
               row.append(cellUserName);
               row.append(EditLink);
+              row.append(EditLinkDel);
               $("#add_listViewUser").append(row);
 
             };
@@ -150,6 +158,20 @@ function getAllUsers () {
     error: function(jqXHR, exception) {
        console.log(exception); 
     }
+  })
+}
+
+function deleteUser (userId) {
+  bootbox.confirm("确认删除用户吗?", function () {
+    $.ajax({
+      url:'/user/'+userId,
+      type:'delete',
+      success:function (data) {
+        if (data.statusCode === 0) {
+          getAllUsers();
+        }
+      }
+    })
   })
 }
 

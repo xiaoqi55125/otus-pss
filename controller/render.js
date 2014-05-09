@@ -190,6 +190,7 @@ exports.journal = function (req, res, next) {
   res.render('subview/journal');
 }
 
+
 /**
  * group page controller
  * @param  {object}   req  the instance of request

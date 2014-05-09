@@ -63,7 +63,7 @@ app.configure(function () {
     app.use(express.session({
         secret : AppConfig.session_secret,
         cookie : {
-            maxAge  : 30 * 60 * 1000      //ms
+            maxAge  : 30 * 60 * 1000 *  1000    //ms
         }
     }));
 });

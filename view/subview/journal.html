@@ -21,10 +21,12 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		getJournals(0,'','',0);
-        getAllJournaltypes ();
-        $('#JourType').change(function(){ 
-            getJournals($('#JourType').val(),'','',0);
-        });
+        getJournals2(0,'','',0,'');
+        //getAllJournaltypes ();
+        // $('#JourType').change(function(){ 
+        //     getJournals($('#JourType').val(),'','',0);
+        //     //getJournals2($('#JourType').val(),'','',0);
+        // });
         $('.input-daterange').datepicker({
             format: "yyyy-mm-dd",
             language: "zh-CN",
@@ -35,34 +37,87 @@
 <div class="main_div">
 	<h3>操作记录</h3>
 	<hr>
-    <div style="float:right; width:300px;">
-        <button style="float: right;margin-left: 10px;height: 30px;" type='button' class='btn btn-info ' onclick="searchJourByDate()">搜索</button>
-        <div class="input-daterange input-group" id="datepicker">
-            <input type="text" class="input-sm form-control" id="sDate" name="start" />
-            <span class="input-group-addon">至</span>
-            <input type="text" class="input-sm form-control" id="eDate" name="end" />
+    <div class="tabbable" id="tabs-410411">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#panel-1" data-toggle="tab">预入库/订单</a>
+            </li>
+            <li>
+                <a href="#panel-2" data-toggle="tab">出库入库</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active fade in" id="panel-1">
+                <div style="width:300px; padding-top:10px;">
+                    <button style="float: right;margin-left: 10px; " type='button' class='btn btn-info ' onclick="searchJourByDate()">搜索</button>
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input form-control" id="sDate" name="start" />
+                        <span class="input-group-addon">至</span>
+                        <input type="text" class="input form-control" id="eDate" name="end" />
+                    </div>
+
+                </div>
+                
+                <table id="bookListStockOut" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>操作类型</th>
+                            <th>操作时间</th>
+                            <th>操作人</th>
+                            <th>查看详情</th>
+                        </tr>
+                    </thead>
+                    <tbody id='add_listView'>
+
+                    </tbody>
+
+                </table>
+                 <div id='paginator_div' style="float:left;margin-bottom:60px" ></div>
+            </div>
+
+            <div class="tab-pane" id="panel-2">
+                <div style=" width:550px; padding-top:10px;">
+                    <button style="float: right;margin-left: 10px;" type='button' class='btn btn-info ' onclick="searchJourByDate2()">搜索</button>
+                    <div style="float: left;margin-right: 10px;height: 30px;" >
+                        <input type="text" id="stockProductInput" class="form-control" style="width:200px" placeholder="输入产品编号" />
+                    </div>
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input form-control" id="sDate2" name="start2" />
+                        <span class="input-group-addon">至</span>
+                        <input type="text" class="input form-control" id="eDate2" name="end2" />
+                    </div>
+
+                </div>
+                <div  id="showStat" class="panel panel-default"  style="margin-top:10px;">
+                  <div id="showStatInner" class="panel-body">
+                    
+                  </div>
+                </div>
+                 <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>操作类型</th>
+                            <th>操作时间</th>
+                            <th>操作人</th>
+                            <th>查看详情</th>
+                        </tr>
+                    </thead>
+                    <tbody id='add_listView1'>
+
+                    </tbody>
+                </table>
+                <div id='paginator_div1' style="float:left;margin-bottom:60px" ></div>
+            </div>
         </div>
-
+        
     </div>
-    <select id="JourType" class="selectpicker show-tick">
-        <option value="0">-- 请选择操作类型 --</option>
-    </select>
-	<table id="bookListStockOut" class="table table-striped">
-        <thead>
-            <tr>
-                <th>操作类型</th>
-                <th>操作时间</th>
-                <th>操作人</th>
-                <th>查看详情</th>
-            </tr>
-        </thead>
-        <tbody id='add_listView'>
+    
+	 
 
-        </tbody>
 
-    </table>
-     <div id='paginator_div' style="float:left;margin-bottom:60px" ></div>
-	 <div class="modal fade" id="checkStockOut" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade" id="checkStockOut" tabindex="-1" role="dialog" aria-labelledby="checkBookListModleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -70,16 +125,14 @@
                     <h4 class="modal-title" >发货详情</h4>
                 </div>
                 <div class="modal-body" id="lastStockOutInfo">
-                    <h5>客户名:<span id="lastStockOutCustName"></span></h5>
-                    <h5>订单时间:<span id="lastStockOutTime"></span></h5>
-                    <h5>备注:<span id="lastStockOutRemark"></span></h5>
                     <table id="lastStockOutInfoDetails" class="table table-striped">
                         <thead>
                             <tr>
+                                <th>商品编号</th>
                                 <th>商品名</th>
-                                <th>单价</th>
+                                <th>批号</th>
                                 <th>数量</th>
-                                <th>备注</th>
+                                <th>客户名</th>
                             </tr>
                         </thead>
                         <tbody id='astStockOut_listView'>
@@ -106,11 +159,11 @@
                     <table id="lastStockInInfoDetails" class="table table-striped">
                         <thead>
                             <tr>
+                                <th>商品编号</th>
                                 <th>商品名</th>
-                                <th>数量</th>
                                 <th>批号</th>
+                                <th>数量</th>
                                 <th>供应商</th>
-                                <th>备注</th>
                             </tr>
                         </thead>
                         <tbody id='astStockIn_listView'>
@@ -160,7 +213,4 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-
-</div>
 

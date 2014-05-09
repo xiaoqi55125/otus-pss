@@ -22,7 +22,7 @@ function getOrderById (oId) {
 				$("#lastStockOutRemark").html(data.data.REMARK);
 				var tempStr = data.data.ORDER_CONTENT;
 				var datas = eval('(' + tempStr + ')');  
-				var list = datas.data;
+				var list = datas;
 				for (var i = 0; i < list.length; i++) {
 					var cellData = list[i];
 					var row = tdCont.row(cellData.PRODUCT_ID);
@@ -46,7 +46,7 @@ function getOrderById (oId) {
 								row.append(cellBacthNum);
 								row.append(cellCnt);
 								$("tr#"+cellData.PRODUCT_ID).after(row);
-								$("#bar_"+cellData.BATCH_NUM).barcode(cellData.BATCH_NUM, "codabar");  
+								$("#bar_"+cellData.BATCH_NUM).barcode(cellData.BATCH_NUM, "code128");  
 							};
 						};
 					}

@@ -78,12 +78,12 @@ function proStockDetail (psId) {
 					var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 					var cellNum = tdCont.cell(cellData.NUM);
 					var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
-					var cellRemark = tdCont.cell(cellData.REMARK);
+					var cellSUPPLIER = tdCont.cell(cellData.SUPPLIER);
 					row.append(cellName);
 					row.append(cellPId);
 					row.append(cellBatchNum);
 					row.append(cellNum);
-					row.append(cellRemark);
+					row.append(cellSUPPLIER);
 					$("#p_listView").append(row);
 				}
 				$("#subpStockInBtn").unbind('click').removeAttr('onclick');

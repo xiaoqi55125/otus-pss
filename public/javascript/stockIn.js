@@ -36,7 +36,7 @@ function addProductToList() {
 		var cellPId = tdCont.cell(cellData.PRODUCT_ID);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
-		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,cellData.BATCH_NUM);
+		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,decodeURIComponent(cellData.BATCH_NUM));
 		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
@@ -133,12 +133,13 @@ function getProductOneInfo(pId) {
 				var pInfo = data.data;
 				$("#productName").val(pInfo.PRODUCT_NAME);
 				//$("#productPrice").val(pInfo.PRICE);
-				$("#productNum").val("1");
+				//$("#productNum").val("1");
+				isExist = 1;
 				return;
 			}else{
 				//bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
 				isExist = 0;
-				$("#productNum").val("1");
+				//$("#productNum").val("1");
 				return;
 			}
 		}

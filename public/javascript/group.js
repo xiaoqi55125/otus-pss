@@ -11,6 +11,21 @@ var in_array = function(arr){
     // 如果不在数组中就会返回false
     return false;
 }
+var tdCont = {
+  cell: function(item) {
+    return $("<td style='line-height: 35px;'></td>").html(item);
+  },
+
+  row: function() {
+    return $("<tr></tr>");
+  },
+  deleteUserGroup: function(userId,groupId) {
+    return function() {
+      deleteUserGroup(userId,groupId);
+    }
+  }
+};
+
  
 // 给字符串添加原型
 String.prototype.in_array = in_array;
@@ -35,6 +50,7 @@ function getAllUsers () {
 }
 
 function getAllGroups (uId) {
+	
 	$.ajax({
 		url:'securitygroups',
 		type:'get',
@@ -71,6 +87,8 @@ function getAllGroups (uId) {
 										}else{
 											 temp = "<option value='" + group.GROUP_ID + "'>" + group.DESCRIPTION + "</option>";
 										}
+										//to do sth. about show the group we have and add them to table 
+										
 									}else{
 										 temp = "<option value='" + group.GROUP_ID + "'>" + group.DESCRIPTION + "</option>";
 									}
@@ -83,12 +101,61 @@ function getAllGroups (uId) {
 						$('#groupSelect').selectpicker('refresh');
 					};
 					$('#groupSelect').selectpicker();
+					getGroupAlreadyHave(uId);
 
 				}
 			};
 		}
 	})
 }
+
+function getGroupAlreadyHave (userId) {
+	
+	$.ajax({
+		url:'/users/'+userId+'/securitygroups',
+		type:'get',
+		success:function (data2) {
+			if (data2.statusCode === 0) {
+				if(data2.data.length){
+					for (var i = data2.data.length - 1; i >= 0; i--) {
+						
+						console.log(data2.data.length);
+						console.log(data2);
+						$("#add_listViewUserGroup").html("");
+			            for (var i = data2.data.length - 1; i >= 0; i--) {
+			              var userGroup =data2.data[i];
+			              var row = tdCont.row();
+			              var cellGroupName = tdCont.cell(userGroup.DESCRIPTION);
+			              var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+			              EditLink.click(tdCont.deleteUserGroup(userId,userGroup.GROUP_ID));
+			              row.append(cellGroupName);
+			              row.append(EditLink);
+			              $("#add_listViewUserGroup").append(row);
+			              $("#groupDeleteList").show();
+			          	}
+				         
+					}
+				}else{
+					$("#groupDeleteList").hide();
+				}
+				
+			};
+		}
+	})
+}
+
+function deleteUserGroup (userId,groupId) {
+	$.ajax({
+		url:'/usersecuritygroups/'+userId+'/'+groupId,
+		type:'delete',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				getAllGroups (userId);
+			} 
+		}
+	})
+}
+
 function allocGroup () {
 
 	if($("#userSelect").val() == '0' ){
@@ -105,7 +172,8 @@ function allocGroup () {
 		data:$('form.groupSec').serialize(),
 		success:function (data) {
 			if (data.statusCode === 0) {
-				bootbox.alert("<h4>分配权限成功!</h4>");
+				getAllGroups ($("#userSelect").val());
+				//bootbox.alert("<h4>分配权限成功!</h4>");
 			}
 		}
 	})
