@@ -165,12 +165,28 @@ function getStatistics (url) {
     url:url,
     success:function (data) {
       if (data.statusCode === 0) {
+        $("#showStatInner").html("");
         var tempData = data.data;
         if (tempData.length) {
           var temp ;
           temp = "<span style='font-size:24px'>";
-          temp += "<span class='label label-primary'>入库数量 "+tempData[0].sum+"</span> ";
-          temp += "<span class='label label-success'>出库数量 "+tempData[1].sum+"</span>";
+
+          if (tempData[0].sum && tempData[0].JT_NAME == 'STOCK_IN') {
+            temp += "<span class='label label-primary'>入库数量 "+tempData[0].sum+"</span> ";
+          };
+
+          if (tempData[0].sum && tempData[0].JT_NAME == 'STOCK_OUT') {
+            temp += "<span class='label label-success'>出库数量 "+tempData[0].sum+"</span> ";
+          };
+
+          if (tempData.length >1 && tempData[1].JT_NAME == 'STOCK_IN') {
+            temp += "<span class='label label-primary'>入库数量 "+tempData[1].sum+"</span> ";
+          };
+
+          if (tempData.length >1 && tempData[1].JT_NAME == 'STOCK_OUT') {
+            temp += "<span class='label label-success'>出库数量 "+tempData[1].sum+"</span> ";
+          };
+          
           temp += "</span>"
           $("#showStatInner").html(temp);
           $("#showStat").show();
