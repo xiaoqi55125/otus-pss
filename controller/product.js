@@ -155,3 +155,29 @@ exports.modify = function (req, res, next) {
     });
 };
 
+/**
+ * get product id set (auto-complete)
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.getProductIds = function (req, res, next) {
+    debugCtrller("controller/product/getProductIds");
+
+    var partialId = req.params.partialId;
+
+    try {
+        check(partialId).notEmpty();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    Product.getProductIdList(function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    });
+};

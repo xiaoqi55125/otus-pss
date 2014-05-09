@@ -163,3 +163,27 @@ exports.modifyProduct = function (productInfo, callback) {
         return callback(null, null);
     });
 };
+
+/**
+ * get product id list (auto-complete)
+ * @param  {String}   partialId the partial product id
+ * @param  {Function} callback  the cb func
+ * @return {null}             
+ */
+exports.getProductIdList = function (partialId, callback) {
+      debugProxy("proxy/product/getProductIdList");
+
+      var sql = "SELECT PRODUCT_ID, PRODUCT_NAME FROM PRODUCT WHERE PRODUCT_ID LIKE '%" + partialId + "%' LIMIT 10";
+
+      mysqlClient.query({
+          sql     : sql,
+          params  : null
+      },  function (err, rows) {
+          if (err || !rows) {
+              debugProxy("[getProductIdList error] : %s", err);
+              return callback(new DBError(), null);
+          }
+
+          return callback(null, rows);
+      });
+};

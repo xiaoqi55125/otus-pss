@@ -80,6 +80,7 @@ module.exports = function (app) {
     app.post("/products", productCtrller.add);
     app.put("/products/:productId", productCtrller.modify);
     // app.delete("/products/:userId", productCtrller.delete);
+    app.get("/product/productIds/:partialId", productCtrller.getProductIds);
 
     //product category
     app.get("/productcategories", productCategoryCtrller.findAll);
