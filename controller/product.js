@@ -173,11 +173,11 @@ exports.getProductIds = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
     }
 
-    Product.getProductIdList(function (err, data) {
+    Product.getProductIdList(partialId, function (err, data) {
         if (err) {
             return res.send(util.generateRes(null, err.statusCode));
         }
 
-        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
     });
 };

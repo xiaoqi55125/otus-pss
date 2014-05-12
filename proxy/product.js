@@ -173,7 +173,7 @@ exports.modifyProduct = function (productInfo, callback) {
 exports.getProductIdList = function (partialId, callback) {
       debugProxy("proxy/product/getProductIdList");
 
-      var sql = "SELECT PRODUCT_ID, PRODUCT_NAME FROM PRODUCT WHERE PRODUCT_ID LIKE '%" + partialId + "%' LIMIT 10";
+      var sql = "SELECT PRODUCT_ID, PRODUCT_NAME FROM PRODUCT ";
 
       mysqlClient.query({
           sql     : sql,
