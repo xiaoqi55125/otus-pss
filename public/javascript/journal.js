@@ -312,6 +312,33 @@ function jDetailsStockIn (relateId) {
   })
  
 }
+
+function getProductsByLikeId (likeId) {
+  $.ajax({
+    url:'/product/productIds/'+likeId,
+    type:'get',
+    success:function (data) {
+        if (data.statusCode === 0) {
+          //$('#autocomplete').autocomplete('clear');
+          var productsItem = [];
+          for (var i = data.data.length - 1; i >= 0; i--) {
+            productsItem.push(data.data[i].PRODUCT_ID);
+          };
+          $('#stockProductInput').autocomplete({
+            lookup: productsItem,
+            lookupLimit:10,
+            minChars: 0,
+            onSelect: function(suggestion) {
+              console.log(suggestion.value);
+              
+            }
+          });
+        }
+    }
+  })
+}
+
+
 function jDetailsOrder (data) {
   var datas = eval('(' + data + ')');  
   $.ajax({

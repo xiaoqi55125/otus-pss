@@ -6,6 +6,7 @@
 	.js("/public/javascript/bootbox.min.js")
 	.js("/public/javascript/stockIn.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
+    .js("/public/lib/jquery/jquery.autocomplete.js")
     .js("/public/javascript/jquery.fs.stepper.js")
     .js("/public/javascript/jquery.validationEngine.js")
     .js("/public/javascript/jquery.validationEngine-zh_CN.js")
@@ -18,6 +19,7 @@
 	.css("/public/stylesheet/validationEngine.jquery.css")
     .css("/public/stylesheet/simplePagination.css")
     .css("/public/stylesheet/jquery.fs.stepper.css")
+    .css("/public/stylesheet/autocomplete.css")
 	.done(assets)
 	%></head>
 
@@ -31,9 +33,14 @@
 	        if (event.keyCode == 13) {  
 	            getProductOneInfo($("#productID").val()); 
 	        }
-	    }) ; 
+	    }); 
+        getProductsByLikeId(null);
 
-	});
+        // $("#productID").blur(function () {
+        //     getProductOneInfo($("#productID").val()); 
+        // })
+       
+    })
 </script>
 
 <div class="main_div" id="main_div_si">
@@ -57,9 +64,7 @@
         <div class="row">
             <div class="col-md-3">
                 商品单价:
-                
                   <input type="text" class="form-control validate[min[0]]" id="productPrice" name="PRICE">
-                  
             </div>
         	<div class="col-md-3">
                 供应商:

@@ -147,6 +147,31 @@ function getProductNum (pId) {
 	})
 }
 
+function getProductsByLikeId (likeId) {
+	$.ajax({
+		url:'/product/productIds/'+likeId,
+		type:'get',
+		success:function (data) {
+	      if (data.statusCode === 0) {
+	      	//$('#autocomplete').autocomplete('clear');
+	        var productsItem = [];
+	        for (var i = data.data.length - 1; i >= 0; i--) {
+	        	productsItem.push(data.data[i].PRODUCT_ID);
+	        };
+	        $('#productID').autocomplete({
+	          lookup: productsItem,
+	          lookupLimit:10,
+	          minChars: 0,
+	          onSelect: function(suggestion) {
+	            console.log(suggestion.value);
+	            getProductOneInfo(suggestion.value); 
+	          }
+	        });
+	      }
+		}
+	})
+}
+
 jQuery.extend({
   parseQuerystring: function(str){
     var nvpair = {};

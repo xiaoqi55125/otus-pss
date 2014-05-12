@@ -8,6 +8,7 @@
 	.js("/public/javascript/journal.js")
 	.js("/public/javascript/moment.min.js")
 	.js("/public/lib/jquery/jquery.simplePagination.js")
+    .js("/public/lib/jquery/jquery.autocomplete.js")
 	.done(assets)
 	%>
 <!-- style -->
@@ -15,6 +16,7 @@
 	.css("/public/stylesheet/bootstrap-select.css")
 	.css("/public/stylesheet/datepicker.css")
 	.css("/public/stylesheet/simplePagination.css")
+    .css("/public/stylesheet/autocomplete.css")
 	.done(assets)
 	%></head>
 
@@ -32,6 +34,8 @@
             language: "zh-CN",
             autoclose: true
         });
+        
+        getProductsByLikeId(null);
 	});
 </script>
 <div class="main_div">

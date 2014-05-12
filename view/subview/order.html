@@ -9,6 +9,7 @@
 	.js("/public/lib/jquery/jquery.simplePagination.js")
     .js("/public/javascript/jquery.validationEngine.js")
     .js("/public/javascript/jquery.validationEngine-zh_CN.js")
+    .js("/public/lib/jquery/jquery.autocomplete.js")
 	.done(assets)
 	%>
 <!-- style -->
@@ -18,6 +19,7 @@
 	.css("/public/stylesheet/simplePagination.css")
 	.css("/public/stylesheet/jquery.fs.stepper.css")
     .css("/public/stylesheet/validationEngine.jquery.css")
+    .css("/public/stylesheet/autocomplete.css")
 	.done(assets)
 	%></head>
 
@@ -31,7 +33,12 @@
 	        if (event.keyCode == 13) {  
 	            getProductOneInfo($("#productID").val()); 
 	        }
-	    })  
+	    });
+        getProductsByLikeId(null);
+
+        // $("#productID").blur(function () {
+        //     getProductOneInfo($("#productID").val()); 
+        // }) 
 	});
 </script>
 <div class="main_div">

@@ -3,7 +3,7 @@ var tdCont = {
     return $("<td style='line-height: 35px;'></td>").html(item);
   },
   cellBatch: function(pId,item) {
-    return $("<td id='batch_"+pId+"_"+item+"'></td>").html(item);
+    return $("<td style='line-height: 35px;' id='batch_"+pId+"_"+item+"'></td>").html(item);
   },
 
   row: function(pId) {
@@ -156,11 +156,38 @@ function createProductQuick (pId,pName) {
       success:function (data) {
         if (data.statusCode === 0) {
           console.log("商品添加成功");
+          console.log("刷新auto");
+          getProductsByLikeId(null);
         }else{
           console.log("商品添加失败");
         }
       }
     })
+}
+
+function getProductsByLikeId (likeId) {
+	$.ajax({
+		url:'/product/productIds/'+likeId,
+		type:'get',
+		success:function (data) {
+	      if (data.statusCode === 0) {
+	      	//$('#autocomplete').autocomplete('clear');
+	        var productsItem = [];
+	        for (var i = data.data.length - 1; i >= 0; i--) {
+	        	productsItem.push(data.data[i].PRODUCT_ID);
+	        };
+	        $('#productID').autocomplete({
+	          lookup: productsItem,
+	          lookupLimit:10,
+	          minChars: 0,
+	          onSelect: function(suggestion) {
+	            console.log(suggestion.value);
+	            getProductOneInfo(suggestion.value); 
+	          }
+	        });
+	      }
+		}
+	})
 }
 
 jQuery.extend({
