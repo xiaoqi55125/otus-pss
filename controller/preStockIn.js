@@ -142,3 +142,30 @@ exports.preStockIn = function (req, res, next) {
 
 };
 
+/**
+ * delete a pre stock in item
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.delete = function (req, res, next) {
+    debugCtrller("controller/preStockIn/delete");
+
+    var psiId = rq.params.psiId;
+
+    try {
+        check(psiId).notEmpty();
+        sanitize(sanitize(psiId).trim()).xss();
+    } catch (e) {
+        return res.send(util.generateRes(null, config.statusCode.STATUS_INVAILD_PARAMS));
+    }
+
+    PreStockIn.delete(psiId, function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(null, config.statusCode.STATUS_OK));
+    })
+};
