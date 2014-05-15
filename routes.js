@@ -94,6 +94,7 @@ module.exports = function (app) {
     app.get("/prestockins", preStockInCtrller.findAll);
     app.get("/prestockins/:psiId", preStockInCtrller.findOne);
     app.post("/prestockins", preStockInCtrller.preStockIn);
+    app.delete("/prestockins/:psiId", preStockInCtrller.delete);
 
     // //stock in
     // app.get("/stockins", stockInCtrller.findAll);         //distinct serial number
