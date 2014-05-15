@@ -262,11 +262,13 @@ function jDetailsPreStockIn (data) {
   for (var i = 0; i < datas.length; i++) {
     var cellData = datas[i];
     var row = tdCont.row();
+    var cellpID = tdCont.cell(cellData.PRODUCT_ID);
     var cellName = tdCont.cell(cellData.PRODUCT_NAME);
     var cellNum = tdCont.cell(cellData.NUM);
     var cellBATCH_NUM = tdCont.cell(cellData.BATCH_NUM);
     var cellSupplier = tdCont.cell(cellData.SUPPLIER);
     var cellRemark = tdCont.cell(cellData.REMARK);
+    row.append(cellpID);
     row.append(cellName);
     row.append(cellNum);
     //row.append(cellPRICE);
@@ -357,11 +359,13 @@ function jDetailsOrder (data) {
         for (var i = 0; i < list.length; i++) {
           var cellData = list[i];
           var row = tdCont.row(cellData.PRODUCT_ID);
+          var cellpID = tdCont.cell(cellData.PRODUCT_ID);
           var cellName = tdCont.cell(cellData.PRODUCT_NAME);
           //var cellPRICE = tdCont.cell(cellData.AMOUNT);
           var cellNum = tdCont.cell(cellData.NUM);
           var cellCount = tdCont.cell(cellData.PRODUCT_COUNT);
           var cellRemark = tdCont.cell(cellData.REMARK);
+          row.append(cellpID);
           row.append(cellName);
           row.append(cellCount);
           row.append(cellNum);

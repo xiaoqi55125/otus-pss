@@ -10,6 +10,11 @@ var tdCont = {
     return function() {
       proStockDetail(psId);
     }
+  },
+  proStockDel: function(psId) {
+    return function() {
+      proStockDel(psId);
+    }
   }
 };
 
@@ -33,10 +38,13 @@ function getAllPreStockInList(pageIndex) {
 						var cellRemark = tdCont.cell(cellData.REMARK);
 						var cellDetails = tdCont.cell($("<a href='javascript:void(0);'>查看详情</a>"));
 						cellDetails.click(tdCont.proStockDetail(cellData.PSI_ID));
+						var cellDel = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+						cellDel.click(tdCont.proStockDel(cellData.PSI_ID));
 						row.append(cellTime);
 						row.append(cellOpeator);
 						row.append(cellRemark);
 						row.append(cellDetails);
+						row.append(cellDel);
 						$("#add_listView").append(row);
 						
 			          };
@@ -59,7 +67,21 @@ function getAllPreStockInList(pageIndex) {
 		}
 	})
 }
+function proStockDel (psId) {
+	bootbox.confirm("<h4>确认删除吗?</h4>", function () {
+		$.ajax({
+			url:'/prestockins/'+psId,
+			type:'delete',
+			success:function (data) {
+				if (data.statusCode === 0) {
+					bootbox.alert("<h4>删除成功</h4>");
+					getAllPreStockInList(1);
+				};
+			}
 
+		})
+	})
+}
 function proStockDetail (psId) {
 	$.ajax({
 		url:'/prestockins/'+psId,

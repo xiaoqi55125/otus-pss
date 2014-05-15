@@ -152,7 +152,7 @@ exports.preStockIn = function (req, res, next) {
 exports.delete = function (req, res, next) {
     debugCtrller("controller/preStockIn/delete");
 
-    var psiId = rq.params.psiId;
+    var psiId = req.params.psiId;
 
     try {
         check(psiId).notEmpty();

@@ -182,10 +182,38 @@ function getProductsByLikeId (likeId) {
 	          minChars: 0,
 	          onSelect: function(suggestion) {
 	            console.log(suggestion.value);
+	            $("#productForm").validationEngine("hide");
 	            getProductOneInfo(suggestion.value); 
 	          }
 	        });
 	      }
+		}
+	})
+}
+
+function getAllSuppliers () {
+	$.ajax({
+		url:'/stockins/suppliers',
+		type:'get',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				var suppliers = [];
+		        for (var i = data.data.length - 1; i >= 0; i--) {
+		        	if (data.data[i].SUPPLIER) {
+		        		suppliers.push(data.data[i].SUPPLIER);
+		        		console.log(data.data[i].SUPPLIER);
+		        	};
+		        	
+		        };
+		        $('#pd_supplier').autocomplete({
+		          lookup: suppliers,
+		          lookupLimit:10,
+		          minChars: 0,
+		          onSelect: function(suggestion) {
+		            console.log(suggestion.value);
+		          }
+		        });
+			};
 		}
 	})
 }

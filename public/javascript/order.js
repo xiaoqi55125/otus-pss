@@ -165,9 +165,36 @@ function getProductsByLikeId (likeId) {
 	          onSelect: function(suggestion) {
 	            console.log(suggestion.value);
 	            getProductOneInfo(suggestion.value); 
+	            $("#productForm").validationEngine("hide");
 	          }
 	        });
 	      }
+		}
+	})
+}
+function getAllCustomers () {
+	$.ajax({
+		url:'/orders/all/customers',
+		type:'get',
+		success:function (data) {
+			if (data.statusCode === 0) {
+				var customers = [];
+		        for (var i = data.data.length - 1; i >= 0; i--) {
+		        	if (data.data[i].CUSTOMER_NAME) {
+		        		customers.push(data.data[i].CUSTOMER_NAME);
+		        		console.log(data.data[i].CUSTOMER_NAME);
+		        	};
+		        	
+		        };
+		        $('#orderCustName').autocomplete({
+		          lookup: customers,
+		          lookupLimit:10,
+		          minChars: 0,
+		          onSelect: function(suggestion) {
+		            console.log(suggestion.value);
+		          }
+		        });
+			};
 		}
 	})
 }
