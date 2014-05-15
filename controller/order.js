@@ -297,3 +297,23 @@ exports.delete = function (req, res, next) {
         return res.send(util.generateRes(null, config.statusCode.STATUS_OK)); 
     });
 };
+
+/**
+ * get all customers for auto-complete
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instance of response
+ * @param  {Function} next the next func
+ * @return {null}        
+ */
+exports.getAllCustomers = function (req, res, next) {
+    debugCtrller("controller/order/getAllCustomers");
+
+    Order.getAllCustomers(function (err, data) {
+        if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK)); 
+    });
+
+};

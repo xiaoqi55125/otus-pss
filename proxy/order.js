@@ -338,3 +338,24 @@ exports.removeById = function (orderId, stockStatus, callback) {
     });
 };
 
+/**
+ * get all customers
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.getAllCustomers = function (callback) {
+    debugProxy("proxy/order/getAllCustomers");
+    var sql = "SELECT DISTINCT CUSTOMER_NAME FROM ORDERS ";
+
+    mysqlClient.query({
+        sql     : sql,
+        params  : {}
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[getAllCustomers error] : %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};

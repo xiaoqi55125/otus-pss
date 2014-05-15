@@ -121,6 +121,7 @@ module.exports = function (app) {
     app.put("/orders", orderCtrller.modify);
     app.get("/orders/:orderId/stockstatus", orderCtrller.findStockStatus);
     app.put("/orders/:orderId/stockstatus", orderCtrller.modifyStockStatus);
+    app.get("/orders/customers", orderCtrller.getAllCustomers);
     app.delete("/orders/:orderId", orderCtrller.delete);
 
     //journal type
