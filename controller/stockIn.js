@@ -132,3 +132,22 @@ exports.modify = function (req, res, next) {
     debugCtrller("controller/stockIn/modify");
 
 };
+
+/**
+ * find all suppliers
+ * @param  {Object}   req  the instance of request
+ * @param  {Object}   res  the instannce of response
+ * @param  {Function} next the next handler
+ * @return {null}        
+ */
+exports.findAllSuppliers = function (req, res, next) {
+    debugCtrller("controller/stockIn/findAllSuppliers");
+
+    StockIn.getAllSuppliers(function (err, data) {
+         if (err) {
+            return res.send(util.generateRes(null, err.statusCode));
+        }
+
+        return res.send(util.generateRes(data, config.statusCode.STATUS_OK));
+    });
+};

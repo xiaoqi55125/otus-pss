@@ -223,3 +223,25 @@ function updateStockIn (conn, productInfo, callback) {
         return callback(null, null);
     });
 }
+
+/**
+ * get all supplier 
+ * @param  {Function} callback the cb func
+ * @return {null}            
+ */
+exports.getAllSuppliers = function (callback) {
+    debugProxy("proxy/stockIn/getAllSuppliers");
+
+    var sql = "SELECT DISTINCT SUPPLIER FROM STOCK_IN ";
+    mysqlClient.query({
+        sql     : sql,
+        params  : {}
+    },  function (err, rows) {
+        if (err || !rows) {
+            debugProxy("[getAllSuppliers error] : %s", err);
+            return callback(new DBError(), null);
+        }
+
+        return callback(null, rows);
+    });
+};
