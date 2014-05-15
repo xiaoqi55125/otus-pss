@@ -100,6 +100,7 @@ module.exports = function (app) {
     // app.get("/stockins/:sn", stockInCtrller.findOne);     //find by serial number
     app.post("/stockins/:psiId", stockInCtrller.stockIn);           // make sure
     // app.delete("/stockins/:sn", stockInCtrller.delete);
+    app.get("/stockins/suppliers", stockInCtrller.findAllSuppliers);
 
     // //stock out
     // app.get("/stockouts", stockOutCtrller.findAll);
@@ -121,7 +122,7 @@ module.exports = function (app) {
     app.put("/orders", orderCtrller.modify);
     app.get("/orders/:orderId/stockstatus", orderCtrller.findStockStatus);
     app.put("/orders/:orderId/stockstatus", orderCtrller.modifyStockStatus);
-    app.get("/orders/customers", orderCtrller.getAllCustomers);
+    app.get("/orders/customers", orderCtrller.findAllCustomers);
     app.delete("/orders/:orderId", orderCtrller.delete);
 
     //journal type

@@ -305,7 +305,7 @@ exports.delete = function (req, res, next) {
  * @param  {Function} next the next func
  * @return {null}        
  */
-exports.getAllCustomers = function (req, res, next) {
+exports.findAllCustomers = function (req, res, next) {
     debugCtrller("controller/order/getAllCustomers");
 
     Order.getAllCustomers(function (err, data) {
