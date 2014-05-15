@@ -3,15 +3,15 @@ var tdCont = {
     return $("<td style='line-height: 35px;'></td>").html(item);
   },
   cellBatch: function(pId,item) {
-    return $("<td style='line-height: 35px;' id='batch_"+pId+"_"+item+"'></td>").html(item);
+    return $("<td style='line-height: 35px;' id='batch_"+pId.toUpperCase()+"_"+item+"'></td>").html(item);
   },
 
   row: function(pId) {
-    return $("<tr id='"+pId+"'></tr>");
+    return $("<tr id='"+pId.toUpperCase()+"'></tr>");
   },
   removeTemp: function(pId) {
     return function() {
-      removeTemp(pId);
+      removeTemp(pId.toUpperCase());
     }
   }
 };
@@ -27,24 +27,25 @@ function addProductToList() {
 		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
 		var cellData = qs;
 		console.log(cellData);
+		var upperProId = cellData.PRODUCT_ID.toUpperCase();
 		if (isExist == 0) {
-			createProductQuick(cellData.PRODUCT_ID,cellData.PRODUCT_NAME);
+			createProductQuick(upperProId,cellData.PRODUCT_NAME);
 		}
-		var row = tdCont.row(cellData.PRODUCT_ID);
-		var cellId = tdCont.cell($("<div style='display:none'> "+cellData.PRODUCT_ID+"</div>"));
+		var row = tdCont.row(upperProId);
+		var cellId = tdCont.cell($("<div style='display:none'> "+upperProId+"</div>"));
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-		var cellPId = tdCont.cell(cellData.PRODUCT_ID);
+		var cellPId = tdCont.cell(upperProId);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
-		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
-		var cellBatchNum = tdCont.cellBatch(cellData.PRODUCT_ID,decodeURIComponent(cellData.BATCH_NUM));
+		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+upperProId+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
+		var cellBatchNum = tdCont.cellBatch(upperProId,decodeURIComponent(cellData.BATCH_NUM));
 		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
-		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
+		EditLink.click(tdCont.removeTemp(upperProId));
 
-		if($("#add_listView:has('#"+cellData.PRODUCT_ID+"')").length > 0 && $("#add_listView:has('#batch_"+cellData.PRODUCT_ID+"_"+cellData.BATCH_NUM+"')").length > 0 )         
+		if($("#add_listView:has('#"+upperProId+"')").length > 0 && $("#add_listView:has('#batch_"+upperProId+"_"+cellData.BATCH_NUM+"')").length > 0 )         
 		{   
-			$("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val(parseInt($("#productNum"+cellData.PRODUCT_ID+cellData.BATCH_NUM).val())+parseInt(cellData.NUM));
+			$("#productNum"+upperProId+cellData.BATCH_NUM).val(parseInt($("#productNum"+upperProId+cellData.BATCH_NUM).val())+parseInt(cellData.NUM));
 			
 		}else{
 			row.append(cellName);
@@ -125,6 +126,7 @@ function removeTemp (pId) {
  * @return {object}    
  */
 function getProductOneInfo(pId) {
+	pId = pId.toUpperCase();
 	$.ajax({
 		url:"/products/"+pId,
 		type:"GET",
@@ -148,6 +150,7 @@ function getProductOneInfo(pId) {
 
 function createProductQuick (pId,pName) {
 	// with name and id is ok
+	pId = pId.toUpperCase();
 	$.ajax({
       url:"/products",
       type:"POST",

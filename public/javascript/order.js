@@ -4,16 +4,16 @@ var tdCont = {
   },
 
   row: function(pId) {
-    return $("<tr id='"+pId+"'></tr>");
+    return $("<tr id='"+pId.toUpperCase()+"'></tr>");
   },
   removeTemp: function(pId) {
     return function() {
-      removeTemp(pId);
+      removeTemp(pId.toUpperCase());
     }
   }
 };
 function removeTemp (pId) {
-	$("#"+pId).remove();
+	$("#"+pId.toUpperCase()).remove();
 }
 
 
@@ -25,12 +25,17 @@ function addProductToList() {
 	if ($("#productForm").validationEngine("validate")) {
 		var qs = jQuery.parseQuerystring($("form.productAddTemp").serialize());
 		var cellData = qs;
-		var row = tdCont.row(cellData.PRODUCT_ID);
-		var cellPid = tdCont.cell(cellData.PRODUCT_ID);
+		console.log(productIsExist(cellData.PRODUCT_ID));
+		if(!productIsExist(cellData.PRODUCT_ID)){
+			bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
+			return;
+		}
+		var row = tdCont.row(cellData.PRODUCT_ID.toUpperCase());
+		var cellPid = tdCont.cell(cellData.PRODUCT_ID.toUpperCase());
 		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
 		var cellPRICE = tdCont.cell(cellData.PRICE);
 		// max='20' 
-		var cellNum = tdCont.cell($("<input type='number' min='1' id='productNum"+cellData.PRODUCT_ID+"' value='"+cellData.NUM+"'/>"));
+		var cellNum = tdCont.cell($("<input type='number' min='1' id='productNum"+cellData.PRODUCT_ID.toUpperCase()+"' value='"+cellData.NUM+"'/>"));
 		var cellRemark = tdCont.cell(cellData.REMARK);
 		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
 		EditLink.click(tdCont.removeTemp(cellData.PRODUCT_ID));
@@ -99,6 +104,10 @@ function submitOrder () {
 				};
 			}
 		})
+	}else{
+		bootbox.alert("<h4>客户名称未填写</h4>",function () {
+			$("#orderCustForm").focus();
+		})
 	}
 
 }
@@ -133,6 +142,23 @@ function getProductOneInfo(pId) {
 			}
 		}
 	})
+}
+function productIsExist(pId) {
+	var res = 0;
+	$.ajax({
+		url:"/products/"+pId,
+		type:"GET",
+		async: false,  
+		success:function (data) {
+			if (data.statusCode === 0 && data.data!=null) {
+				res = 1;
+			}else{
+				//bootbox.alert("<h4>未查询到该产品,请检查!</h4>");
+				res = 0;
+			}
+		}
+	});
+	return res;
 }
 
 function getProductNum (pId) {
