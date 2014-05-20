@@ -34,6 +34,11 @@
 	            getProductOneInfo($("#productID").val()); 
 	        }
 	    }); 
+        $("#batchNum").keydown(function(event) {  
+            if (event.keyCode == 13) {  
+                $("#batchNum").val($("#batchNum").val()+',');
+            }
+        }); 
         getProductsByLikeId(null);
         getAllSuppliers();
         $("#productID").blur(function () {
@@ -70,22 +75,23 @@
                 供应商:
                  <input id="pd_supplier" class="form-control" name="SUPPLIER" size="16" type="text">
             </div>
-            <div class="col-md-3">
-                批号(生产日期):
-                <input type="text" class="form-control validate[required]" id="batchNum" name="BATCH_NUM">
-            </div>
+            
             <div class="col-md-3">
                 备注:
                 <input id="pd_remark" class="form-control" name="REMARK" size="16" type="text">
             </div>
             
         </div>
+        <div class="row">
+            <div class="col-md-9">
+                批号(生产日期):
+                <input type="text" class="form-control validate[required]" id="batchNum" name="BATCH_NUM" onKeyUp="ReplaceDot(this)">
+            </div>
+        </div>
 
         <div class="row">
              <div class="col-md-3">
                 <button type="button" id="submitBtn" type="submit" class="btn btn-primary" style="margin-top:10px" onclick="addProductToList()">添加商品至入库列表</button>
-
-
             </div>
         </div>
     </form>

@@ -31,33 +31,40 @@ function addProductToList() {
 		if (isExist == 0) {
 			createProductQuick(upperProId,cellData.PRODUCT_NAME);
 		}
-		var row = tdCont.row(upperProId);
-		var cellId = tdCont.cell($("<div style='display:none'> "+upperProId+"</div>"));
-		var cellName = tdCont.cell(cellData.PRODUCT_NAME);
-		var cellPId = tdCont.cell(upperProId);
-		var cellPRICE = tdCont.cell(cellData.PRICE);
-		var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+upperProId+cellData.BATCH_NUM+"' value='"+cellData.NUM+"'/>"));
-		var cellBatchNum = tdCont.cellBatch(upperProId,decodeURIComponent(cellData.BATCH_NUM));
-		var cellSupplier = tdCont.cell(cellData.SUPPLIER);
-		var cellRemark = tdCont.cell(cellData.REMARK);
-		var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
-		EditLink.click(tdCont.removeTemp(upperProId));
+		var batchNumSplit = decodeURIComponent(cellData.BATCH_NUM).split(',');
+		console.log(batchNumSplit);
+		for (var i = batchNumSplit.length - 1; i >= 0; i--) {
+			//batchNumSplit[i]
+			if (batchNumSplit[i]) {
+				var row = tdCont.row(upperProId);
+				var cellId = tdCont.cell($("<div style='display:none'> "+upperProId+"</div>"));
+				var cellName = tdCont.cell(cellData.PRODUCT_NAME);
+				var cellPId = tdCont.cell(upperProId);
+				var cellPRICE = tdCont.cell(cellData.PRICE);
+				var cellNum = tdCont.cell($("<input type='number' min='1'  id='productNum"+upperProId+batchNumSplit[i]+"' value='"+cellData.NUM+"'/>"));
+				var cellBatchNum = tdCont.cellBatch(upperProId,batchNumSplit[i]);
+				var cellSupplier = tdCont.cell(cellData.SUPPLIER);
+				var cellRemark = tdCont.cell(cellData.REMARK);
+				var EditLink = tdCont.cell($("<a href='javascript:void(0);'>删除</a>"));
+				EditLink.click(tdCont.removeTemp(upperProId));
 
-		if($("#add_listView:has('#"+upperProId+"')").length > 0 && $("#add_listView:has('#batch_"+upperProId+"_"+cellData.BATCH_NUM+"')").length > 0 )         
-		{   
-			$("#productNum"+upperProId+cellData.BATCH_NUM).val(parseInt($("#productNum"+upperProId+cellData.BATCH_NUM).val())+parseInt(cellData.NUM));
-			
-		}else{
-			row.append(cellName);
-			row.append(cellPId);
-			row.append(cellPRICE);
-			row.append(cellNum);
-			row.append(cellSupplier);
-			row.append(cellBatchNum);
-			row.append(cellRemark);
-			row.append(EditLink);
-			$("#add_listView").append(row);
-		} 
+				if($("#add_listView:has('#"+upperProId+"')").length > 0 && $("#add_listView:has('#batch_"+upperProId+"_"+batchNumSplit[i]+"')").length > 0 )         
+				{   
+					$("#productNum"+upperProId+batchNumSplit[i]).val(parseInt($("#productNum"+upperProId+batchNumSplit[i]).val())+parseInt(cellData.NUM));
+					
+				}else{
+					row.append(cellName);
+					row.append(cellPId);
+					row.append(cellPRICE);
+					row.append(cellNum);
+					row.append(cellSupplier);
+					row.append(cellBatchNum);
+					row.append(cellRemark);
+					row.append(EditLink);
+					$("#add_listView").append(row);
+				} 
+			}
+		}
 		$('#productID').focus();
 		isExist = 1;
 		$('.productAddTemp')[0].reset();
@@ -259,4 +266,15 @@ function showTip (msg) {
     $("#span_tipMsg").text(msg);
     $("#div_tip").fadeIn(1000);
     $("#div_tip").fadeOut(1000);
+}
+
+function ReplaceDot(obj)
+{
+	var oldValue=obj.value;
+	while(oldValue.indexOf("，")!=-1)//寻找每一个中文逗号，并替换
+	{
+	obj.value=oldValue.replace("，",",");
+	oldValue=obj.value;
+	}
+	obj.value = oldValue;
 }
