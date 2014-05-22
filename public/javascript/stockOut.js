@@ -354,7 +354,7 @@ function getProductCheck (pId) {
 						var cellBatchNum = tdCont.cell(cellData.BATCH_NUM);
 						var cellNum = tdCont.cell(cellData.NUM);
 						var wholeNum = parseInt($("#lastProductNum").html());
-						var cellEditNum = tdCont.cell("<input  type='number' min='0' max='"+cellData.NUM+"' value='0' class='editNumInput' /> ");
+						var cellEditNum = tdCont.cell("<input  type='number' min='0' max='"+cellData.NUM+"' value='"+cellData.NUM+"' class='editNumInput' /> ");
 						row.append(cellBatchNum);
 						row.append(cellNum);
 						row.append(cellEditNum);
